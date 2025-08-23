@@ -1,4 +1,3 @@
-import authStore from '@/stores/authStore'
 import api from './api'
 
 const auth = (() => {
@@ -8,7 +7,6 @@ const auth = (() => {
       method: 'POST',
       body: JSON.stringify({ login, password }),
     })
-    authStore().login(response.data)
     return response.data || true
   }
 
@@ -16,7 +14,6 @@ const auth = (() => {
     const response = await api.fetchAuth(`logout`, {
       method: 'POST',
     })
-    authStore().logout()
     return response.data || true
   }
 

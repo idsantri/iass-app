@@ -4,6 +4,7 @@
 
 <script setup>
 import auth from '@/models/auth'
+import authStore from '@/stores/authStore'
 import { notifyConfirm } from '@/utils/notify'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -14,7 +15,12 @@ onMounted(async () => {
   if (!isConfirmed) {
     router.go(-1)
   } else {
-    await auth.logout()
+    try {
+      await auth.logout()
+    } catch (error) {
+      console.log(error)
+    }
+    authStore().logout()
     router.push('/login')
   }
 })

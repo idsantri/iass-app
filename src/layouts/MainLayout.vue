@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr lff">
+  <q-layout view="lHh Lpr lFf">
     <MainHeader @onDrawer="drawer = !drawer" />
 
     <q-drawer

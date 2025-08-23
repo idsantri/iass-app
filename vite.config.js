@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
       // @quasar/plugin-vite options list:
       // https://github.com/quasarframework/quasar/blob/dev/vite-plugin/index.d.ts
       quasar({
-        autoImportComponentCase: 'kebab',
+        autoImportComponentCase: 'combined',
         sassVariables: fileURLToPath(new URL('./src/quasar-variables.sass', import.meta.url)),
       }),
       tailwindcss(),
