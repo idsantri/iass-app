@@ -8,7 +8,7 @@ import { handleResponseSuccess, handleResponseErrors } from './utilities/handler
 import { notifyError, notifySuccess } from '../utils/notify'
 import authStore from '../stores/authStore'
 
-class Fetcher {
+class Api {
   constructor() {
     this.BASE_URL = import.meta.env.VITE_BASE_API + import.meta.env.VITE_END_API
     this.notifyConfig = {
@@ -16,7 +16,7 @@ class Fetcher {
       showError: true,
     }
     this.withLog = false
-    this.isTest = import.meta.env.VITE_APP_ENV === 'test'
+    this.isTest = import.meta.env.MODE === 'test'
   }
 
   /**
@@ -46,6 +46,16 @@ class Fetcher {
     } else {
       // Default jika input tidak valid
       this.notifyConfig = { showSuccess: true, showError: true }
+    }
+  }
+
+  defaultConfig() {
+    if (this.isTest) {
+      this.setNotify(false)
+      this.setLog(true)
+    } else {
+      this.setNotify(true)
+      this.setLog(false)
     }
   }
 
@@ -236,4 +246,4 @@ class Fetcher {
   }
 }
 
-export default Fetcher
+export default Api

@@ -20,6 +20,7 @@ export default defineConfig({
       'src/**/*.test.{js,ts,jsx,tsx}', // Test file JS & TS
     ],
     globals: true,
+    setupFiles: ['./src/models/tests/setup.js'],
     coverage: {
       reporter: ['text', 'json', 'html'],
     },

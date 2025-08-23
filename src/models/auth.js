@@ -1,12 +1,9 @@
-import Fetcher from './Fetcher'
+import Api from './Api'
 
-class Auth extends Fetcher {
+class Auth extends Api {
   constructor() {
     super()
-  }
-
-  #setNotify() {
-    this.isTest ? this.setNotify(false) : this.setNotify(true)
+    this.defaultConfig()
   }
 
   /**
@@ -17,7 +14,6 @@ class Auth extends Fetcher {
    * @returns {Promise<any>} Promise yang menghasilkan data respons login.
    */
   async login({ login, password }) {
-    this.#setNotify()
     const response = await this.fetchGuest(`login`, {
       method: 'POST',
       body: JSON.stringify({ login, password }),
@@ -30,7 +26,6 @@ class Auth extends Fetcher {
    * @returns {Promise<any>} Promise yang menghasilkan data respons logout.
    */
   async logout() {
-    this.#setNotify()
     const response = await this.fetchAuth(`logout`, {
       method: 'POST',
     })
