@@ -1,6 +1,6 @@
 import Api from './Api'
 
-class Member extends Api {
+class Anggota extends Api {
   constructor() {
     super()
     this.defaultConfig()
@@ -47,4 +47,4 @@ class Member extends Api {
     return response.data || true
   }
 }
-export default new Member()
+export default new Anggota()
