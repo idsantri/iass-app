@@ -57,7 +57,7 @@
   </div>
 </template>
 <script setup>
-import auth from '@/models/auth'
+import Auth from '@/models/Auth'
 import authStore from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
@@ -70,8 +70,7 @@ const isLoading = ref(false)
 
 const onLogin = () => {
   isLoading.value = true
-  auth
-    .login({ login: login.value, password: password.value })
+  Auth.login({ login: login.value, password: password.value })
     .then((res) => {
       authStore().login(res)
       router.push('/')

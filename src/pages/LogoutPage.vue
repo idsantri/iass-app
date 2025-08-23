@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import auth from '@/models/auth'
+import Auth from '@/models/Auth'
 import authStore from '@/stores/authStore'
 import { notifyConfirm } from '@/utils/notify'
 import { onMounted } from 'vue'
@@ -16,7 +16,7 @@ onMounted(async () => {
     router.go(-1)
   } else {
     try {
-      await auth.logout()
+      await Auth.logout()
     } catch (error) {
       console.log(error)
     }

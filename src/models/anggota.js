@@ -1,7 +1,7 @@
-import api from './api'
-//  IIFE/factory function
+// import Api from './Api'
 
 const anggota = (() => {
+  const api = new Api()
   async function getAll(params) {
     // api.setNotify({ showSuccess: false, showError: true })
     api.setNotify(false)

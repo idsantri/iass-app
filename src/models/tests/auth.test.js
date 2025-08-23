@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import auth from '../auth'
+import Auth from '../Auth'
 import { authTestUtils, doLogin } from './setup-auth'
 
 describe('auth model', () => {
   beforeEach(() => {
     localStorage.clear()
     authTestUtils.resetAuth()
-    auth.setLog(false)
+    Auth.setLog(false)
   })
 
   it('login should return token on success', async () => {
@@ -26,7 +26,7 @@ describe('auth model', () => {
 
   it('login should throw error on wrong credentials', async () => {
     await expect(
-      auth.login({
+      Auth.login({
         login: 'user1',
         password: 'wrongpassword',
       }),
@@ -42,7 +42,7 @@ describe('auth model', () => {
     expect(authState.isLoggedIn()).toBe(true)
 
     // Perform logout
-    const logoutResponse = await auth.logout(false)
+    const logoutResponse = await Auth.logout(false)
 
     // Clear store after logout
     authTestUtils.resetAuth()

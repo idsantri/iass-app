@@ -8,21 +8,22 @@ import { handleResponseSuccess, handleResponseErrors } from './utilities/handler
 import { notifyError, notifySuccess } from '../utils/notify'
 import authStore from '../stores/authStore'
 
-const state = {
-  BASE_URL: import.meta.env.VITE_BASE_API + import.meta.env.VITE_END_API,
-  notifyConfig: {
-    showSuccess: true,
-    showError: true,
-  },
-  withLog: false,
-}
+class Fetcher {
+  constructor() {
+    this.BASE_URL = import.meta.env.VITE_BASE_API + import.meta.env.VITE_END_API
+    this.notifyConfig = {
+      showSuccess: true,
+      showError: true,
+    }
+    this.withLog = false
+    this.isTest = import.meta.env.VITE_APP_ENV === 'test'
+  }
 
-const api = (() => {
   /**
    * Mengambil token akses dari store.
    * @returns {string|null} Token akses atau null.
    */
-  function getAccessToken() {
+  getAccessToken() {
     return authStore().token || null
   }
 
@@ -30,30 +31,46 @@ const api = (() => {
    * Mengatur konfigurasi notifikasi.
    * @param {boolean|object} notify - Nilai boolean atau objek konfigurasi.
    */
-  function setNotify(notify) {
+  setNotify(notify) {
     if (typeof notify === 'boolean') {
-      state.notifyConfig = {
+      this.notifyConfig = {
         showSuccess: notify,
         showError: notify,
       }
     } else if (typeof notify === 'object' && notify !== null) {
       // Menggunakan default value jika properti tidak ada atau bukan boolean
-      state.notifyConfig = {
+      this.notifyConfig = {
         showSuccess: !!notify.showSuccess, // Menggunakan !! untuk konversi ke boolean
         showError: !!notify.showError,
       }
     } else {
       // Default jika input tidak valid
-      state.notifyConfig = { showSuccess: true, showError: true }
+      this.notifyConfig = { showSuccess: true, showError: true }
     }
+  }
+
+  /**
+   * Mengambil konfigurasi notifikasi.
+   * @returns {object} Konfigurasi notifikasi.
+   */
+  getNotify() {
+    return { ...this.notifyConfig }
   }
 
   /**
    * Mengatur status logging.
    * @param {boolean} value - Status logging.
    */
-  function setLog(value) {
-    state.withLog = !!value
+  setLog(value) {
+    this.withLog = !!value
+  }
+
+  /**
+   * Mengambil status logging.
+   * @returns {boolean} Status logging.
+   */
+  getLog() {
+    return this.withLog
   }
 
   /**
@@ -61,7 +78,7 @@ const api = (() => {
    * @param {object} params - Objek parameter.
    * @returns {string} Query string.
    */
-  function buildQueryString(params) {
+  buildQueryString(params) {
     if (!params || typeof params !== 'object') return ''
     const searchParams = new URLSearchParams(
       Object.entries(params).filter(([, value]) => value !== null && value !== undefined),
@@ -76,7 +93,7 @@ const api = (() => {
    * @param {object} options - Opsi fetch.
    * @returns {Promise<Response>} Promise yang menghasilkan objek Response.
    */
-  async function performFetch(fullUrl, options) {
+  async performFetch(fullUrl, options) {
     const requestStart = Date.now()
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const finalOptions = {
@@ -87,15 +104,15 @@ const api = (() => {
       },
     }
 
-    if (state.withLog) logRequestDetails(fullUrl, finalOptions)
+    if (this.withLog) logRequestDetails(fullUrl, finalOptions)
 
     try {
       const response = await fetch(fullUrl, finalOptions)
       response.requestStart = requestStart // Attach requestStart to response
       return response
     } catch (error) {
-      if (state.withLog) logErrorDetails({ error, fullUrl, options: finalOptions })
-      if (state.notifyConfig.showError) {
+      if (this.withLog) logErrorDetails({ error, fullUrl, options: finalOptions })
+      if (this.notifyConfig.showError) {
         notifyError({ message: 'Gagal terhubung ke server' })
       }
       throw error
@@ -108,20 +125,20 @@ const api = (() => {
    * @param {object} options - Opsi fetch yang digunakan.
    * @returns {Promise<object>} Promise yang menghasilkan data JSON.
    */
-  async function handleApi(response, options) {
+  async handleApi(response, options) {
     if (!response.ok) {
-      await handleResponseErrors(response, state.notifyConfig, state.withLog)
+      await handleResponseErrors(response, this.notifyConfig, this.withLog)
       return // Menghentikan eksekusi setelah menangani kesalahan
     }
 
     const responseJson = await handleResponseSuccess(
       response,
       options,
-      state.notifyConfig,
-      state.withLog,
+      this.notifyConfig,
+      this.withLog,
     )
 
-    if (state.withLog) logResponseDetails(response, responseJson)
+    if (this.withLog) logResponseDetails(response, responseJson)
     return responseJson
   }
 
@@ -131,16 +148,16 @@ const api = (() => {
    * @param {object} options - Opsi fetch.
    * @returns {Promise<object>} Promise yang menghasilkan data JSON.
    */
-  async function fetchGuest(endPoint, options = {}) {
+  async fetchGuest(endPoint, options = {}) {
     const { params, ...fetchOptions } = options
     fetchOptions.headers = {
       ...options.headers,
       'Content-Type': 'application/json',
     }
-    const queryString = buildQueryString(params)
-    const fullUrl = state.BASE_URL + endPoint + queryString
-    const response = await performFetch(fullUrl, fetchOptions)
-    return handleApi(response, fetchOptions)
+    const queryString = this.buildQueryString(params)
+    const fullUrl = this.BASE_URL + endPoint + queryString
+    const response = await this.performFetch(fullUrl, fetchOptions)
+    return this.handleApi(response, fetchOptions)
   }
 
   /**
@@ -149,11 +166,11 @@ const api = (() => {
    * @param {object} options - Opsi fetch.
    * @returns {Promise<object>} Promise yang menghasilkan data JSON.
    */
-  async function fetchAuth(endPoint, options = {}) {
-    const token = getAccessToken()
+  async fetchAuth(endPoint, options = {}) {
+    const token = this.getAccessToken()
     if (!token) {
-      if (state.withLog) logErrorToken(state.BASE_URL + endPoint, options)
-      if (state.notifyConfig.showError) {
+      if (this.withLog) logErrorToken(this.BASE_URL + endPoint, options)
+      if (this.notifyConfig.showError) {
         notifyError({
           message: 'Tidak ada token akses yang ditemukan',
         })
@@ -161,7 +178,7 @@ const api = (() => {
       throw new Error('No access token found')
     }
 
-    return fetchGuest(endPoint, {
+    return this.fetchGuest(endPoint, {
       ...options,
       headers: {
         ...options.headers,
@@ -177,12 +194,12 @@ const api = (() => {
    * @param {object} options - Opsi fetch.
    * @returns {Promise<Blob>} Promise yang menghasilkan objek Blob.
    */
-  async function fetchFile(endPoint, fileName, options = {}) {
+  async fetchFile(endPoint, fileName, options = {}) {
     const { params, ...fetchOptions } = options
-    const queryString = buildQueryString(params)
-    const fullUrl = state.BASE_URL + endPoint + queryString
+    const queryString = this.buildQueryString(params)
+    const fullUrl = this.BASE_URL + endPoint + queryString
 
-    const token = getAccessToken()
+    const token = this.getAccessToken()
     if (token) {
       fetchOptions.headers = {
         ...fetchOptions.headers,
@@ -190,43 +207,33 @@ const api = (() => {
       }
     }
 
-    const response = await performFetch(fullUrl, fetchOptions)
+    const response = await this.performFetch(fullUrl, fetchOptions)
     if (!response.ok) {
-      await handleResponseErrors(response, state.notifyConfig, state.withLog)
+      await handleResponseErrors(response, this.notifyConfig, this.withLog)
       throw new Error('Failed to fetch file')
     }
 
     try {
       const responseBlob = await response.blob()
-      if (state.withLog) {
+      if (this.withLog) {
         logResponseDetails(response, {
           message: 'File fetched successfully',
         })
       }
-      if (state.notifyConfig.showSuccess) {
+      if (this.notifyConfig.showSuccess) {
         notifySuccess(`File ${fileName} berhasil diunduh`)
       }
       return responseBlob
     } catch (error) {
-      if (state.withLog) {
+      if (this.withLog) {
         logErrorDetails({ error, fullUrl, options: fetchOptions })
       }
-      if (state.notifyConfig.showError) {
+      if (this.notifyConfig.showError) {
         notifyError('Gagal memproses file dari server')
       }
       throw error
     }
   }
+}
 
-  return {
-    fetchGuest,
-    fetchAuth,
-    fetchFile,
-    setNotify,
-    getNotify: () => ({ ...state.notifyConfig }),
-    setLog,
-    getLog: () => state.withLog,
-  }
-})()
-
-export default api
+export default Fetcher

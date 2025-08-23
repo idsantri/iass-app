@@ -1,5 +1,5 @@
 import authStore from '../../stores/authStore'
-import auth from '../auth'
+import Auth from '../Auth'
 
 // Test utilities
 export const authTestUtils = {
@@ -15,7 +15,7 @@ export const authTestUtils = {
 
 export async function doLogin() {
   localStorage.clear()
-  const result = await auth.login({
+  const result = await Auth.login({
     login: 'admin',
     password: '112233',
   })

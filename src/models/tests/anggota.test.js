@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeAll, vi } from 'vitest'
 import anggota from '../anggota'
 import { doLogin } from './setup-auth'
-import api from '../api' // Import api to mock its methods
+// import Api from '../Api' // Import api to mock its methods
 
+const api = new Api()
 beforeAll(async () => {
   await doLogin()
 
