@@ -26,6 +26,9 @@ importers:
       datatables.net-vue3:
         specifier: ^3.0.4
         version: 3.0.4(datatables.net@2.3.3)(vue@3.5.19(typescript@5.9.2))
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       pinia:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.9.2)(vue@3.5.19(typescript@5.9.2))
@@ -1187,6 +1190,9 @@ packages:
 
   datatables.net@2.3.3:
     resolution: {integrity: sha512-SWL3za6nheY6gdoiLgCc++tYmxbwrmv2bjrEiII9rXBWXXSbOZct6pjR3FueMVRM5jmt7pQcXiGovfuFDnutQg==}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
@@ -3540,6 +3546,8 @@ snapshots:
   datatables.net@2.3.3:
     dependencies:
       jquery: 3.7.1
+
+  date-fns@4.1.0: {}
 
   debug@4.4.1:
     dependencies:

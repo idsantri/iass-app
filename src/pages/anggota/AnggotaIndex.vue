@@ -1,7 +1,18 @@
 <template>
   <q-card flat bordered>
+    <SectionHeader title="Data Anggota" @on-reload="loadData">
+      <template #left>
+        <QBtn
+          dense
+          label="Tambah"
+          outline=""
+          icon="add"
+          no-caps
+          class="q-px-md q-mr-sm text-orange-1"
+        />
+      </template>
+    </SectionHeader>
     <QCardSection class="flex items-center justify-between bg-orange-1 q-pa-sm">
-      <div class="tw:text-2xl">Data Anggota</div>
       <QSelect
         outlined
         v-model="filter"
@@ -34,6 +45,7 @@ import DataTable from 'datatables.net-vue3'
 import DataTablesCore from 'datatables.net-dt'
 import { useRouter } from 'vue-router'
 import Anggota from '@/models/Anggota'
+import SectionHeader from '@/components/SectionHeader.vue'
 
 const table = ref(null)
 const isLoading = ref(false)

@@ -8,7 +8,7 @@ class Anggota extends Api {
   }
 
   async getAll(params) {
-    this.setNotify({ showSuccess: false })
+    this.setNotify({ showSuccess: false, showError: true })
     const response = await this.fetchAuth(this.path, {
       method: 'GET',
       params,
@@ -17,7 +17,7 @@ class Anggota extends Api {
   }
 
   async getById(id) {
-    this.setNotify({ showSuccess: false })
+    this.setNotify({ showSuccess: false, showError: true })
     const response = await this.fetchAuth(`${this.path}/${id}`, {
       method: 'GET',
     })
