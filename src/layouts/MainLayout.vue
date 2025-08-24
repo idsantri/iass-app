@@ -8,7 +8,7 @@
       :width="250"
       :breakpoint="500"
       bordered
-      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+      class="bg-orange-2"
     >
       <MainSideBar />
     </q-drawer>

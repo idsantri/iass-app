@@ -27,6 +27,16 @@ export default [
         component: HomeView,
       },
       {
+        path: 'anggota',
+        meta: { title: 'Anggota' },
+        component: () => import('../pages/anggota/AnggotaIndex.vue'),
+      },
+      {
+        path: 'anggota/:id',
+        meta: { title: 'Anggota' },
+        component: () => import('../pages/anggota/AnggotaDetail.vue'),
+      },
+      {
         path: '/about',
         name: 'about',
         meta: { title: 'About' },
@@ -36,5 +46,11 @@ export default [
         component: () => import('../pages/AboutView.vue'),
       },
     ],
+  },
+  // Always leave this as last one,
+  // but you can also remove it
+  {
+    path: '/:catchAll(.*)*',
+    component: () => import('@/pages/ErrorNotFound.vue'),
   },
 ]

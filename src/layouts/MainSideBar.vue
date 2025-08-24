@@ -18,33 +18,28 @@
 <script setup>
 const menuList = [
   {
-    icon: 'inbox',
-    label: 'Inbox',
-    route: '/',
+    icon: 'home',
+    label: 'Anggota',
+    route: '/anggota',
     separator: true,
   },
   {
-    icon: 'send',
-    label: 'Outbox',
+    icon: 'home',
+    label: 'NKS',
     route: '/',
     separator: false,
   },
   {
-    icon: 'delete',
-    label: 'Trash',
-    route: '/',
-    separator: false,
-  },
-  {
-    icon: 'error',
-    label: 'Spam',
+    icon: 'home',
+    label: 'Absensi',
     route: '/',
     separator: true,
   },
+
   {
     icon: 'settings',
     label: 'Settings',
-    route: '/',
+    route: '/setting',
     separator: false,
   },
   {

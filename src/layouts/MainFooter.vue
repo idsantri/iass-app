@@ -1,5 +1,5 @@
 <template>
-  <q-footer bordered class="bg-grey-9 text-white">
+  <q-footer bordered class="bg-orange-10 text-orange-1">
     <div class="text-center q-pa-sm">ID Santri</div>
   </q-footer>
 </template>
