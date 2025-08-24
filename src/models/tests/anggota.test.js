@@ -1,46 +1,63 @@
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import setupAuth from './setupAuth'
 import Anggota from '../Anggota'
 
-beforeAll(async () => {
-  await setupAuth.doLogin()
-})
-
-describe('customers model', () => {
-  let createdId
-
-  it('should create a customer', async () => {
-    const data = {
-      name: 'Test Customer',
-      address: 'Test Address',
-      district: 'Socah',
-    }
-    const response = await Anggota.create(data)
-    expect(response).toBeDefined()
-    expect(response.customer).toHaveProperty('id')
-    createdId = response.customer.id
+describe('anggota model', () => {
+  // Login sekali saja
+  beforeAll(async () => {
+    await setupAuth.setupTestSuite()
   })
 
-  it('should get all customers', async () => {
+  // Restore auth state sebelum setiap test
+  beforeEach(() => {
+    const store = setupAuth.setupTestCase()
+    expect(store.token).toBeDefined()
+  })
+
+  const data = {
+    id: 112233,
+    nama: 'Test anggota',
+    address: 'Test Address',
+    district: 'Socah',
+    iass: true,
+    wilayah: 'Bangkalan',
+    komisariat: 'Socah',
+    kelompok: 'Kesamben',
+  }
+
+  it('should create a anggota', async () => {
+    try {
+      const response = await Anggota.create(data)
+      console.log('Create response:', response)
+      expect(response).toBeDefined()
+      expect(response.anggota).toHaveProperty('id')
+      data.id = response.anggota.id
+    } catch (error) {
+      console.error('Create failed:', error)
+      throw error
+    }
+  })
+
+  it('should get all anggota', async () => {
     const response = await Anggota.getAll()
     expect(response).toBeDefined()
-    expect(Array.isArray(response.customers)).toBe(true)
+    expect(Array.isArray(response.anggota)).toBe(true)
   })
 
-  it('should get customer by id', async () => {
-    const response = await Anggota.getById(createdId)
+  it('should get anggota by id', async () => {
+    const response = await Anggota.getById(data.id)
     expect(response).toBeDefined()
-    expect(response.customer).toHaveProperty('id', createdId)
+    expect(response.anggota).toHaveProperty('id', data.id)
   })
 
-  it('should update customer', async () => {
-    const update = { name: 'Updated Customer' }
-    const response = await Anggota.update(createdId, update)
+  it('should update anggota', async () => {
+    const update = { ...data, nama: 'Updated anggota' }
+    const response = await Anggota.update(data.id, update)
     expect(response).toBeDefined()
   })
 
-  it('should remove customer', async () => {
-    const response = await Anggota.remove(createdId)
+  it('should remove anggota', async () => {
+    const response = await Anggota.remove(data.id)
     expect(response).toBeDefined()
   })
 })

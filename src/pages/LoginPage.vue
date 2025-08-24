@@ -1,7 +1,7 @@
 <template>
   <div class="tw:flex tw:items-center tw:justify-center tw:h-screen tw:mx-auto tw:max-w-md tw:p-4">
-    <div class="tw:border tw:border-gray-300 tw:p-4 tw:rounded bg-orange-3 tw:w-full">
-      <div class="tw:text-2xl text-center q-my-lg">Halaman Login</div>
+    <div class="tw:border tw:border-gray-300 tw:p-4 tw:rounded-lg bg-orange-2 tw:w-full">
+      <div class="tw:text-2xl text-center q-my-lg tw:font-light">Halaman Login</div>
       <form @submit.prevent="onLogin">
         <div class="q-gutter-y-md column">
           <q-input
@@ -40,8 +40,8 @@
           </q-input>
           <q-btn
             type="submit"
-            class="full-width q-pa-sm text-orange-11"
-            color="orange-5"
+            class="full-width q-pa-sm text-orange-10"
+            color="orange-4"
             label="Login"
           />
 
