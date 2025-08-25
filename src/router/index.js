@@ -1,38 +1,38 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { nextTick } from 'vue'
-import authStore from '@/stores/authStore'
-import routes from './routes'
+import { createRouter, createWebHistory } from 'vue-router';
+import { nextTick } from 'vue';
+import authStore from '@/stores/authStore';
+import routes from './routes';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes,
-})
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: routes,
+});
 
 router.beforeEach((to, _from, next) => {
-  // if (to.fullPath == '/') {
-  //   return next('/home')
-  // }
+    // if (to.fullPath == '/') {
+    //   return next('/home')
+    // }
 
-  const store = authStore()
-  const isAuthenticate = store.isLoggedIn
+    const store = authStore();
+    const isAuthenticate = store.isLoggedIn;
 
-  const authRoutes = ['Register', 'Login', 'Forgot', 'Reset', 'Verify']
-  const toAuthRoutes = authRoutes.includes(to.name)
+    const authRoutes = ['Register', 'Login', 'Forgot', 'Reset', 'Verify'];
+    const toAuthRoutes = authRoutes.includes(to.name);
 
-  if (!toAuthRoutes && !isAuthenticate) {
-    // console.log('toAuthRoutes && !isAuthenticate')
-    next('/login')
-  } else if (toAuthRoutes && isAuthenticate) {
-    history.go(-1)
-  } else {
-    next()
-  }
-})
+    if (!toAuthRoutes && !isAuthenticate) {
+        // console.log('toAuthRoutes && !isAuthenticate')
+        next('/login');
+    } else if (toAuthRoutes && isAuthenticate) {
+        history.go(-1);
+    } else {
+        next();
+    }
+});
 
-const DEFAULT_TITLE = import.meta.env.VITE_APP_INSTANCE
+const DEFAULT_TITLE = import.meta.env.VITE_APP_INSTANCE;
 router.afterEach(async (to) => {
-  await nextTick(() => {
-    document.title = to.meta.title ? `${DEFAULT_TITLE} — ${to.meta.title}` : DEFAULT_TITLE
-  })
-})
-export default router
+    await nextTick(() => {
+        document.title = to.meta.title ? `${DEFAULT_TITLE} — ${to.meta.title}` : DEFAULT_TITLE;
+    });
+});
+export default router;

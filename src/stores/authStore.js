@@ -1,41 +1,41 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 const authStore = defineStore('auth', {
-  state: () => ({
-    user: null,
-    token: null,
-    roles: null,
-  }),
+    state: () => ({
+        user: null,
+        token: null,
+        roles: null,
+    }),
 
-  actions: {
-    login({ user, token, roles }) {
-      this.user = user
-      this.token = token
-      this.roles = roles
+    actions: {
+        login({ user, token, roles }) {
+            this.user = user;
+            this.token = token;
+            this.roles = roles;
+        },
+
+        setUser(userData) {
+            this.user = {
+                ...this.user,
+                ...userData,
+            };
+        },
+
+        logout() {
+            this.user = null;
+            this.token = null;
+            this.roles = null;
+        },
     },
 
-    setUser(userData) {
-      this.user = {
-        ...this.user,
-        ...userData,
-      }
+    getters: {
+        isLoggedIn: (state) => {
+            return typeof state.token === 'string' && state.token.length >= 10;
+        },
     },
 
-    logout() {
-      this.user = null
-      this.token = null
-      this.roles = null
+    persist: {
+        storage: localStorage,
     },
-  },
-
-  getters: {
-    isLoggedIn: (state) => {
-      return typeof state.token === 'string' && state.token.length >= 10
-    },
-  },
-
-  persist: {
-    storage: localStorage,
-  },
-})
-export default authStore
+});
+export default authStore;

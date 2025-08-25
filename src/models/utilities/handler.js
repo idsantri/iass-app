@@ -1,5 +1,5 @@
-import { notifyError, notifySuccess } from '../../utils/notify'
-import { logErrorDetails, logResponseDetails } from './logger'
+import { notifyError, notifySuccess } from '../../utils/notify';
+import { logErrorDetails, logResponseDetails } from './logger';
 
 /**
  * Handle server errors (5xx status codes)
@@ -8,76 +8,80 @@ import { logErrorDetails, logResponseDetails } from './logger'
  * @param {boolean} withLog - Whether to log the response
  */
 async function handleError5xx(response, notifyConfig, withLog) {
-  try {
-    // Try to get error details from response body
-    const errorData = await response.json().catch(() => null)
+    try {
+        // Try to get error details from response body
+        const errorData = await response.json().catch(() => null);
 
-    // Create error object with details
-    const error = {
-      status: response.status,
-      statusText: response.statusText,
-      message: errorData?.message || 'Server error occurred',
-      timestamp: new Date().toISOString(),
-      url: response.url,
+        // Create error object with details
+        const error = {
+            status: response.status,
+            statusText: response.statusText,
+            message: errorData?.message || 'Server error occurred',
+            timestamp: new Date().toISOString(),
+            url: response.url,
+        };
+
+        // Handle different types of server errors
+        switch (response.status) {
+            case 500:
+                console.error(
+                    'Internal Server Error - The server encountered an unexpected condition',
+                );
+                if (notifyConfig.showError) {
+                    notifyError('Terjadi kesalahan pada server. Hubungi developer.');
+                }
+                break;
+
+            case 501:
+                console.error('Not Implemented - The server does not support this functionality');
+                if (notifyConfig.showError) {
+                    notifyError('Fitur ini belum tersedia. Hubungi developer.');
+                }
+                break;
+
+            case 502:
+                console.error('Bad Gateway - Invalid response from upstream server');
+                if (notifyConfig.showError) {
+                    notifyError('Server tidak merespons dengan benar. Silakan coba lagi.');
+                }
+                break;
+
+            case 503:
+                console.error(
+                    'Service Unavailable - Server temporarily overloaded or under maintenance',
+                );
+                if (notifyConfig.showError) {
+                    notifyError('Server sedang dalam perawatan. Silakan coba lagi nanti.');
+                }
+                break;
+
+            case 504:
+                console.error('Gateway Timeout - Upstream server timeout');
+                if (notifyConfig.showError) {
+                    notifyError('Koneksi ke server terputus. Silakan coba lagi nanti.');
+                }
+                break;
+
+            default:
+                console.error(`Server Error ${response.status}: ${response.statusText}`);
+                if (notifyConfig.showError) {
+                    notifyError(`Terjadi kesalahan pada server: ${error.message}`);
+                }
+                break;
+        }
+
+        // Log if enabled
+        if (withLog) {
+            logResponseDetails(response, errorData);
+        }
+
+        // Throw error to be caught by calling code
+        throw new Error(`Server Error ${response.status}: ${error.message}`);
+    } catch (parseError) {
+        // Handle case where response body can't be parsed
+        console.error('Failed to parse server error response:', parseError);
+        throw new Error(`Server Error ${response.status}: ${response.statusText}`);
     }
-
-    // Handle different types of server errors
-    switch (response.status) {
-      case 500:
-        console.error('Internal Server Error - The server encountered an unexpected condition')
-        if (notifyConfig.showError) {
-          notifyError('Terjadi kesalahan pada server. Hubungi developer.')
-        }
-        break
-
-      case 501:
-        console.error('Not Implemented - The server does not support this functionality')
-        if (notifyConfig.showError) {
-          notifyError('Fitur ini belum tersedia. Hubungi developer.')
-        }
-        break
-
-      case 502:
-        console.error('Bad Gateway - Invalid response from upstream server')
-        if (notifyConfig.showError) {
-          notifyError('Server tidak merespons dengan benar. Silakan coba lagi.')
-        }
-        break
-
-      case 503:
-        console.error('Service Unavailable - Server temporarily overloaded or under maintenance')
-        if (notifyConfig.showError) {
-          notifyError('Server sedang dalam perawatan. Silakan coba lagi nanti.')
-        }
-        break
-
-      case 504:
-        console.error('Gateway Timeout - Upstream server timeout')
-        if (notifyConfig.showError) {
-          notifyError('Koneksi ke server terputus. Silakan coba lagi nanti.')
-        }
-        break
-
-      default:
-        console.error(`Server Error ${response.status}: ${response.statusText}`)
-        if (notifyConfig.showError) {
-          notifyError(`Terjadi kesalahan pada server: ${error.message}`)
-        }
-        break
-    }
-
-    // Log if enabled
-    if (withLog) {
-      logResponseDetails(response, errorData)
-    }
-
-    // Throw error to be caught by calling code
-    throw new Error(`Server Error ${response.status}: ${error.message}`)
-  } catch (parseError) {
-    // Handle case where response body can't be parsed
-    console.error('Failed to parse server error response:', parseError)
-    throw new Error(`Server Error ${response.status}: ${response.statusText}`)
-  }
 }
 
 /**
@@ -87,30 +91,30 @@ async function handleError5xx(response, notifyConfig, withLog) {
  * @param {boolean} withLog - Whether to log the response
  */
 async function handleError4xx(response, notifyConfig, withLog) {
-  let errorMessage = 'Terjadi kesalahan pada server'
-  let responseJson = null
+    let errorMessage = 'Terjadi kesalahan pada server';
+    let responseJson = null;
 
-  // Try to parse error response for better error message
-  try {
-    responseJson = await response.json()
-    errorMessage = responseJson.message || errorMessage
-  } catch (parseError) {
-    console.error('Failed to parse error response:', parseError)
-    notifyError('Not valid JSON response!')
-    throw parseError
-  }
+    // Try to parse error response for better error message
+    try {
+        responseJson = await response.json();
+        errorMessage = responseJson.message || errorMessage;
+    } catch (parseError) {
+        console.error('Failed to parse error response:', parseError);
+        notifyError('Not valid JSON response!');
+        throw parseError;
+    }
 
-  if (notifyConfig.showError) notifyError(errorMessage)
-  if (withLog) logResponseDetails(response, responseJson)
-  throw responseJson || new Error(errorMessage)
+    if (notifyConfig.showError) notifyError(errorMessage);
+    if (withLog) logResponseDetails(response, responseJson);
+    throw responseJson || new Error(errorMessage);
 }
 
 export async function handleResponseErrors(response, notifyConfig, withLog) {
-  if (response.status >= 500) {
-    await handleError5xx(response, notifyConfig, withLog)
-  } else {
-    await handleError4xx(response, notifyConfig, withLog)
-  }
+    if (response.status >= 500) {
+        await handleError5xx(response, notifyConfig, withLog);
+    } else {
+        await handleError4xx(response, notifyConfig, withLog);
+    }
 }
 
 /**
@@ -122,21 +126,21 @@ export async function handleResponseErrors(response, notifyConfig, withLog) {
  * @returns {Object} Parsed response JSON
  */
 export async function handleResponseSuccess(response, options, notifyConfig, withLog) {
-  const fullUrl = response.url || 'unknown'
-  let responseJson
+    const fullUrl = response.url || 'unknown';
+    let responseJson;
 
-  // Parse JSON response
-  try {
-    responseJson = await response.json()
-  } catch (error) {
-    if (withLog) logErrorDetails({ error, fullUrl, options })
-    if (notifyConfig.showError) notifyError('Gagal memproses respons server')
-    throw error
-  }
+    // Parse JSON response
+    try {
+        responseJson = await response.json();
+    } catch (error) {
+        if (withLog) logErrorDetails({ error, fullUrl, options });
+        if (notifyConfig.showError) notifyError('Gagal memproses respons server');
+        throw error;
+    }
 
-  // Show success notification
-  const { message } = responseJson
-  if (notifyConfig.showSuccess) notifySuccess(message || 'Success')
+    // Show success notification
+    const { message } = responseJson;
+    if (notifyConfig.showSuccess) notifySuccess(message || 'Success');
 
-  return responseJson
+    return responseJson;
 }

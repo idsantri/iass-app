@@ -1,160 +1,160 @@
 <template>
-  <q-card flat bordered>
-    <SectionHeader title="Data Anggota" @on-reload="loadData">
-      <template #left>
-        <QBtn
-          dense
-          label="Tambah"
-          outline=""
-          icon="add"
-          no-caps
-          class="q-px-md q-mr-sm text-orange-1"
-          @click="dialog = true"
-        />
-      </template>
-    </SectionHeader>
-    <QCardSection class="flex items-center justify-between bg-orange-1 q-pa-sm">
-      <QSelect
-        outlined
-        v-model="filter"
-        :options="optionsKomisariat"
-        label="Filter Komisariat"
-        class="full-width q-my-sm"
-        behavior="menu"
-        clearable=""
-        style="max-width: 400px"
-        dense
-      />
-    </QCardSection>
-    <q-card-section class="relative-position">
-      <LoadingFixed v-if="isLoading" />
-      <DataTable class="display" :options="optionsDT" :data="filteredData" ref="table" />
-    </q-card-section>
-  </q-card>
-  <QDialog v-model="dialog">
-    <MemberForm />
-  </QDialog>
+    <q-card flat bordered>
+        <SectionHeader title="Data Anggota" @on-reload="loadData">
+            <template #left>
+                <QBtn
+                    dense
+                    label="Tambah"
+                    outline=""
+                    icon="add"
+                    no-caps
+                    class="q-px-md q-mr-sm text-orange-1"
+                    @click="dialog = true"
+                />
+            </template>
+        </SectionHeader>
+        <QCardSection class="flex items-center justify-between bg-orange-1 q-pa-sm">
+            <QSelect
+                outlined
+                v-model="filter"
+                :options="optionsKomisariat"
+                label="Filter Komisariat"
+                class="full-width q-my-sm"
+                behavior="menu"
+                clearable=""
+                style="max-width: 400px"
+                dense
+            />
+        </QCardSection>
+        <q-card-section class="relative-position">
+            <LoadingFixed v-if="isLoading" />
+            <DataTable class="display" :options="optionsDT" :data="filteredData" ref="table" />
+        </q-card-section>
+    </q-card>
+    <QDialog v-model="dialog">
+        <MemberForm />
+    </QDialog>
 </template>
 
 <script setup>
-import 'datatables.net-select-dt'
+import 'datatables.net-select-dt';
 
-import { onMounted, ref, computed } from 'vue'
-import DataTable from 'datatables.net-vue3'
-import DataTablesCore from 'datatables.net-dt'
-import { useRouter } from 'vue-router'
-import Member from '@/models/Member'
-import SectionHeader from '@/components/SectionHeader.vue'
-import LoadingFixed from '@/components/LoadingFixed.vue'
-import MemberForm from '@/components/forms/MemberForm.vue'
+import { onMounted, ref, computed } from 'vue';
+import DataTable from 'datatables.net-vue3';
+import DataTablesCore from 'datatables.net-dt';
+import { useRouter } from 'vue-router';
+import Member from '@/models/Member';
+import SectionHeader from '@/components/SectionHeader.vue';
+import LoadingFixed from '@/components/LoadingFixed.vue';
+import MemberForm from '@/components/forms/MemberForm.vue';
 
-const table = ref(null)
-const isLoading = ref(false)
-const anggota = ref([])
-const router = useRouter()
-const filter = ref('')
-const dialog = ref(false)
+const table = ref(null);
+const isLoading = ref(false);
+const anggota = ref([]);
+const router = useRouter();
+const filter = ref('');
+const dialog = ref(false);
 
-DataTable.use(DataTablesCore)
+DataTable.use(DataTablesCore);
 
 const filteredData = computed(() => {
-  if (!filter.value) {
-    return anggota.value
-  }
-  return anggota.value.filter((item) => item.komisariat == filter.value)
-})
+    if (!filter.value) {
+        return anggota.value;
+    }
+    return anggota.value.filter((item) => item.komisariat == filter.value);
+});
 
 async function loadData() {
-  try {
-    isLoading.value = true
-    const res = await Member.getAll()
-    anggota.value = res.members
-  } catch (e) {
-    console.log('error get members ', e)
-  } finally {
-    isLoading.value = false
-  }
+    try {
+        isLoading.value = true;
+        const res = await Member.getAll();
+        anggota.value = res.members;
+    } catch (e) {
+        console.log('error get members ', e);
+    } finally {
+        isLoading.value = false;
+    }
 }
 
 const optionsKomisariat = computed(() => {
-  const komSet = new Set()
-  anggota.value.forEach((item) => {
-    if (item.komisariat) {
-      komSet.add(item.komisariat)
-    }
-  })
-  return Array.from(komSet).sort((a, b) => a.localeCompare(b))
-})
+    const komSet = new Set();
+    anggota.value.forEach((item) => {
+        if (item.komisariat) {
+            komSet.add(item.komisariat);
+        }
+    });
+    return Array.from(komSet).sort((a, b) => a.localeCompare(b));
+});
 
 const optionsDT = ref({
-  responsive: true,
-  order: [],
-  select: {
-    style: 'single',
-    info: false,
-  },
-  columns: [
-    {
-      title: 'ID',
-      data: 'id',
+    responsive: true,
+    order: [],
+    select: {
+        style: 'single',
+        info: false,
     },
-    {
-      title: 'Nama',
-      data: 'nama',
+    columns: [
+        {
+            title: 'ID',
+            data: 'id',
+        },
+        {
+            title: 'Nama',
+            data: 'nama',
+        },
+        {
+            title: 'Alamat',
+            render: function (data, type, row) {
+                return `${row.jl ?? ''} ${row.desa ?? ''} ${row.kecamatan ?? ''}`;
+            },
+        },
+        {
+            title: 'Komisariat',
+            data: 'komisariat',
+        },
+        {
+            title: 'Kelompok',
+            data: 'kelompok',
+        },
+        {
+            title: 'status',
+            data: 'status_max',
+        },
+        {
+            title: 'Keanggotaan',
+            data: 'iass',
+            render: function (data, type, row) {
+                return `${row.iass == true ? 'IASS' : 'Sidogirian'}`;
+            },
+        },
+    ],
+    language: {
+        search: 'Cari:',
+        zeroRecords: 'Tidak data data untuk ditampilkan. Coba kata kunci yang lain!',
+        info: 'Menampilkan _START_ hingga _END_, dari total _TOTAL_ data',
+        infoFiltered: '(disaring dari _MAX_ total data)',
+        paginate: { first: '↑', previous: '←', next: '→', last: '↓' },
+        lengthMenu: '_MENU_ Perhalaman',
     },
-    {
-      title: 'Alamat',
-      render: function (data, type, row) {
-        return `${row.jl ?? ''} ${row.desa ?? ''} ${row.kecamatan ?? ''}`
-      },
-    },
-    {
-      title: 'Komisariat',
-      data: 'komisariat',
-    },
-    {
-      title: 'Kelompok',
-      data: 'kelompok',
-    },
-    {
-      title: 'status',
-      data: 'status_max',
-    },
-    {
-      title: 'Keanggotaan',
-      data: 'iass',
-      render: function (data, type, row) {
-        return `${row.iass == true ? 'IASS' : 'Sidogirian'}`
-      },
-    },
-  ],
-  language: {
-    search: 'Cari:',
-    zeroRecords: 'Tidak data data untuk ditampilkan. Coba kata kunci yang lain!',
-    info: 'Menampilkan _START_ hingga _END_, dari total _TOTAL_ data',
-    infoFiltered: '(disaring dari _MAX_ total data)',
-    paginate: { first: '↑', previous: '←', next: '→', last: '↓' },
-    lengthMenu: '_MENU_ Perhalaman',
-  },
-  autoWidth: true,
-  dom: 'bftip',
-  scrollX: true,
-})
+    autoWidth: true,
+    dom: 'bftip',
+    scrollX: true,
+});
 
 onMounted(async () => {
-  await loadData()
+    await loadData();
 
-  if (table.value) {
-    const dt = table.value.dt
-    dt.on('select', (e, dt, type, indexes) => {
-      const selectedData = dt.rows(indexes).data().toArray()
-      if (selectedData.length > 0) {
-        const selected = selectedData[0]
-        router.push(`/anggota/${selected.id}`)
-      }
-    })
-  }
-})
+    if (table.value) {
+        const dt = table.value.dt;
+        dt.on('select', (e, dt, type, indexes) => {
+            const selectedData = dt.rows(indexes).data().toArray();
+            if (selectedData.length > 0) {
+                const selected = selectedData[0];
+                router.push(`/anggota/${selected.id}`);
+            }
+        });
+    }
+});
 </script>
 
 <style lang="scss">
