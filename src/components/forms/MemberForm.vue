@@ -2,6 +2,7 @@
     <q-card class="full-width bg-orange-1" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
             <FormHeader title="Input Anggota" :is-new="inputs.id ? false : true" />
+            <LoadingAbsolute v-if="loading" />
             <q-card-section class="q-pa-sm">
                 <q-carousel
                     v-model="slide"
@@ -29,12 +30,7 @@
                             {{ carousel.address.title }}
                         </div>
                         <QSeparator class="q-my-sm" />
-                        <div>
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Pariatur
-                            perspiciatis placeat nesciunt quos ratione rem temporibus minima harum
-                            a. Soluta praesentium quasi quo nesciunt corrupti, aliquid magnam enim
-                            odit sunt.
-                        </div>
+                        <MemberFormAddress v-model="inputs" />
                     </q-carousel-slide>
 
                     <!-- lain-lain -->
@@ -70,6 +66,8 @@ import FormActions from './parts/FormActions.vue';
 import FormHeader from './parts/FormHeader.vue';
 import MemberIdentity from './parts/MemberIdentity.vue';
 import MemberFormIass from './parts/MemberFormIass.vue';
+import MemberFormAddress from './parts/MemberFormAddress.vue';
+import LoadingAbsolute from '../LoadingAbsolute.vue';
 
 const props = defineProps({
     data: { type: Object, required: false, default: () => {} },
@@ -77,8 +75,16 @@ const props = defineProps({
 
 const _emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
 
-const inputs = ref({ wilayah: 'Bangkalan', iass: 1 });
-const _loadingCrud = ref(false);
+const inputs = ref({
+    wilayah: 'Bangkalan',
+    iass: 1,
+    tmp_lahir: 'Bangkalan',
+    provinsi: 'Jawa Timur',
+    kabupaten: 'Kab. Bangkalan',
+    rt: 1,
+    rw: 1,
+});
+const loading = ref(false);
 
 onMounted(async () => {
     Object.assign(inputs.value, props.data);

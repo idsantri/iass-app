@@ -7,6 +7,7 @@
         v-model="inputs.id"
         :rules="[(val) => !val || !isNaN(val) || 'Hanya angka!']"
         error-color="negative"
+        type="number"
     />
     <q-input
         dense
@@ -31,14 +32,7 @@
         v-model="inputs.nik"
         :rules="[(val) => !val || (val?.length == 16 && !isNaN(val)) || '16 digit angka!']"
     />
-    <q-input
-        dense
-        hint=""
-        class="q-my-sm"
-        outlined
-        label="Tempat Lahir"
-        v-model="inputs.tmp_lahir"
-    />
+    <InputSelectKotaLahir v-model="inputs" />
     <q-input
         dense
         class="q-my-sm"
@@ -54,7 +48,7 @@
         outlined
         label="Nomor Telepon"
         v-model="inputs.no_hp"
-        type="text"
+        type="number"
         hint="08123456789"
         :rules="[(val) => !val || !isNaN(val) || 'hanya angka!']"
     />
@@ -69,5 +63,7 @@
     />
 </template>
 <script setup>
+import InputSelectKotaLahir from './InputSelectKotaLahir.vue';
+
 const inputs = defineModel();
 </script>
