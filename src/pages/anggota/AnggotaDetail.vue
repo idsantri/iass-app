@@ -30,12 +30,12 @@ const loading = ref(false)
 const anggota = ref({})
 
 async function loadData(id) {
-  loading.value = true
   try {
+    loading.value = true
     const res = await Member.getById(id)
     anggota.value = res.member
   } catch (e) {
-    console.log(e)
+    console.log('error get member id ', e)
   } finally {
     loading.value = false
   }

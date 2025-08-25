@@ -58,12 +58,15 @@ const filteredData = computed(() => {
 })
 
 async function loadData() {
-  isLoading.value = true
-  const data = await Member.getAll()
-  if (data) {
-    anggota.value = data.members
+  try {
+    isLoading.value = true
+    const res = await Member.getAll()
+    anggota.value = res.members
+  } catch (e) {
+    console.log('error get members ', e)
+  } finally {
+    isLoading.value = false
   }
-  isLoading.value = false
 }
 
 const optionsKomisariat = computed(() => {
