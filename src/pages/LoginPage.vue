@@ -75,7 +75,7 @@ const onLogin = () => {
       authStore().login(res)
       router.push('/')
     })
-    .catch((err) => console.log(err))
+    .catch((err) => console.log('error on login ', err))
     .finally(() => (isLoading.value = false))
 }
 </script>
