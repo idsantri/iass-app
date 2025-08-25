@@ -9,6 +9,7 @@
           icon="add"
           no-caps
           class="q-px-md q-mr-sm text-orange-1"
+          @click="dialog = true"
         />
       </template>
     </SectionHeader>
@@ -30,6 +31,9 @@
       <DataTable class="display" :options="optionsDT" :data="filteredData" ref="table" />
     </q-card-section>
   </q-card>
+  <QDialog v-model="dialog">
+    <MemberForm />
+  </QDialog>
 </template>
 
 <script setup>
@@ -42,12 +46,15 @@ import { useRouter } from 'vue-router'
 import Member from '@/models/Member'
 import SectionHeader from '@/components/SectionHeader.vue'
 import LoadingFixed from '@/components/LoadingFixed.vue'
+import MemberForm from '@/components/forms/MemberForm.vue'
 
 const table = ref(null)
 const isLoading = ref(false)
 const anggota = ref([])
 const router = useRouter()
 const filter = ref('')
+const dialog = ref(false)
+
 DataTable.use(DataTablesCore)
 
 const filteredData = computed(() => {
