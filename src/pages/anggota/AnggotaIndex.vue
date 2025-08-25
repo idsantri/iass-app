@@ -25,14 +25,9 @@
         dense
       />
     </QCardSection>
-    <q-card-section>
-      <q-spinner-cube
-        v-if="isLoading"
-        color="orange-12"
-        size="14em"
-        class="flex flex-center q-mx-auto"
-      />
-      <DataTable v-else class="display" :options="optionsDT" :data="filteredData" ref="table" />
+    <q-card-section class="relative-position">
+      <LoadingFixed v-if="isLoading" />
+      <DataTable class="display" :options="optionsDT" :data="filteredData" ref="table" />
     </q-card-section>
   </q-card>
 </template>
@@ -46,6 +41,7 @@ import DataTablesCore from 'datatables.net-dt'
 import { useRouter } from 'vue-router'
 import Member from '@/models/Member'
 import SectionHeader from '@/components/SectionHeader.vue'
+import LoadingFixed from '@/components/LoadingFixed.vue'
 
 const table = ref(null)
 const isLoading = ref(false)

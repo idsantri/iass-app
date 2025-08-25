@@ -1,15 +1,12 @@
 <template>
-  <QCard flat bordered>
+  <QCard flat bordered class="relative-position">
     <SectionHeader title="Detail Anggota" @on-reload="loadData"> </SectionHeader>
 
-    <q-spinner-cube
-      v-if="loading"
-      color="orange-12"
-      size="14em"
-      class="flex flex-center q-ma-md q-mx-auto"
-    />
-
-    <QCardSection v-else class="q-pa-sm">
+    <!-- <div class="tw:z-[999] tw:flex tw:items-center tw:justify-center tw:text-center tw:fixed">
+      <q-spinner-cube color="orange-12" size="14em" class="flex flex-center q-ma-md q-mx-auto" />
+    </div> -->
+    <LoadingFixed v-if="loading" />
+    <QCardSection class="q-pa-sm">
       <AnggotaDetailIdentity :anggota="anggota" />
       <AnggotaDetailStatus :statuses="anggota?.statuses" />
     </QCardSection>
@@ -25,6 +22,7 @@ import { onMounted, ref } from 'vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import AnggotaDetailIdentity from './comp/DetailIdentity.vue'
 import AnggotaDetailStatus from './comp/DetailStatus.vue'
+import LoadingFixed from '@/components/LoadingFixed.vue'
 
 const route = useRoute()
 const id = route.params.id

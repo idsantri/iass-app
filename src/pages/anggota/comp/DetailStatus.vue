@@ -38,7 +38,7 @@
 import formatDate from '@/utils/format-date'
 defineProps({
   statuses: {
-    type: Array,
+    // type: Array,
     required: true,
   },
 })
