@@ -10,7 +10,7 @@
   />
   <q-input
     dense
-    hint=""
+    hint="tanpa gelar kehormatan"
     class="q-my-sm"
     outlined
     label="Nama *"
@@ -27,7 +27,6 @@
     label="Nomor Induk Kependudukan"
     v-model="inputs.nik"
     :rules="[(val) => !val || (val?.length == 16 && !isNaN(val)) || '16 digit angka!']"
-    error-color="negative"
   />
   <q-input dense hint="" class="q-my-sm" outlined label="Tempat Lahir" v-model="inputs.tmp_lahir" />
   <q-input
@@ -37,6 +36,25 @@
     label="Tanggal Lahir"
     v-model="inputs.tgl_lahir"
     type="date"
+    hint=""
+  />
+  <q-input
+    dense
+    class="q-my-sm"
+    outlined
+    label="Nomor Telepon"
+    v-model="inputs.no_hp"
+    type="text"
+    hint="08123456789"
+    :rules="[(val) => !val || !isNaN(val) || 'hanya angka!']"
+  />
+  <q-input
+    dense
+    class="q-my-sm"
+    outlined
+    label="Email"
+    v-model="inputs.email"
+    type="email"
     hint=""
   />
 </template>

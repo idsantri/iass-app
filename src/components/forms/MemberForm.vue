@@ -42,11 +42,7 @@
               {{ carousel.iass.title }}
             </div>
             <QSeparator class="q-my-sm" />
-            <div>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Pariatur perspiciatis
-              placeat nesciunt quos ratione rem temporibus minima harum a. Soluta praesentium quasi
-              quo nesciunt corrupti, aliquid magnam enim odit sunt.
-            </div>
+            <MemberFormIass v-model="inputs" />
           </q-carousel-slide>
         </q-carousel>
       </q-card-section>
@@ -69,9 +65,10 @@
 </template>
 <script setup>
 import { onMounted, ref, watch } from 'vue'
-import FormActions from './slices/FormActions.vue'
-import FormHeader from './slices/FormHeader.vue'
-import MemberIdentity from './slices/MemberIdentity.vue'
+import FormActions from './parts/FormActions.vue'
+import FormHeader from './parts/FormHeader.vue'
+import MemberIdentity from './parts/MemberIdentity.vue'
+import MemberFormIass from './parts/MemberFormIass.vue'
 
 const props = defineProps({
   data: { type: Object, required: false, default: () => {} },
@@ -79,22 +76,24 @@ const props = defineProps({
 
 const _emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate'])
 
-const inputs = ref({})
+const inputs = ref({ wilayah: 'Bangkalan', iass: 1 })
 const _loadingCrud = ref(false)
 
 onMounted(async () => {
   Object.assign(inputs.value, props.data)
 })
 
-const onSubmit = async () => {}
+const onSubmit = async () => {
+  console.log(inputs.value)
+}
 
 const onDelete = async () => {}
 
-watch(inputs.value, (newValue, oldValue) => {
-  console.log('myObject changed!')
-  console.log('New value:', newValue)
-  console.log('Old value:', oldValue)
-})
+// watch(inputs.value, (newValue, oldValue) => {
+//   console.log('myObject changed!')
+//   console.log('New value:', newValue)
+//   console.log('Old value:', oldValue)
+// })
 
 const carousel = {
   identitas: {
