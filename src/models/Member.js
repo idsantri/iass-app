@@ -1,10 +1,10 @@
 import Api from './Api'
 
-class Anggota extends Api {
+class Member extends Api {
   constructor() {
     super()
     this.defaultConfig()
-    this.path = 'anggota'
+    this.path = 'members'
   }
 
   async getAll(params) {
@@ -47,4 +47,4 @@ class Anggota extends Api {
     return response.data || true
   }
 }
-export default new Anggota()
+export default new Member()

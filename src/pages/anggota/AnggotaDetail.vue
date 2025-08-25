@@ -77,7 +77,7 @@
   </QCard>
 </template>
 <script setup>
-import Anggota from '@/models/Anggota'
+import Member from '@/models/Member'
 import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -91,8 +91,8 @@ const anggota = ref({})
 async function loadData(id) {
   loading.value = true
   try {
-    const res = await Anggota.getById(id)
-    anggota.value = res.anggota
+    const res = await Member.getById(id)
+    anggota.value = res.member
   } catch (e) {
     console.log(e)
   } finally {

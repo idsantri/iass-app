@@ -44,7 +44,7 @@ import { onMounted, ref, computed } from 'vue'
 import DataTable from 'datatables.net-vue3'
 import DataTablesCore from 'datatables.net-dt'
 import { useRouter } from 'vue-router'
-import Anggota from '@/models/Anggota'
+import Member from '@/models/Member'
 import SectionHeader from '@/components/SectionHeader.vue'
 
 const table = ref(null)
@@ -63,9 +63,9 @@ const filteredData = computed(() => {
 
 async function loadData() {
   isLoading.value = true
-  const data = await Anggota.getAll()
+  const data = await Member.getAll()
   if (data) {
-    anggota.value = data.anggota
+    anggota.value = data.members
   }
   isLoading.value = false
 }
