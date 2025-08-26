@@ -6,7 +6,7 @@
         <!-- <div
       class="tw:w-[70px] tw:h-[70px] tw:border-[8px] tw:border-orange-200 tw:border-t-orange-500 tw:rounded-full tw:animate-spin"
     ></div> -->
-        <q-spinner-rings color="orange" :size="size" />
+        <q-spinner-tail color="orange" :size="size" />
     </div>
 </template>
 

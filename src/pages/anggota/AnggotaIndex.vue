@@ -32,7 +32,7 @@
         </q-card-section>
     </q-card>
     <QDialog v-model="dialog">
-        <MemberForm />
+        <MemberForm @success-submit="(res) => $router.push(`/anggota/${res.id}`)" />
     </QDialog>
 </template>
 

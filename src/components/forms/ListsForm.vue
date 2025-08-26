@@ -1,7 +1,7 @@
 <template lang="">
     <q-card class="full-width" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
-            <FormHeader :title="inputs.key || 'List'" :is-new="inputs.id ? false : true" />
+            <FormHeader :title="inputs.key || 'List'" :is-new="!id" />
             <LoadingAbsolute size="4em" v-if="loading" />
 
             <q-card-section class="q-pa-sm">
@@ -26,7 +26,7 @@
                     v-if="props.showInput.val1"
                 />
             </q-card-section>
-            <FormActions :btn-delete="inputs.id ? true : false" @on-delete="onDelete" />
+            <FormActions :btn-delete="!!id" @on-delete="onDelete" />
         </q-form>
     </q-card>
 </template>
@@ -52,8 +52,9 @@ const emit = defineEmits(['successSubmit', 'successDelete']);
 
 const loading = ref(false);
 const inputs = ref({});
-
 let btnClose = null;
+const id = props.dataInput?.id;
+
 onMounted(() => {
     Object.assign(inputs.value, props.dataInput);
     btnClose = document.getElementById('btn-close-form');
@@ -65,9 +66,8 @@ async function onSubmit() {
         loading.value = true;
         let response = null;
 
-        if (data.id) {
-            delete data.id;
-            response = await List.update(inputs.value.id, data);
+        if (id) {
+            response = await List.update(id, data);
         } else {
             response = await List.create(data);
         }
@@ -82,9 +82,6 @@ async function onSubmit() {
 }
 
 async function onDelete() {
-    const id = inputs.value.id;
-    if (!id) return;
-
     const isConfirmed = await notifyConfirm('Hapus data ini?', true);
     if (!isConfirmed) return;
 

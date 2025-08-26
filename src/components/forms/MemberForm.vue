@@ -1,7 +1,7 @@
 <template>
     <q-card class="full-width bg-orange-1" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
-            <FormHeader title="Input Anggota" :is-new="inputs.id ? false : true" />
+            <FormHeader title="Input Anggota" :is-new="!id" />
             <LoadingAbsolute v-if="loading" />
             <q-card-section class="q-pa-sm">
                 <q-carousel
@@ -55,7 +55,7 @@
                     />
                 </div>
             </q-card-section>
-            <FormActions :btn-delete="inputs.id ? true : false" @on-delete="onDelete" />
+            <FormActions :btn-delete="!!id" @on-delete="onDelete" />
         </q-form>
         <!-- <pre>{{ props.santri }}</pre> -->
     </q-card>
@@ -68,12 +68,14 @@ import MemberIdentity from './parts/MemberIdentity.vue';
 import MemberFormIass from './parts/MemberFormIass.vue';
 import MemberFormAddress from './parts/MemberFormAddress.vue';
 import LoadingAbsolute from '../LoadingAbsolute.vue';
+import Member from '@/models/Member';
+import { notifyConfirm } from '@/utils/notify';
 
 const props = defineProps({
     data: { type: Object, required: false, default: () => {} },
 });
 
-const _emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
+const emit = defineEmits(['successSubmit', 'successCreate', 'successUpdate', 'successDelete']);
 
 const inputs = ref({
     wilayah: 'Bangkalan',
@@ -85,22 +87,50 @@ const inputs = ref({
     rw: 1,
 });
 const loading = ref(false);
+const id = props.data?.id;
+let btnClose = null;
 
 onMounted(async () => {
     Object.assign(inputs.value, props.data);
+    btnClose = document.getElementById('btn-close-form');
 });
 
 const onSubmit = async () => {
-    console.log(inputs.value);
+    const data = JSON.parse(JSON.stringify(inputs.value));
+    try {
+        loading.value = true;
+        let response = null;
+        if (!id) {
+            response = await Member.create(data);
+            emit('successCreate', response?.member);
+        } else {
+            response = await Member.update(id, data);
+            emit('successUpdate', response?.member);
+        }
+        emit('successSubmit', response?.member);
+        btnClose?.click();
+    } catch (error) {
+        console.log('error submit member ', error);
+    } finally {
+        loading.value = false;
+    }
 };
 
-const onDelete = async () => {};
+const onDelete = async () => {
+    const isConfirmed = await notifyConfirm('Hapus data ini?', true);
+    if (!isConfirmed) return;
 
-// watch(inputs.value, (newValue, oldValue) => {
-//   console.log('myObject changed!')
-//   console.log('New value:', newValue)
-//   console.log('Old value:', oldValue)
-// })
+    try {
+        loading.value = true;
+        await Member.remove(id);
+        emit('successDelete', id);
+        btnClose?.click();
+    } catch (error) {
+        console.log('error on delete member ', error);
+    } finally {
+        loading.value = false;
+    }
+};
 
 const carousel = {
     identity: {

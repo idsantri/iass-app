@@ -11,7 +11,7 @@
         :hint="textHint()"
     >
         <template v-slot:after>
-            <drop-down-after v-if="btnSetting" :route-to="url" @reload="fetchList" />
+            <DropDownAfter v-if="btnSetting" :route-to="url" @reload="fetchList" />
         </template>
     </q-select>
 </template>

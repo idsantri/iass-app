@@ -47,7 +47,7 @@
 
 <script setup>
 import { watch } from 'vue';
-import InputSelectArray from './InputSelectArray.vue';
+import InputSelectArray from '../inputs/InputSelectArray.vue';
 
 const inputs = defineModel();
 watch(

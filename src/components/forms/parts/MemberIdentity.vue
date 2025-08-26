@@ -5,7 +5,7 @@
         outlined
         label="ID IASS *"
         v-model="inputs.id"
-        :rules="[(val) => !val || !isNaN(val) || 'Hanya angka!']"
+        :rules="[(val) => !isNaN(val) || 'Hanya angka!']"
         error-color="negative"
         type="number"
     />
@@ -63,7 +63,7 @@
     />
 </template>
 <script setup>
-import InputSelectKotaLahir from './InputSelectKotaLahir.vue';
+import InputSelectKotaLahir from '../inputs/InputSelectKotaLahir.vue';
 
 const inputs = defineModel();
 </script>

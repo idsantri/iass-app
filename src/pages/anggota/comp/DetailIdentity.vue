@@ -1,7 +1,15 @@
 <template>
     <div class="q-pa-sm bg-orange-1 q-mb-sm flex items-center justify-between">
         <div>Data Diri</div>
-        <QBtn dense label="Edit" outline="" icon="edit" no-caps class="q-px-md" />
+        <QBtn
+            dense
+            label="Edit"
+            outline=""
+            icon="edit"
+            no-caps
+            class="q-px-md"
+            @click="emit('setEdit')"
+        />
     </div>
     <QMarkupTable flat bordered>
         <tbody>
@@ -64,6 +72,8 @@ defineProps({
         required: true,
     },
 });
+
+const emit = defineEmits(['setEdit']);
 </script>
 <style scoped>
 td {

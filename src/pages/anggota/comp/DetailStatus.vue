@@ -28,7 +28,7 @@
                     </QItemLabel>
                 </QItemSection>
                 <QItemSection side>
-                    <QBtn icon="edit" round outline glossy />
+                    <QBtn icon="edit" round outline glossy color="orange-10" />
                 </QItemSection>
             </QItem>
         </template>
