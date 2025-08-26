@@ -127,7 +127,7 @@ class Api {
         } catch (error) {
             if (this.withLog) logErrorDetails({ error, fullUrl, options: finalOptions });
             if (this.notifyConfig.showError) {
-                notifyError({ message: 'Gagal terhubung ke server' });
+                notifyError('Gagal terhubung ke server');
             }
             throw error;
         }
