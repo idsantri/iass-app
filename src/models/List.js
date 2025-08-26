@@ -1,10 +1,16 @@
 import Api from './Api';
 
-class Member extends Api {
+class List extends Api {
     constructor() {
         super();
         this.defaultConfig();
-        this.path = 'members';
+        this.path = 'lists';
+    }
+
+    async getByKey(key) {
+        this.setNotifyGet();
+        const response = await this.fetchGuest(`${this.path}/${key}`, { method: 'GET' });
+        return response.data || true;
     }
 
     async getAll(params) {
@@ -50,4 +56,5 @@ class Member extends Api {
         return response.data || true;
     }
 }
-export default new Member();
+
+export default new List();

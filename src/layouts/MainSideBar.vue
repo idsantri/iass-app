@@ -43,8 +43,8 @@ const menuList = [
 
     {
         icon: 'settings',
-        label: 'Settings',
-        route: '/setting',
+        label: 'List (Auto Complete)',
+        route: '/settings/lists',
         separator: false,
     },
     {

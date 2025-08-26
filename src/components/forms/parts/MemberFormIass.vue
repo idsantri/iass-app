@@ -29,13 +29,11 @@
         v-model="inputs.wilayah"
         disable
     />
-    <q-input
-        dense
-        hint=""
-        class="q-my-sm"
-        outlined
-        label="Komisariat"
+    <InputSelectArray
         v-model="inputs.komisariat"
+        url="komisariat"
+        label="Komisariat *"
+        class="q-my-sm"
     />
     <q-input
         dense
@@ -49,6 +47,7 @@
 
 <script setup>
 import { watch } from 'vue';
+import InputSelectArray from './InputSelectArray.vue';
 
 const inputs = defineModel();
 watch(

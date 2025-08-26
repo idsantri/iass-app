@@ -49,6 +49,10 @@ class Api {
         }
     }
 
+    setNotifyGet() {
+        this.setNotify({ showSuccess: false, showError: true });
+    }
+
     defaultConfig() {
         if (this.isTest) {
             this.setNotify(false);

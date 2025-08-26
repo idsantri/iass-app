@@ -14,7 +14,7 @@
 defineProps({
     size: {
         type: String,
-        default: '16em',
+        default: '6em',
     },
 });
 </script>

@@ -45,6 +45,22 @@ export default [
                 // which is lazy-loaded when the route is visited.
                 component: () => import('../pages/AboutView.vue'),
             },
+            {
+                path: 'settings',
+                children: [
+                    {
+                        path: 'lists',
+                        component: () => import('../pages/lists/ListsIndex.vue'),
+                        meta: { title: 'Setting: List' },
+                        children: [
+                            {
+                                path: ':listKey',
+                                component: () => import('../pages/lists/ListsByKey.vue'),
+                            },
+                        ],
+                    },
+                ],
+            },
         ],
     },
     // Always leave this as last one,
