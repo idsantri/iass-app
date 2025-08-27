@@ -27,7 +27,10 @@
             <tr>
                 <td>Kelahiran</td>
                 <td>
-                    {{ anggota.tmp_lahir }}, {{ formatDate(anggota.tgl_lahir, 'dd MMMM yyyy') }}
+                    {{ anggota.tmp_lahir }}, {{ formatDate(anggota.tgl_lahir, 'dd MMMM yyyy') }} ({{
+                        getAge(anggota.tgl_lahir)
+                    }}
+                    tahun)
                 </td>
             </tr>
             <tr>
@@ -64,7 +67,7 @@
 </template>
 
 <script setup>
-import formatDate from '@/utils/format-date';
+import { formatDate, getAge } from '@/utils/date-operation';
 
 defineProps({
     anggota: {

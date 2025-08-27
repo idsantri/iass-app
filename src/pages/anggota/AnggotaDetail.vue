@@ -8,7 +8,13 @@
         <LoadingFixed v-if="loading" />
         <QCardSection class="q-pa-sm">
             <AnggotaDetailIdentity :anggota="anggota" @set-edit="dialog = true" />
-            <AnggotaDetailStatus :statuses="anggota?.statuses" />
+            <AnggotaDetailStatus
+                :statuses="anggota?.statuses"
+                :member="{ id: anggota.id, nama: anggota.nama }"
+                @create-status="onCreateStatus"
+                @update-status="onUpdateStatus"
+                @delete-status="onDeleteStatus"
+            />
         </QCardSection>
         <!-- <pre>
       {{ anggota }}
@@ -32,15 +38,16 @@ import AnggotaDetailStatus from './comp/DetailStatus.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import { useRouter } from 'vue-router';
+import ArrayCrud from '@/models/ArrayCrud';
 
-const route = useRoute();
-const id = route.params.id;
+const { params } = useRoute();
+const id = params.id;
 const loading = ref(false);
 const anggota = ref({});
 const dialog = ref(false);
 const router = useRouter();
 
-async function loadData(id) {
+async function loadData() {
     try {
         loading.value = true;
         const res = await Member.getById(id);
@@ -57,10 +64,19 @@ function onSubmit(res) {
         router.push(`/anggota/${res.id}`);
     }
     Object.assign(anggota.value, res);
-    console.log(anggota.value);
-    // assing res to anggota.value
+    // console.log(anggota.value);
 }
 onMounted(async () => {
-    if (id) await loadData(id);
+    if (id) await loadData();
 });
+
+const onDeleteStatus = (id) => {
+    anggota.value.statuses = ArrayCrud.remove(anggota.value.statuses, id);
+};
+const onUpdateStatus = (obj) => {
+    anggota.value.statuses = ArrayCrud.update(anggota.value.statuses, obj.id, obj);
+};
+const onCreateStatus = (obj) => {
+    anggota.value.statuses = ArrayCrud.create(anggota.value.statuses, obj, 'first');
+};
 </script>

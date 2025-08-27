@@ -1,7 +1,15 @@
 <template>
     <div class="q-pa-sm bg-orange-1 q-my-sm flex items-center justify-between">
         <div>Riwayat Status</div>
-        <QBtn label="Tambah" icon="add" outline dense no-caps="" class="q-px-md" />
+        <QBtn
+            label="Tambah"
+            icon="add"
+            outline
+            dense
+            no-caps=""
+            class="q-px-md"
+            @click="handleAdd"
+        />
     </div>
     <QList bordered separator>
         <template v-if="!statuses || !statuses?.length">
@@ -28,18 +36,55 @@
                     </QItemLabel>
                 </QItemSection>
                 <QItemSection side>
-                    <QBtn icon="edit" round outline glossy color="orange-10" />
+                    <QBtn
+                        icon="edit"
+                        round
+                        outline
+                        glossy
+                        color="orange-10"
+                        @click="handleEdit(item)"
+                    />
                 </QItemSection>
             </QItem>
         </template>
     </QList>
+    <!-- {{ member }} -->
+    <QDialog v-model="dialog">
+        <StatusForm
+            :data="objStatus"
+            @success-delete="(id) => emit('deleteStatus', id)"
+            @success-create="(obj) => emit('createStatus', obj)"
+            @success-update="(obj) => emit('updateStatus', obj)"
+        />
+    </QDialog>
 </template>
 <script setup>
-import formatDate from '@/utils/format-date';
-defineProps({
+import StatusForm from '@/components/forms/StatusForm.vue';
+import { formatDate } from '@/utils/date-operation';
+import { ref } from 'vue';
+
+const emit = defineEmits(['deleteStatus', 'createStatus', 'updateStatus']);
+const props = defineProps({
     statuses: {
-        // type: Array,
+        type: Array,
+        required: true,
+    },
+    member: {
+        type: Object,
         required: true,
     },
 });
+
+const dialog = ref(false);
+const objStatus = ref({});
+const handleAdd = () => {
+    objStatus.value = { member_id: props.member.id, nama: props.member.nama };
+    dialog.value = true;
+};
+const handleEdit = (obj) => {
+    objStatus.value = obj;
+    objStatus.value.member_id = props.member.id;
+    objStatus.value.nama = props.member.nama;
+    dialog.value = true;
+};
 </script>
