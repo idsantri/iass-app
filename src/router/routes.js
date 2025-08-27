@@ -59,6 +59,16 @@ export default [
                             },
                         ],
                     },
+                    {
+                        path: 'users',
+                        component: () => import('../pages/users/UserPage.vue'),
+                        meta: { title: 'Setting: User' },
+                    },
+                    {
+                        path: 'users/:id',
+                        component: () => import('../pages/users/UserId.vue'),
+                        meta: { title: 'Setting: User' },
+                    },
                 ],
             },
         ],

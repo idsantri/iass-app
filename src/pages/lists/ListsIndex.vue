@@ -1,7 +1,7 @@
 <template>
     <q-card style="max-width: 600px" flat bordered class="bg-transparent">
         <SectionHeader title="Input Auto Complete" :show-reload="false" />
-        <q-card-section class="q-pa-sm">
+        <q-card-section class="q-ma-sm no-padding">
             <q-select
                 dense
                 outlined
@@ -14,7 +14,7 @@
                 behavior="menu"
             />
         </q-card-section>
-        <q-card-section class="q-pa-sm">
+        <q-card-section class="q-ma-sm no-padding">
             <q-card v-if="listModel" class="" flat bordered>
                 <router-view :key="$route.fullPath" />
             </q-card>

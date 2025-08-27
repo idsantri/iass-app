@@ -1,34 +1,28 @@
 <template>
     <q-card class="full-width" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
-            <FormHeader title="Input Status" :is-new="!id" />
+            <FormHeader title="Input User" :is-new="!id" />
             <LoadingAbsolute v-if="loading" />
 
             <q-card-section class="q-pa-sm">
+                <q-input dense outlined label="Nama *" v-model="inputs.name" />
                 <q-input
                     dense
-                    outlined
-                    label="Nama"
-                    :model-value="inputs?.nama + ' (' + inputs?.member_id + ')'"
-                    disable=""
-                    filled=""
                     class="q-my-sm"
+                    outlined
+                    label="Email *"
+                    v-model="inputs.email"
+                    type="email"
+                    hint=""
                 />
+                <q-input dense outlined label="Password" v-model="inputs.password" />
 
                 <InputSelectArray
-                    v-model="inputs.status"
-                    url="status"
-                    label="Status *"
+                    v-model="inputs.komisariat"
+                    url="komisariat"
+                    label="Komisariat"
                     class="q-my-sm"
-                    :rules="[(val) => !!val || 'Harus diisi!']"
-                />
-                <q-input
-                    dense
-                    class="q-my-sm"
-                    outlined
-                    label="Keterangan"
-                    v-model="inputs.keterangan"
-                    autogrow=""
+                    clearable
                 />
             </q-card-section>
             <FormActions :btn-delete="!!id" @on-delete="onDelete" />
@@ -39,13 +33,13 @@
 import { onMounted, ref } from 'vue';
 import LoadingAbsolute from '../LoadingAbsolute.vue';
 import InputSelectArray from './inputs/InputSelectArray.vue';
-import Status from '@/models/Status';
 import { notifyConfirm } from '@/utils/notify';
 import FormHeader from './parts/FormHeader.vue';
 import FormActions from './parts/FormActions.vue';
+import User from '@/models/User';
 
 const props = defineProps({
-    data: { type: Object, required: true },
+    data: { type: Object },
 });
 const emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
 
@@ -61,25 +55,26 @@ onMounted(async () => {
 
 const onSubmit = async () => {
     const data = {
-        member_id: inputs.value.member_id,
-        status: inputs.value.status,
-        keterangan: inputs.value.keterangan,
+        name: inputs.value.name,
+        email: inputs.value.email,
+        password: inputs.value.password,
+        komisariat: inputs.value.komisariat,
     };
 
     try {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await Status.create(data);
-            emit('successCreate', response?.status);
+            response = await User.create(data);
+            emit('successCreate', response?.user);
         } else {
-            response = await Status.update(id, data);
-            emit('successUpdate', response?.status);
+            response = await User.update(id, data);
+            emit('successUpdate', response?.user);
         }
-        emit('successSubmit', response?.status);
+        emit('successSubmit', response?.user);
         btnClose.click();
     } catch (error) {
-        console.log('error status ', error);
+        console.log('error user ', error);
     } finally {
         loading.value = false;
     }
@@ -91,11 +86,11 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await Status.remove(id);
+        await User.remove(id);
         btnClose.click();
         emit('successDelete', id);
     } catch (error) {
-        console.log('error delete status ', error);
+        console.log('error delete user ', error);
     } finally {
         loading.value = false;
     }

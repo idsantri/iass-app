@@ -48,6 +48,12 @@ const menuList = [
         separator: false,
     },
     {
+        icon: 'settings',
+        label: 'Pengaturan Pengguna',
+        route: '/settings/users',
+        separator: false,
+    },
+    {
         icon: 'info',
         label: 'Tentang',
         route: '/about',
