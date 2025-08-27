@@ -12,17 +12,18 @@ router.beforeEach((to, _from, next) => {
     // if (to.fullPath == '/') {
     //   return next('/home')
     // }
-
     const store = authStore();
     const isAuthenticate = store.isLoggedIn;
+    // const newUser = store.mustChangePassword;
 
-    const authRoutes = ['Register', 'Login', 'Forgot', 'Reset', 'Verify'];
-    const toAuthRoutes = authRoutes.includes(to.name);
+    const guestRoutes = ['Register', 'Login', 'Forgot', 'Reset', 'Verify'];
+    const protectedRoutes = !guestRoutes.includes(to.name);
 
-    if (!toAuthRoutes && !isAuthenticate) {
-        // console.log('toAuthRoutes && !isAuthenticate')
+    if (protectedRoutes && !isAuthenticate) {
         next('/login');
-    } else if (toAuthRoutes && isAuthenticate) {
+        // } else if (isAuthenticate && newUser && to.fullPath != '/profile' && to.fullPath != '/logout') {
+        //     next('/profile');
+    } else if (!protectedRoutes && isAuthenticate) {
         history.go(-1);
     } else {
         next();

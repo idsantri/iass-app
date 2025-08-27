@@ -71,6 +71,10 @@ export default [
                     },
                 ],
             },
+            {
+                path: 'profile',
+                component: () => import('../pages/profile/ProfileUser.vue'),
+            },
         ],
     },
     // Always leave this as last one,

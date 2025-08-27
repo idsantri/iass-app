@@ -10,12 +10,13 @@
                     dense
                     class="q-my-sm"
                     outlined
-                    label="Email *"
-                    v-model="inputs.email"
-                    type="email"
+                    label="Username *"
+                    v-model="inputs.username"
+                    type="text"
                     hint=""
+                    :rules="[(val) => !!val || 'Harus diisi!']"
                 />
-                <q-input dense outlined label="Password" v-model="inputs.password" />
+                <q-input v-if="!id" dense outlined label="Password" v-model="inputs.password" />
 
                 <InputSelectArray
                     v-model="inputs.komisariat"
@@ -56,7 +57,7 @@ onMounted(async () => {
 const onSubmit = async () => {
     const data = {
         name: inputs.value.name,
-        email: inputs.value.email,
+        username: inputs.value.username,
         password: inputs.value.password,
         komisariat: inputs.value.komisariat,
     };

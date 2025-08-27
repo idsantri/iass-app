@@ -22,10 +22,10 @@
                         <td class="text-italic text-caption q-pr-sm">Nama</td>
                         <td>{{ user.name }}</td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td class="text-italic text-caption q-pr-sm">Email</td>
                         <td>{{ user.email }}</td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td class="text-italic text-caption q-pr-sm">Username</td>
                         <td>{{ user.username }}</td>
@@ -37,6 +37,49 @@
                 </tbody>
             </q-markup-table>
             <q-list bordered separator class="q-mt-sm">
+                <q-item class="q-pa-sm">
+                    <q-item-section>
+                        <q-item-label overline> Password </q-item-label>
+                        <q-item-label v-if="user">
+                            <q-toggle
+                                v-model="user.must_change_password"
+                                color="orange"
+                                label="Harus ganti password"
+                                @click="setChangePassword"
+                                :true-value="1"
+                                :false-value="0"
+                            />
+                        </q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <QBtn
+                            icon="key"
+                            label="Atur Password"
+                            no-caps
+                            outline
+                            @click="inputPassword = !inputPassword"
+                        />
+                    </q-item-section>
+                </q-item>
+                <q-item v-if="inputPassword" class="q-pa-sm">
+                    <q-item-section>
+                        <q-item-label overline> Password </q-item-label>
+                        <q-item-label v-if="user">
+                            <q-input dense outlined v-model="password">
+                                <template v-slot:after>
+                                    <QBtn
+                                        icon="save"
+                                        outline
+                                        label="Simpan"
+                                        no-caps
+                                        @click="setPassword"
+                                    />
+                                </template>
+                            </q-input>
+                        </q-item-label>
+                    </q-item-section>
+                </q-item>
+
                 <q-item class="q-pa-sm">
                     <q-item-section>
                         <q-item-label overline> User Group (Role) </q-item-label>
@@ -66,6 +109,9 @@
             :data="user"
         />
     </QDialog>
+    <!-- <pre>
+        {{ user }}
+    </pre> -->
 </template>
 <script setup>
 import UserForm from '@/components/forms/UserForm.vue';
@@ -79,6 +125,8 @@ const user = ref({});
 const loading = ref(false);
 const { params } = useRoute();
 const dialog = ref(false);
+const inputPassword = ref(false);
+const password = ref('');
 
 async function setRole(role, index) {
     const newRole = !role.value;
@@ -93,6 +141,31 @@ async function setRole(role, index) {
         user.value.roles[index].value = !newRole;
     }
 }
+
+const setChangePassword = async () => {
+    const set = user.value.must_change_password;
+    try {
+        await User.update(user.value.id, { must_change_password: set });
+    } catch (error) {
+        user.value.must_change_password = set ? 0 : 1;
+        console.log('error change password', error);
+    }
+};
+
+const setPassword = async () => {
+    if (!password.value) return;
+    try {
+        loading.value = true;
+        const data = await User.update(user.value.id, { password: password.value });
+        Object.assign(user.value, data.user);
+        password.value = '';
+        inputPassword.value = false;
+    } catch (error) {
+        console.log('error set password', error);
+    } finally {
+        loading.value = false;
+    }
+};
 
 async function loadData() {
     try {

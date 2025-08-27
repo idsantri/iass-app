@@ -80,7 +80,11 @@ const onLogin = () => {
     Auth.login({ login: login.value, password: password.value })
         .then((res) => {
             authStore().login(res);
-            router.push('/');
+            if (res.user.must_change_password) {
+                router.push('/profile');
+            } else {
+                router.push('/');
+            }
         })
         .catch((err) => console.log('error on login ', err))
         .finally(() => (isLoading.value = false));

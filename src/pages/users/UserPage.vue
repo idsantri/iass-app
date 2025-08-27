@@ -69,14 +69,14 @@ const columns = [
         sortable: true,
         // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
     },
-    {
-        name: 'email',
-        label: 'Email',
-        align: 'left',
-        field: 'email',
-        sortable: true,
-        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-    },
+    // {
+    //     name: 'email',
+    //     label: 'Email',
+    //     align: 'left',
+    //     field: 'email',
+    //     sortable: true,
+    //     // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    // },
     {
         name: 'roles',
         label: 'Group (Role)',
@@ -103,6 +103,15 @@ const columns = [
     //     sortable: true,
     //     // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
     // },
+    {
+        name: 'must_change_password',
+        label: 'Ganti Password',
+        align: 'left',
+        field: 'must_change_password',
+        format: (val) => `${val ? 'Ya' : 'Tidak'}`,
+        sortable: true,
+        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    },
 ];
 
 async function loadData() {

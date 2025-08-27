@@ -32,6 +32,9 @@ const authStore = defineStore('auth', {
         isLoggedIn: (state) => {
             return typeof state.token === 'string' && state.token.length >= 10;
         },
+        mustChangePassword: (state) => {
+            return !!state.user.must_change_password;
+        },
     },
 
     persist: {
