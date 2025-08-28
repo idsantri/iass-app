@@ -36,15 +36,7 @@ export default [
                 meta: { title: 'Anggota' },
                 component: () => import('../pages/anggota/AnggotaDetail.vue'),
             },
-            {
-                path: '/about',
-                name: 'about',
-                meta: { title: 'About' },
-                // route level code-splitting
-                // this generates a separate chunk (About.[hash].js) for this route
-                // which is lazy-loaded when the route is visited.
-                component: () => import('../pages/AboutView.vue'),
-            },
+
             {
                 path: 'settings',
                 children: [

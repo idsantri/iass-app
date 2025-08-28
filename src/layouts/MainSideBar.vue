@@ -23,42 +23,42 @@
 <script setup>
 const menuList = [
     {
-        icon: 'home',
+        icon: 'groups',
         label: 'Anggota',
         route: '/anggota',
         separator: true,
     },
     {
-        icon: 'home',
+        icon: 'sym_o_history_2',
         label: 'NKS',
         route: '/',
         separator: false,
     },
     {
-        icon: 'home',
+        icon: 'sym_o_list_alt_check',
         label: 'Absensi',
         route: '/',
         separator: true,
     },
 
     {
-        icon: 'settings',
+        icon: 'sym_o_grading',
         label: 'List (Auto Complete)',
         route: '/settings/lists',
         separator: false,
     },
     {
-        icon: 'settings',
+        icon: 'manage_accounts',
         label: 'Pengaturan Pengguna',
         route: '/settings/users',
-        separator: false,
-    },
-    {
-        icon: 'info',
-        label: 'Tentang',
-        route: '/about',
         separator: true,
     },
+    // {
+    //     icon: 'info',
+    //     label: 'Tentang',
+    //     route: '/about',
+    //     separator: true,
+    // },
     {
         icon: 'logout',
         label: 'Keluar',

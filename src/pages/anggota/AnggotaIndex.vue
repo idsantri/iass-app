@@ -22,9 +22,10 @@
                 class="full-width q-my-sm"
                 behavior="menu"
                 clearable=""
-                style="max-width: 400px"
+                style="max-width: 250px"
                 dense
             />
+            <QBtn label="Export Excel" outline no-caps disable="" color="grey" />
         </QCardSection>
         <q-card-section class="relative-position">
             <LoadingFixed v-if="isLoading" />
@@ -107,6 +108,7 @@ const optionsDT = ref({
             render: function (data, type, row) {
                 return `${row.jl ?? ''} ${row.desa ?? ''} ${row.kecamatan ?? ''}`;
             },
+            // data: 'alamat_singkat',
         },
         {
             title: 'Komisariat',
@@ -117,15 +119,19 @@ const optionsDT = ref({
             data: 'kelompok',
         },
         {
-            title: 'status',
+            title: 'Status',
             data: 'status_max',
         },
         {
             title: 'Keanggotaan',
-            data: 'iass',
+            // data: 'iass',
             render: function (data, type, row) {
                 return `${row.iass == true ? 'IASS' : 'Sidogirian'}`;
             },
+        },
+        {
+            title: 'NIK',
+            data: 'nik',
         },
     ],
     language: {
