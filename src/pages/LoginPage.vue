@@ -81,9 +81,9 @@ const onLogin = () => {
         .then((res) => {
             authStore().login(res);
             if (res.user.must_change_password) {
-                router.push('/profile');
+                router.replace('/profile');
             } else {
-                router.push('/');
+                router.replace('/');
             }
         })
         .catch((err) => console.log('error on login ', err))

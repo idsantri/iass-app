@@ -21,7 +21,7 @@ onMounted(async () => {
             console.log('error on logout ', error);
         }
         authStore().logout();
-        router.push('/login');
+        router.replace('/login');
     }
 });
 </script>
