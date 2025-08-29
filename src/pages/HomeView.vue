@@ -1,14 +1,5 @@
-<script setup>
-import { ref } from 'vue';
-
-const inputs = ref({});
-</script>
+<script setup></script>
 
 <template>
-    <q-input type="text" v-model="inputs.nama" outlined="" />
-    <q-input type="text" v-model="inputs.alamat" outlined="" />
-    <pre>
-  {{ inputs }}
-</pre
-    >
+    <div class="tw:text-2xl tw:text-center tw:p-6">Selamat Datang di Aplikasi IASS Bangkalan</div>
 </template>

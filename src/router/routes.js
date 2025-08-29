@@ -27,6 +27,16 @@ export default [
                 component: HomeView,
             },
             {
+                path: 'nks',
+                component: () => import('@/pages/nks/NksIndex.vue'),
+                meta: { title: 'NKS' },
+            },
+            {
+                path: 'nks/:id',
+                component: () => import('@/pages/nks/NksDetail.vue'),
+                meta: { title: 'NKS' },
+            },
+            {
                 path: 'anggota',
                 meta: { title: 'Anggota' },
                 component: () => import('../pages/anggota/AnggotaIndex.vue'),
