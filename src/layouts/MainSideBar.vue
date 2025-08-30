@@ -27,23 +27,23 @@ const menus = [
         icon: 'groups',
         label: 'Anggota',
         route: '/anggota',
-        separator: true,
+        separator: false,
         disable: false,
     },
     {
         icon: 'sym_o_history_2',
         label: 'NKS',
         route: '/nks',
-        separator: false,
+        separator: true,
         disable: false,
     },
-    {
-        icon: 'sym_o_list_alt_check',
-        label: 'Absensi',
-        route: '/',
-        separator: true,
-        disable: true,
-    },
+    // {
+    //     icon: 'sym_o_list_alt_check',
+    //     label: 'Absensi',
+    //     route: '/',
+    //     separator: true,
+    //     disable: true,
+    // },
 
     {
         icon: 'sym_o_grading',

@@ -44,7 +44,7 @@
             </QCard>
 
             <q-list bordered separator class="q-mt-sm">
-                <q-item class="q-pa-sm">
+                <q-item class="q-pa-sm bg-grey-2">
                     <q-item-section>
                         <q-item-label overline> User Group (Role) </q-item-label>
                         <q-item-label v-if="user">

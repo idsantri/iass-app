@@ -1,6 +1,6 @@
 <template>
     <q-card flat bordered>
-        <SectionHeader title="Data Anggota" @on-reload="loadData">
+        <SectionHeader title="Data NKS" @on-reload="loadData">
             <template #left>
                 <QBtn
                     dense
@@ -17,6 +17,7 @@
         <q-card-section class="q-pa-sm">
             <QTable
                 :rows="nks"
+                :columns="columns"
                 flat
                 :loading="loading"
                 @row-click="(evt, row, index) => $router.push(`/nks/${row.id}`)"
@@ -24,10 +25,11 @@
         </q-card-section>
     </q-card>
     <QDialog v-model="dialog">
-        <!-- <MemberForm @success-submit="(res) => $router.push(`/anggota/${res.id}`)" /> -->
+        <NksForm @success-submit="(res) => $router.push(`/nks/${res.id}`)" />
     </QDialog>
 </template>
 <script setup>
+import NksForm from '@/components/forms/NksForm.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
 import Nks from '@/models/Nks';
 import { onMounted, ref } from 'vue';
@@ -47,7 +49,35 @@ async function loadData() {
         loading.value = false;
     }
 }
+
 onMounted(async () => {
     await loadData();
 });
+
+const columns = [
+    {
+        name: 'tahun_bulan',
+        label: 'Tahun Bulan',
+        align: 'left',
+        field: 'tahun_bulan',
+        sortable: true,
+        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    },
+    {
+        name: 'th_ajaran_h',
+        label: 'Tahun Ajaran',
+        align: 'left',
+        field: 'th_ajaran_h',
+        sortable: true,
+        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    },
+    {
+        name: 'komisariat',
+        label: 'Komisariat',
+        align: 'left',
+        field: 'komisariat',
+        sortable: true,
+        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    },
+];
 </script>

@@ -1,10 +1,6 @@
 <template>
     <QCard flat bordered class="relative-position">
         <SectionHeader title="Detail Anggota" @on-reload="loadData"> </SectionHeader>
-
-        <!-- <div class="tw:z-[999] tw:flex tw:items-center tw:justify-center tw:text-center tw:fixed">
-      <q-spinner-cube color="orange-12" size="14em" class="flex flex-center q-ma-md q-mx-auto" />
-    </div> -->
         <LoadingFixed v-if="loading" />
         <QCardSection class="q-pa-sm">
             <AnggotaDetailIdentity :anggota="anggota" @set-edit="dialog = true" />
