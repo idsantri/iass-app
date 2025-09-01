@@ -47,12 +47,15 @@
                             {{ nks.lokasi }}
                         </td>
                     </tr>
-                    <tr>
-                        <td>Komisariat</td>
+                    <!-- <tr>
+                        <td>Lock</td>
                         <td>{{ nks.komisariat }}</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </QMarkupTable>
+        </QCardSection>
+        <QCardSection class="q-pa-sm">
+            <NksReportAbsence :nksId="nks.id" />
         </QCardSection>
         <!-- <pre>
       {{ nks }}
@@ -76,6 +79,7 @@ import Nks from '@/models/Nks';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
 import NksForm from '@/components/forms/NksForm.vue';
+import NksReportAbsence from './NksReportAbsence.vue';
 
 const { params } = useRoute();
 const id = params.id;
