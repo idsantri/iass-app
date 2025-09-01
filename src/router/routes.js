@@ -37,6 +37,16 @@ export default [
                 meta: { title: 'NKS' },
             },
             {
+                path: 'nks/:nksId/absence',
+                component: () => import('@/pages/nks-absence/IndexPage.vue'),
+                meta: { title: 'Absensi NKS' },
+            },
+            {
+                path: 'nks/:nksId/absence/qr',
+                component: () => import('@/pages/nks-absence/QRPage.vue'),
+                meta: { title: 'Absensi NKS' },
+            },
+            {
                 path: 'anggota',
                 meta: { title: 'Anggota' },
                 component: () => import('../pages/anggota/AnggotaIndex.vue'),

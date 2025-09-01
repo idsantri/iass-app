@@ -11,18 +11,23 @@
         />
         <div>Rekap Absen Perkomisariat</div>
         <QSpace />
-        <DropdownAbsence
-            :nks-id="nksId"
-            @on-loading="(v) => (loading = v)"
-            @success-delete="report = []"
+        <QBtn
+            :to="`/nks/${nksId}/absence`"
+            label="Detail Absen"
+            dense
+            color="orange-10"
+            no-caps
+            glossy=""
+            class="q-px-sm text-orange-1"
+            icon="sym_o_co_present"
         />
     </div>
     <QMarkupTable flat bordered>
         <LoadingAbsolute v-if="loading" />
-        <thead>
+        <thead class="bg-orange-1">
             <tr>
                 <th class="text-left">Komisariat</th>
-                <th>Aktif</th>
+                <th>Total (Aktif)</th>
                 <th>Hadir</th>
                 <th>%</th>
             </tr>
@@ -57,21 +62,50 @@
                 </tr>
             </template>
         </tbody>
+        <tfoot class="bg-orange-2">
+            <tr>
+                <td>
+                    <QBtn
+                        label="Reset Data"
+                        color="negative"
+                        no-caps
+                        @click="resetAbsence"
+                        :disable="!report.length"
+                    />
+                </td>
+                <td class="text-center">{{ sumActive }}</td>
+                <td class="text-center">{{ sumHadir }}</td>
+                <td class="text-center">
+                    {{ String(((sumHadir / sumActive) * 100).toFixed(2)).padStart(5, '0') }}%
+                </td>
+            </tr>
+        </tfoot>
     </QMarkupTable>
 
-    <!-- <pre>{{ report }}</pre> -->
+    <!-- <pre>{{ sumActive }}</pre> -->
 </template>
 <script setup>
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import NksAbsence from '@/models/NksAbsence';
-import { ref, watchEffect } from 'vue';
-import DropdownAbsence from './DropdownAbsence.vue';
+import { notifyConfirm } from '@/utils/notify';
+import { computed, ref, watchEffect } from 'vue';
 
 const props = defineProps({
     nksId: { required: true },
 });
 const loading = ref(false);
 const report = ref([]);
+
+const sumActive = computed(() => {
+    return report.value.reduce((accumulator, r) => {
+        return accumulator + parseInt(r.jumlah);
+    }, 0);
+});
+const sumHadir = computed(() => {
+    return report.value.reduce((accumulator, r) => {
+        return accumulator + parseInt(r.hadir);
+    }, 0);
+});
 
 async function loadData() {
     try {
@@ -102,4 +136,19 @@ watchEffect(async () => {
         await loadData();
     }
 });
+
+async function resetAbsence() {
+    const isConfirmed = await notifyConfirm('Hapus data absensi untuk NKS ini?', true);
+    if (!isConfirmed) return;
+
+    try {
+        loading.value = true;
+        await NksAbsence.removeByNks(props.nksId);
+        report.value = [];
+    } catch (error) {
+        console.log('error on reset absence ', error);
+    } finally {
+        loading.value = false;
+    }
+}
 </script>

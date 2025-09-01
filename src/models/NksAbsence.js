@@ -31,6 +31,15 @@ class NksAbsence extends ApiCrud {
         });
         return response.data || true;
     }
+
+    async byNks(nksId) {
+        this.setNotifyGet();
+        const response = await this.fetchAuth(`${this.path}/nks/${nksId}`, {
+            method: 'GET',
+        });
+        return response.data || true;
+    }
+
     async reportByNks(nksId) {
         this.setNotifyGet();
         const response = await this.fetchAuth(`${this.path}/nks/${nksId}/report`, {
