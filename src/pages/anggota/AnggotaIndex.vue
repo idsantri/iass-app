@@ -126,7 +126,7 @@ const optionsDT = ref({
             title: 'Keanggotaan',
             // data: 'iass',
             render: function (data, type, row) {
-                return `${row.iass == true ? 'IASS' : 'Sidogirian'}`;
+                return `${row.alumni == true ? 'IASS' : 'Sidogirian'}`;
             },
         },
         {

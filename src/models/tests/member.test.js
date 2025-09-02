@@ -19,7 +19,7 @@ describe('member model', () => {
         nama: 'Test member',
         address: 'Test Address',
         district: 'Socah',
-        iass: true,
+        alumni: true,
         wilayah: 'Bangkalan',
         komisariat: 'Socah',
         kelompok: 'Kesamben',

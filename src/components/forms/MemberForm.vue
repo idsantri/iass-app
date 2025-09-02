@@ -79,7 +79,7 @@ const emit = defineEmits(['successSubmit', 'successCreate', 'successUpdate', 'su
 
 const inputs = ref({
     wilayah: 'Bangkalan',
-    iass: 1,
+    alumni: 1,
     tmp_lahir: 'Bangkalan',
     provinsi: 'Jawa Timur',
     kabupaten: 'Kab. Bangkalan',
