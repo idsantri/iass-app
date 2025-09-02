@@ -8,12 +8,12 @@ export default [
             {
                 path: 'login',
                 name: 'Login',
-                component: () => import('@/pages/LoginPage.vue'),
+                component: () => import('@/pages/auth/LoginPage.vue'),
             },
             {
                 path: 'logout',
                 name: 'Logout',
-                component: () => import('@/pages/LogoutPage.vue'),
+                component: () => import('@/pages/auth/LogoutPage.vue'),
             },
         ],
     },
