@@ -1,5 +1,5 @@
 <template>
-    <q-card flat bordered>
+    <q-card flat bordered style="max-width: 1024px">
         <SectionHeader title="Absensi NKS" @on-reload="loadData">
             <template #left>
                 <QBtn
@@ -17,12 +17,15 @@
         <LoadingFixed v-if="loading" />
 
         <QCardSection class="q-px-md q-pt-sm q-pb-none text-center">
-            NKS {{ nks.komisariat }}, <br />
+            NKS {{ nks.komisariat }} <br />
             <small>
                 {{ formatDate(nks.tgl_m, 'cccc, dd MMMM yyyy') }} |
                 {{ bacaHijri(nks.tgl_h) }}
             </small>
         </QCardSection>
+        <div v-if="nks.locked" class="q-mt-sm q-pa-md text-center text-negative bg-orange-3">
+            Data dikunci oleh Admin
+        </div>
         <q-card-section class="q-px-sm q-pt-none q-pb-sm">
             <div class="flex justify-between">
                 <div class="q-ma-sm full-width" style="max-width: 450px">
@@ -71,7 +74,7 @@
                                 flat
                                 round=""
                                 color="orange-4"
-                                :to="`/anggota/${absence.member_id}`"
+                                :to="`/members/${absence.member_id}`"
                             />
                             <div>
                                 <span class="tw:font-medium">
@@ -89,9 +92,10 @@
                                 v-model="absence.hadir"
                                 color="orange"
                                 label="Hadir"
-                                @click="setHadir(absence)"
+                                @click="() => (nks.locked ? null : setHadir(absence))"
                                 :true-value="1"
                                 :false-value="0"
+                                :disable="!!nks.locked"
                             />
                         </td>
                     </tr>

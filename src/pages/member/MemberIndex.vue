@@ -33,7 +33,7 @@
         </q-card-section>
     </q-card>
     <QDialog v-model="dialog">
-        <MemberForm @success-submit="(res) => $router.push(`/anggota/${res.id}`)" />
+        <MemberForm @success-submit="(res) => $router.push(`/members/${res.id}`)" />
     </QDialog>
 </template>
 
@@ -156,7 +156,7 @@ onMounted(async () => {
             const selectedData = dt.rows(indexes).data().toArray();
             if (selectedData.length > 0) {
                 const selected = selectedData[0];
-                router.push(`/anggota/${selected.id}`);
+                router.push(`/members/${selected.id}`);
             }
         });
     }

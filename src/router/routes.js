@@ -47,14 +47,14 @@ export default [
                 meta: { title: 'Absensi NKS' },
             },
             {
-                path: 'anggota',
+                path: 'members',
                 meta: { title: 'Anggota' },
-                component: () => import('../pages/anggota/AnggotaIndex.vue'),
+                component: () => import('../pages/member/MemberIndex.vue'),
             },
             {
-                path: 'anggota/:id',
+                path: 'members/:id',
                 meta: { title: 'Anggota' },
-                component: () => import('../pages/anggota/AnggotaDetail.vue'),
+                component: () => import('../pages/member/MemberDetail.vue'),
             },
 
             {

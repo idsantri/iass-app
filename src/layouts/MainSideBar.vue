@@ -26,7 +26,7 @@ const menus = [
     {
         icon: 'groups',
         label: 'Anggota',
-        route: '/anggota',
+        route: '/members',
         separator: false,
         disable: false,
     },

@@ -1,10 +1,10 @@
 <template>
-    <QCard flat bordered class="relative-position">
+    <QCard flat bordered class="relative-position" style="max-width: 1024px">
         <SectionHeader title="Detail Anggota" @on-reload="loadData"> </SectionHeader>
         <LoadingFixed v-if="loading" />
         <QCardSection class="q-pa-sm">
-            <AnggotaDetailIdentity :anggota="anggota" @set-edit="dialog = true" />
-            <AnggotaDetailStatus
+            <DetailIdentity :anggota="anggota" @set-edit="dialog = true" />
+            <DetailStatus
                 :statuses="anggota?.statuses"
                 :member="{ id: anggota.id, nama: anggota.nama }"
                 @create-status="onCreateStatus"
@@ -29,8 +29,8 @@ import Member from '@/models/Member';
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import SectionHeader from '@/components/SectionHeader.vue';
-import AnggotaDetailIdentity from './comp/DetailIdentity.vue';
-import AnggotaDetailStatus from './comp/DetailStatus.vue';
+import DetailIdentity from './comp/DetailIdentity.vue';
+import DetailStatus from './comp/DetailStatus.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import { useRouter } from 'vue-router';
@@ -57,7 +57,7 @@ async function loadData() {
 
 function onSubmit(res) {
     if (id != res.id) {
-        router.push(`/anggota/${res.id}`);
+        router.push(`/members/${res.id}`);
     }
     Object.assign(anggota.value, res);
     // console.log(anggota.value);

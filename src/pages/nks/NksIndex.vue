@@ -1,5 +1,5 @@
 <template>
-    <q-card flat bordered>
+    <q-card flat bordered style="max-width: 1024px">
         <SectionHeader title="Data NKS" @on-reload="loadData">
             <template #left>
                 <QBtn

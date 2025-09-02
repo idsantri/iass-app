@@ -1,5 +1,5 @@
 <template>
-    <QCard flat bordered class="relative-position">
+    <QCard flat bordered class="relative-position" style="max-width: 1024px">
         <SectionHeader title="Detail NKS" @on-reload="loadData">
             <template #left>
                 <QBtn
@@ -47,10 +47,19 @@
                             {{ nks.lokasi }}
                         </td>
                     </tr>
-                    <!-- <tr>
-                        <td>Lock</td>
-                        <td>{{ nks.komisariat }}</td>
-                    </tr> -->
+                    <tr>
+                        <td>Lock data</td>
+                        <td class="no-padding">
+                            <q-toggle
+                                v-model="nks.locked"
+                                color="orange"
+                                :label="nks.locked ? 'Locked' : 'Unlocked'"
+                                @click="lockNks(nks)"
+                                :true-value="1"
+                                :false-value="0"
+                            />
+                        </td>
+                    </tr>
                 </tbody>
             </QMarkupTable>
         </QCardSection>
@@ -97,6 +106,15 @@ async function loadData() {
         console.log('error get nks id ', e);
     } finally {
         loading.value = false;
+    }
+}
+
+async function lockNks(data) {
+    try {
+        await Nks.update(data.id, { locked: data.locked });
+    } catch (e) {
+        nks.value.locked = data.locked ? 0 : 1;
+        console.log('error lock nks ', e);
     }
 }
 

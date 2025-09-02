@@ -1,9 +1,9 @@
 <template>
-    <q-card flat bordered>
+    <q-card flat bordered style="max-width: 600px">
         <SectionHeader title="Scan QR/Barcode" @on-reload="loadData"> </SectionHeader>
         <LoadingFixed v-if="loading" />
         <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
-            NKS {{ nks.komisariat }}, <br />
+            NKS {{ nks.komisariat }} <br />
             <small>
                 {{ formatDate(nks.tgl_m, 'cccc, dd MMMM yyyy') }} |
                 {{ bacaHijri(nks.tgl_h) }}
@@ -26,7 +26,7 @@
                 dense
                 label="Pilih Kamera"
             />
-            <div class="q-mt-sm">
+            <div v-if="!nks.locked" class="q-mt-sm">
                 <qrcode-stream
                     :constraints="selectedConstraints"
                     :track="paintBoundingBox"
@@ -35,6 +35,9 @@
                     @detect="onDetect"
                     @camera-on="onCameraReady"
                 />
+            </div>
+            <div v-else class="q-mt-sm q-pa-lg text-center text-negative bg-orange-3">
+                Fitur dikunci oleh Admin!
             </div>
         </q-card-section>
         <q-card-section class="q-pa-sm bg-orange-1 text-orange-10">
