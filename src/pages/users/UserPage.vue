@@ -45,11 +45,11 @@
 import UserForm from '@/components/forms/UserForm.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
 import User from '@/models/User';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, shallowRef } from 'vue';
 
 const filter = ref('');
 const loading = ref(false);
-const users = ref([]);
+const users = shallowRef([]);
 const dialog = ref(false);
 
 const columns = [
@@ -59,7 +59,6 @@ const columns = [
         align: 'left',
         field: 'name',
         sortable: true,
-        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
     },
     {
         name: 'username',
@@ -67,23 +66,14 @@ const columns = [
         align: 'left',
         field: 'username',
         sortable: true,
-        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
     },
-    // {
-    //     name: 'email',
-    //     label: 'Email',
-    //     align: 'left',
-    //     field: 'email',
-    //     sortable: true,
-    //     // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-    // },
+
     {
         name: 'roles',
         label: 'Group (Role)',
         align: 'left',
         field: 'roles',
         sortable: true,
-        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
     },
     {
         name: 'komisariat',
@@ -91,26 +81,8 @@ const columns = [
         align: 'left',
         field: 'komisariat',
         sortable: true,
-        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
     },
-    // {
-    //     name: 'confirmed_at',
-    //     label: 'Konfirmasi',
-    //     align: 'left',
-    //     field: 'confirmed_at',
-    //     format: (val) => `${val ? 'Ya' : 'Tidak'}`,
-    //     sortable: true,
-    //     // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-    // },
-    // {
-    //     name: 'verified',
-    //     label: 'Verikasi',
-    //     align: 'left',
-    //     field: 'email_verified_at',
-    //     format: (val) => `${val ? 'Ya' : 'Tidak'}`,
-    //     sortable: true,
-    //     // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-    // },
+
     {
         name: 'must_change_password',
         label: 'Ganti Password',
@@ -118,13 +90,13 @@ const columns = [
         field: 'must_change_password',
         format: (val) => `${val ? 'Ya' : 'Tidak'}`,
         sortable: true,
-        // sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
     },
 ];
 
 async function loadData() {
     try {
         loading.value = true;
+        users.value = [];
         const data = await User.getAll();
         users.value = data.users;
     } catch (error) {
