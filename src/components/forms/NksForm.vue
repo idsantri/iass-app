@@ -11,7 +11,7 @@
                     outlined
                     label="ID NKS*"
                     v-model="inputs.id"
-                    hint="[tahun hijri][bulan] 144601"
+                    hint="[tahun hijri][bulan] (misal: “144701”)"
                 />
                 <!-- :rules="[
                         (val) => !val || val?.length == 6 || 'tahun dan bulan (6 digit)!',
