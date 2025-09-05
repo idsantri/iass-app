@@ -23,7 +23,11 @@
             </QItem>
         </template>
         <template v-else>
-            <QItem v-for="item in statuses" :key="item.id">
+            <QItem
+                v-for="(item, index) in statuses"
+                :key="item.id"
+                :class="index == 0 ? 'bg-yellow-1' : ''"
+            >
                 <QItemSection>
                     <QItemLabel overline>
                         {{ item.status }}
