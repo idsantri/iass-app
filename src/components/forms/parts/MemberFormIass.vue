@@ -25,7 +25,7 @@
         hint=""
         class="q-my-sm"
         outlined
-        label="Wilayah"
+        label="Wilayah *"
         v-model="inputs.wilayah"
         disable
     />
@@ -39,7 +39,7 @@
         dense
         class="q-my-sm"
         outlined
-        label="Kelompok"
+        label="Kelompok *"
         v-model="inputs.kelompok"
         hint="Kelompok koordinasi desa"
     />

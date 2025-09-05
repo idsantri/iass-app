@@ -22,8 +22,8 @@
             :loading="loading"
             :filter="filter"
             @row-click="(evt, row, index) => $router.push(`/settings/users/${row.id}`)"
+            :rows-per-page-options="[25, 50, 75, 100, 0]"
         >
-            <!-- :rows-per-page-options="[10, 25, 50, 75, 100, 0]" -->
             <template v-slot:top-right>
                 <q-input outlined dense debounce="300" v-model="filter" placeholder="Cari">
                     <template v-slot:append>
