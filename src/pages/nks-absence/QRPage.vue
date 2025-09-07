@@ -27,8 +27,9 @@
                 label="Pilih Kamera"
             />
             <div v-if="!nks.locked" class="q-mt-sm">
+                <LoadingAbsolute v-if="loadingAbsence" />
                 <qrcode-stream
-                    :constraints="selectedConstraints"
+                    :constraints="!!loadingAbsence ? null : selectedConstraints"
                     :track="paintBoundingBox"
                     :formats="['code_128', 'qr_code', 'linear_codes']"
                     @error="onError"
@@ -47,9 +48,11 @@
 </template>
 
 <script setup>
+import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
 import Nks from '@/models/Nks';
+import NksAbsence from '@/models/NksAbsence';
 import { formatDate } from '@/utils/date-operation';
 import { bacaHijri } from '@/utils/hijri';
 import { onMounted, ref, watch } from 'vue';
@@ -58,6 +61,7 @@ import { useRoute } from 'vue-router';
 
 const result = ref('');
 const loading = ref(false);
+const loadingAbsence = ref(false);
 const error = ref('');
 const { params } = useRoute();
 const nks = ref({});
@@ -80,9 +84,20 @@ onMounted(async () => {
     }
 });
 
-watch(result, (value) => {
+const onHadir = async (member_id) => {
+    try {
+        loadingAbsence.value = true;
+        await NksAbsence.hadir({ nks_id: nks.value.id, member_id: member_id });
+    } catch (error) {
+        console.log('error hadir ', error);
+    } finally {
+        loadingAbsence.value = false;
+    }
+};
+
+watch(result, async (value) => {
     if (value) {
-        console.log(value);
+        await onHadir(value);
     }
 });
 
