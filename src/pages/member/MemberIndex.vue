@@ -100,8 +100,8 @@ const filteredData = computed(() => {
 
     return filteredByKomisariat.filter((item) => {
         if (filterAktif.value === 'all') return true;
-        if (filterAktif.value === 'active') return item.status_max.toLowerCase() === 'aktif';
-        if (filterAktif.value === 'non-active') return item.status_max.toLowerCase() !== 'aktif';
+        if (filterAktif.value === 'active') return item.status_max?.toLowerCase() === 'aktif';
+        if (filterAktif.value === 'non-active') return item.status_max?.toLowerCase() !== 'aktif';
         return true;
     });
 });
