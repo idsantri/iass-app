@@ -149,9 +149,9 @@ const filteredData = computed(() => {
 
         const isInputMatch =
             !filterInputValue ||
-            item.nama.toLowerCase().includes(filterInputValue) ||
-            item.komisariat.toLowerCase().includes(filterInputValue) ||
-            item.kelompok.toLowerCase().includes(filterInputValue);
+            item.nama?.toLowerCase().includes(filterInputValue) ||
+            item.komisariat?.toLowerCase().includes(filterInputValue) ||
+            item.kelompok?.toLowerCase().includes(filterInputValue);
 
         return isKomisariatMatch && isInputMatch;
     });
