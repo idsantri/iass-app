@@ -18,7 +18,7 @@
         v-model="inputs.nama"
         :rules="[
             (val) => !!val || 'Harus diisi!',
-            (val) => val?.length >= 5 || 'Setidaknya 5 huruf!',
+            (val) => val?.length >= 4 || 'Setidaknya 4 huruf!',
         ]"
         error-color="negative"
         autocapitalize="words"
