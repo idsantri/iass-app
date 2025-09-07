@@ -13,19 +13,54 @@
                 />
             </template>
         </SectionHeader>
-        <QCardSection class="flex items-center justify-between bg-orange-1 q-pa-sm">
-            <QSelect
-                outlined
-                v-model="filter"
-                :options="optionsKomisariat"
-                label="Filter Komisariat"
-                class="full-width q-my-sm"
-                behavior="menu"
-                clearable=""
-                style="max-width: 250px"
-                dense
-            />
-            <QBtn label="Export Excel" outline no-caps disable="" color="grey" />
+        <QCardSection class="q-pa-sm bg-orange-1">
+            <div class="flex items-center justify-between q-gutter-y-sm">
+                <QSelect
+                    outlined
+                    v-model="filter"
+                    :options="optionsKomisariat"
+                    label="Filter Komisariat"
+                    class="full-width"
+                    behavior="menu"
+                    clearable=""
+                    style="max-width: 450px"
+                    dense
+                />
+                <q-card
+                    bordered
+                    flat
+                    class="q-px-sm bg-transparent flex items-center justify-between full-width"
+                    style="max-width: 450px"
+                >
+                    <div class="text-caption">Status</div>
+                    <div class="q-gutter-sm">
+                        <q-radio
+                            v-model="filterAktif"
+                            val="active"
+                            label="Aktif"
+                            color="orange-10"
+                            checked-icon="task_alt"
+                            unchecked-icon="panorama_fish_eye"
+                        />
+                        <q-radio
+                            v-model="filterAktif"
+                            val="non-active"
+                            label="Non Aktif"
+                            color="orange-10"
+                            checked-icon="task_alt"
+                            unchecked-icon="panorama_fish_eye"
+                        />
+                        <q-radio
+                            v-model="filterAktif"
+                            val="all"
+                            label="Semua"
+                            color="orange-10"
+                            checked-icon="task_alt"
+                            unchecked-icon="panorama_fish_eye"
+                        />
+                    </div>
+                </q-card>
+            </div>
         </QCardSection>
         <q-card-section class="relative-position">
             <LoadingFixed v-if="isLoading" />
@@ -48,21 +83,27 @@ import Member from '@/models/Member';
 import SectionHeader from '@/components/SectionHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
-
 const table = ref(null);
 const isLoading = ref(false);
 const anggota = ref([]);
 const router = useRouter();
 const filter = ref('');
 const dialog = ref(false);
+const filterAktif = ref('active');
 
 DataTable.use(DataTablesCore);
 
 const filteredData = computed(() => {
-    if (!filter.value) {
-        return anggota.value;
-    }
-    return anggota.value.filter((item) => item.komisariat == filter.value);
+    const filteredByKomisariat = filter.value
+        ? anggota.value.filter((item) => item.komisariat === filter.value)
+        : anggota.value;
+
+    return filteredByKomisariat.filter((item) => {
+        if (filterAktif.value === 'all') return true;
+        if (filterAktif.value === 'active') return item.status_max.toLowerCase() === 'aktif';
+        if (filterAktif.value === 'non-active') return item.status_max.toLowerCase() !== 'aktif';
+        return true;
+    });
 });
 
 async function loadData() {
