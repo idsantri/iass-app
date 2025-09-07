@@ -13,7 +13,10 @@
                         <q-icon :name="item.icon" />
                     </q-item-section>
                     <q-item-section>
-                        {{ item.label }}
+                        <q-item-label>{{ item.label }}</q-item-label>
+                        <q-item-label caption v-if="item.caption">
+                            {{ item.caption }}
+                        </q-item-label>
                     </q-item-section>
                 </q-item>
                 <q-separator :key="'sep' + index" v-if="item.separator" />
@@ -26,28 +29,41 @@ const menus = [
     {
         icon: 'groups',
         label: 'Anggota',
+        caption: 'IASS Bangkalan',
         route: '/members',
-        separator: false,
+        separator: true,
         disable: false,
     },
     {
         icon: 'sym_o_history_2',
         label: 'NKS',
+        caption: 'Jadwal NKS',
         route: '/nks',
         separator: true,
         disable: false,
     },
+
     // {
-    //     icon: 'sym_o_list_alt_check',
-    //     label: 'Absensi',
-    //     route: '/',
+    //     icon: 'sym_o_overview_key',
+    //     label: 'Rekap',
+    //     caption: 'Absensi by Komisariat',
+    //     route: '/nks/absence/rekap-komisariat',
+    //     separator: false,
+    //     disable: false,
+    // },
+    // {
+    //     icon: 'sym_o_clinical_notes',
+    //     label: 'Rekap',
+    //     caption: 'Absensi by Anggota',
+    //     route: '/nks/absence/rekap-member',
     //     separator: true,
-    //     disable: true,
+    //     disable: false,
     // },
 
     {
         icon: 'sym_o_grading',
-        label: 'List (Auto Complete)',
+        label: 'List',
+        caption: 'Input AutoComplete',
         route: '/settings/lists',
         separator: false,
         disable: false,

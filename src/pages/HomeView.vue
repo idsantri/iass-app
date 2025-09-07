@@ -5,7 +5,7 @@ const env = import.meta.env;
 <template>
     <div class="q-pa-xl">
         <div class="text-center">
-            <q-avatar round color="orange-1" size="150px">
+            <q-avatar round color="" size="200px">
                 <img alt="logo" src="/icons/icon-512x512.png" />
             </q-avatar>
         </div>

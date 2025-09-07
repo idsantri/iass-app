@@ -6,7 +6,7 @@
             <BannerInstallPWA />
             <div class="tw:border tw:border-gray-300 tw:p-4 tw:rounded-lg bg-orange-2">
                 <div class="text-center">
-                    <q-avatar round color="orange-1" size="100px">
+                    <q-avatar round color="" size="150px">
                         <img alt="logo" src="/icons/icon-512x512.png" />
                     </q-avatar>
                 </div>

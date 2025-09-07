@@ -47,6 +47,16 @@ export default [
                 meta: { title: 'Absensi NKS' },
             },
             {
+                path: 'nks/absence/rekap-komisariat',
+                component: () => import('@/pages/nks-absence/RekapKomisariat.vue'),
+                meta: { title: 'Absensi NKS | Rekap Komisariat' },
+            },
+            {
+                path: 'nks/absence/rekap-member',
+                component: () => import('@/pages/nks-absence/RekapMember.vue'),
+                meta: { title: 'Absensi NKS | Rekap Anggota' },
+            },
+            {
                 path: 'members',
                 meta: { title: 'Anggota' },
                 component: () => import('../pages/member/MemberIndex.vue'),
