@@ -17,7 +17,7 @@
             <div class="flex items-center justify-between q-gutter-y-sm">
                 <QSelect
                     outlined
-                    v-model="filter"
+                    v-model="filterKomisariat"
                     :options="optionsKomisariat"
                     label="Filter Komisariat"
                     class="full-width"
@@ -35,7 +35,7 @@
                     <div class="text-caption">Status</div>
                     <div class="q-gutter-sm">
                         <q-radio
-                            v-model="filterAktif"
+                            v-model="filterStatus"
                             val="active"
                             label="Aktif"
                             color="orange-10"
@@ -43,7 +43,7 @@
                             unchecked-icon="panorama_fish_eye"
                         />
                         <q-radio
-                            v-model="filterAktif"
+                            v-model="filterStatus"
                             val="non-active"
                             label="Non Aktif"
                             color="orange-10"
@@ -51,7 +51,7 @@
                             unchecked-icon="panorama_fish_eye"
                         />
                         <q-radio
-                            v-model="filterAktif"
+                            v-model="filterStatus"
                             val="all"
                             label="Semua"
                             color="orange-10"
@@ -74,43 +74,51 @@
 
 <script setup>
 import 'datatables.net-select-dt';
-
 import { onMounted, ref, computed } from 'vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-dt';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import useMembersStore from '@/stores/membersStore';
 import Member from '@/models/Member';
 import SectionHeader from '@/components/SectionHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
+
 const table = ref(null);
 const isLoading = ref(false);
-const anggota = ref([]);
 const router = useRouter();
-const filter = ref('');
 const dialog = ref(false);
-const filterAktif = ref('active');
+
+const membersStore = useMembersStore();
+const { filterKomisariat, filterStatus, members } = storeToRefs(membersStore);
 
 DataTable.use(DataTablesCore);
 
 const filteredData = computed(() => {
-    const filteredByKomisariat = filter.value
-        ? anggota.value.filter((item) => item.komisariat === filter.value)
-        : anggota.value;
+    const filteredByKomisariat = filterKomisariat.value
+        ? members.value.filter(
+              (item) =>
+                  item.komisariat?.toLowerCase() === filterKomisariat.value?.toLocaleLowerCase(),
+          )
+        : members.value;
 
-    return filteredByKomisariat.filter((item) => {
-        if (filterAktif.value === 'all') return true;
-        if (filterAktif.value === 'active') return item.status_max?.toLowerCase() === 'aktif';
-        if (filterAktif.value === 'non-active') return item.status_max?.toLowerCase() !== 'aktif';
+    const filterByStatus = filteredByKomisariat.filter((item) => {
+        if (filterStatus.value === 'all') return true;
+        if (filterStatus.value === 'active') return item.status_max?.toLowerCase() === 'aktif';
+        if (filterStatus.value === 'non-active') return item.status_max?.toLowerCase() !== 'aktif';
         return true;
     });
+
+    return filterByStatus;
 });
 
 async function loadData() {
     try {
         isLoading.value = true;
         const res = await Member.getAll();
-        anggota.value = res.members;
+        // anggota.value = res.members;
+        membersStore.setMembers(res.members);
     } catch (e) {
         console.log('error get members ', e);
     } finally {
@@ -120,7 +128,7 @@ async function loadData() {
 
 const optionsKomisariat = computed(() => {
     const komSet = new Set();
-    anggota.value.forEach((item) => {
+    members.value.forEach((item) => {
         if (item.komisariat) {
             komSet.add(item.komisariat);
         }
@@ -189,7 +197,9 @@ const optionsDT = ref({
 });
 
 onMounted(async () => {
-    await loadData();
+    if (!members.value.length) {
+        await loadData();
+    }
 
     if (table.value) {
         const dt = table.value.dt;
