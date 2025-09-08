@@ -39,26 +39,26 @@ const menus = [
         label: 'NKS',
         caption: 'Jadwal NKS',
         route: '/nks',
-        separator: true,
+        separator: false,
         disable: false,
     },
 
-    // {
-    //     icon: 'sym_o_overview_key',
-    //     label: 'Rekap',
-    //     caption: 'Absensi by Komisariat',
-    //     route: '/nks/absence/rekap-komisariat',
-    //     separator: false,
-    //     disable: false,
-    // },
-    // {
-    //     icon: 'sym_o_clinical_notes',
-    //     label: 'Rekap',
-    //     caption: 'Absensi by Anggota',
-    //     route: '/nks/absence/rekap-member',
-    //     separator: true,
-    //     disable: false,
-    // },
+    {
+        icon: 'sym_o_overview_key',
+        label: 'Rekap Komisariat',
+        caption: 'Absensi by Komisariat',
+        route: '/nks/absence/rekap-komisariat',
+        separator: false,
+        disable: false,
+    },
+    {
+        icon: 'sym_o_clinical_notes',
+        label: 'Rekap Anggota',
+        caption: 'Absensi by Anggota',
+        route: '/nks/absence/rekap-member',
+        separator: true,
+        disable: false,
+    },
 
     {
         icon: 'sym_o_grading',

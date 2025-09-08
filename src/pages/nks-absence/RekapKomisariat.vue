@@ -2,49 +2,260 @@
     <q-card flat bordered>
         <SectionHeader title="Rekap Absensi per Komisariat" :show-reload="false"> </SectionHeader>
         <LoadingFixed v-if="loading" />
-
+        <q-card-section class="q-pa-sm bg-orange-1">
+            <QSelect
+                outlined
+                :options="optionsNks"
+                label="Pilih Tahun Ajaran"
+                class=""
+                behavior="menu"
+                clearable=""
+                style="max-width: 450px"
+                dense
+                :loading="loadingNks"
+                v-model="thAjaranH"
+                :disable="loadingNks"
+            />
+        </q-card-section>
         <q-card-section class="q-pa-sm">
+            <QBanner class="bg-orange-2 q-mb-sm" v-if="reports.length > 0">
+                <template v-slot:avatar>
+                    <q-icon name="info" color="orange-10" size="md" />
+                </template>
+                <div>
+                    Tabel rekap absensi ini menampilkan data absensi anggota per komisariat untuk
+                    setiap bulan dalam tahun ajaran berjalan.
+                </div>
+                <div class="q-mt-sm">
+                    "H" => jumlah kehadiran; "A" => jumlah ketidakhadiran (absen); "T" => total
+                    anggota <span class="text-weight-bold">aktif</span> di komisariat tersebut.
+                </div>
+            </QBanner>
             <q-markup-table flat bordered class="my-sticky-column-table">
                 <thead>
-                    <tr class="bg-orange-1 text-subtitle2">
-                        <th class="text-left">Komisariat</th>
-                        <th class="text-center">B-11</th>
-                        <th class="text-center">B-12</th>
-                        <th class="text-center">B-01</th>
-                        <th class="text-center">B-02</th>
-                        <th class="text-center">B-03</th>
-                        <th class="text-center">B-04</th>
-                        <th class="text-center">B-05</th>
-                        <th class="text-center">B-06</th>
-                        <th class="text-center">B-07</th>
+                    <tr class="text-subtitle2">
+                        <th rowspan="2" class="text-left bg-deep-orange-3">Komisariat</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">11 - Z Qad</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">12 - Z Hij</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">01 - Muh</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">02 - Sfr</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">03 - R Aw</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">04 - R Ts</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">05 - J Ul</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">06 - J Ts</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">07 - Rjb</th>
+                    </tr>
+                    <tr class="text-subtitle2">
+                        <template v-for="n in 9" :key="n">
+                            <th
+                                :class="`text-center ${n % 2 == 0 ? 'bg-deep-orange-2' : 'bg-deep-orange-1'}`"
+                                title="Hadir"
+                                style="z-index: 0"
+                            >
+                                H
+                            </th>
+                            <th
+                                :class="`text-center ${n % 2 == 0 ? 'bg-deep-orange-2' : 'bg-deep-orange-1'}`"
+                                title="Absen"
+                            >
+                                A
+                            </th>
+                            <th
+                                :class="`text-center ${n % 2 == 0 ? 'bg-deep-orange-2' : 'bg-deep-orange-1'}`"
+                                title="Total"
+                            >
+                                T
+                            </th>
+                        </template>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="report in filtered" :key="report.komisariat">
-                        <td class="text-left">{{ report.komisariat }}</td>
-                        <td class="text-center">{{ report.b11 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b12 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b01 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b02 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b03 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b04 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b05 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b06 ?? '-' }}</td>
-                        <td class="text-center">{{ report.b07 ?? '-' }}</td>
+                    <tr v-for="report in reports" :key="report.komisariat">
+                        <td class="text-left bg-orange-3">{{ report.komisariat }}</td>
+
+                        <td title="Hadir" class="text-center bg-orange-1">
+                            {{ report.h11 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-1">
+                            {{ report.a11 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-1">
+                            {{ report.t11 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-2">
+                            {{ report.h12 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-2">
+                            {{ report.a12 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-2">
+                            {{ report.t12 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-1">
+                            {{ report.h01 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-1">
+                            {{ report.a01 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-1">
+                            {{ report.t01 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-2">
+                            {{ report.h02 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-2">
+                            {{ report.a02 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-2">
+                            {{ report.t02 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-1">
+                            {{ report.h03 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-1">
+                            {{ report.a03 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-1">
+                            {{ report.t03 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-2">
+                            {{ report.h04 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-2">
+                            {{ report.a04 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-2">
+                            {{ report.t04 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-1">
+                            {{ report.h05 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-1">
+                            {{ report.a05 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-1">
+                            {{ report.t05 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-2">
+                            {{ report.h06 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-2">
+                            {{ report.a06 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-2">
+                            {{ report.t06 ?? '-' }}
+                        </td>
+
+                        <td title="Hadir" class="text-center bg-orange-1">
+                            {{ report.h07 ?? '-' }}
+                        </td>
+                        <td title="Absen" class="text-center bg-orange-1">
+                            {{ report.a07 ?? '-' }}
+                        </td>
+                        <td title="Total" class="text-center bg-orange-1">
+                            {{ report.t07 ?? '-' }}
+                        </td>
                     </tr>
                 </tbody>
                 <tfoot>
-                    <tr class="bg-orange-2 text-subtitle2">
-                        <th class="text-left">Total</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b11') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b12') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b01') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b02') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b03') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b04') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b05') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b06') }}</th>
-                        <th class="text-center">{{ hitungNilai(filtered, 'b07') }}</th>
+                    <tr class="text-subtitle2">
+                        <th class="text-left bg-deep-orange-3">Total</th>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'h11') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'a11') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 't11') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'h12') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'a12') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 't12') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'h01') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'a01') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 't01') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'h02') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'a02') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 't02') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'h03') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'a03') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 't03') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'h04') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'a04') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 't04') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'h05') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'a05') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 't05') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'h06') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 'a06') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-2">
+                            {{ hitungNilai(reports, 't06') }}
+                        </td>
+
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'h07') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 'a07') }}
+                        </td>
+                        <td class="text-center bg-deep-orange-1">
+                            {{ hitungNilai(reports, 't07') }}
+                        </td>
                     </tr>
                 </tfoot>
             </q-markup-table>
@@ -55,19 +266,21 @@
 <script setup>
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
+import Nks from '@/models/Nks';
 import ReportAbsence from '@/models/ReportAbsence';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+
 const reports = ref([]);
 const loading = ref(false);
-
-const filtered = computed(() => {
-    return reports.value.filter((r) => r.hadir == 1);
-});
+const loadingNks = ref(false);
+const optionsNks = ref([]);
+const thAjaranH = ref('');
 
 const loadData = async (th_ajaran_h) => {
     try {
         loading.value = true;
         const data = await ReportAbsence.byKomisariat({ th_ajaran_h });
+        // console.log(data);
         reports.value = data.reports;
     } catch (error) {
         console.log('error load reports', error);
@@ -76,8 +289,39 @@ const loadData = async (th_ajaran_h) => {
     }
 };
 
+const loadNks = async () => {
+    try {
+        loadingNks.value = true;
+        const data = await Nks.getAll();
+        if (data.nks?.length > 0) {
+            const _set = new Set();
+            data.nks.forEach((n) => {
+                if (n.th_ajaran_h) {
+                    _set.add(n.th_ajaran_h);
+                }
+            });
+            optionsNks.value = Array.from(_set).sort();
+        }
+        // console.log(optionsNks.value);
+    } catch (error) {
+        console.log('error load nks', error);
+    } finally {
+        loadingNks.value = false;
+    }
+};
+
 onMounted(async () => {
-    await loadData('1446-1447');
+    await loadNks();
+    // await loadData('1446-1447');
+});
+
+watch(thAjaranH, async (newVal) => {
+    if (newVal) {
+        reports.value = [];
+        await loadData(newVal);
+    } else {
+        reports.value = [];
+    }
 });
 
 function hitungNilai(data, keyToCalculate) {

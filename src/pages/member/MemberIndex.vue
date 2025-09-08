@@ -15,7 +15,7 @@
         </SectionHeader>
         <q-banner v-if="warning" class="bg-yellow-2 text-black text-center q-pa-sm">
             <q-icon name="warning" class="q-mr-sm" />
-            Klik tombol muat ulang untuk memperbarui data!
+            Data tidak realtime. Klik tombol muat ulang untuk memperbarui data!
         </q-banner>
         <QCardSection class="q-pa-sm bg-orange-1">
             <div class="flex items-center justify-between q-gutter-y-sm">
