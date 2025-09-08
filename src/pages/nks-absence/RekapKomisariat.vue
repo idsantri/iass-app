@@ -35,15 +35,15 @@
                 <thead>
                     <tr class="text-subtitle2">
                         <th rowspan="2" class="text-left bg-deep-orange-3">Komisariat</th>
-                        <th colspan="3" class="text-center bg-deep-orange-1">11 - Z Qad</th>
-                        <th colspan="3" class="text-center bg-deep-orange-2">12 - Z Hij</th>
-                        <th colspan="3" class="text-center bg-deep-orange-1">01 - Muh</th>
-                        <th colspan="3" class="text-center bg-deep-orange-2">02 - Sfr</th>
-                        <th colspan="3" class="text-center bg-deep-orange-1">03 - R Aw</th>
-                        <th colspan="3" class="text-center bg-deep-orange-2">04 - R Ts</th>
-                        <th colspan="3" class="text-center bg-deep-orange-1">05 - J Ul</th>
-                        <th colspan="3" class="text-center bg-deep-orange-2">06 - J Ts</th>
-                        <th colspan="3" class="text-center bg-deep-orange-1">07 - Rjb</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">11 - Dz Qadah</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">12 - Dz Hijjah</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">01 - Muharram</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">02 - Safar</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">03 - R Awal</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">04 - R Tsani</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">05 - J Ula</th>
+                        <th colspan="3" class="text-center bg-deep-orange-2">06 - J Tsaniyah</th>
+                        <th colspan="3" class="text-center bg-deep-orange-1">07 - Rajab</th>
                     </tr>
                     <tr class="text-subtitle2">
                         <template v-for="n in 9" :key="n">
@@ -268,15 +268,15 @@ import LoadingFixed from '@/components/LoadingFixed.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
 import Nks from '@/models/Nks';
 import ReportAbsence from '@/models/ReportAbsence';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, shallowRef } from 'vue';
 
-const reports = ref([]);
+const reports = shallowRef([]);
 const loading = ref(false);
 const loadingNks = ref(false);
 const optionsNks = ref([]);
 const thAjaranH = ref('');
 
-const loadData = async (th_ajaran_h) => {
+const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
         const data = await ReportAbsence.byKomisariat({ th_ajaran_h });
@@ -318,7 +318,7 @@ onMounted(async () => {
 watch(thAjaranH, async (newVal) => {
     if (newVal) {
         reports.value = [];
-        await loadData(newVal);
+        await loadReport(newVal);
     } else {
         reports.value = [];
     }
