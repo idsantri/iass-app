@@ -13,12 +13,16 @@
                 />
             </template>
         </SectionHeader>
+        <q-banner v-if="warning" class="bg-yellow-2 text-black text-center q-pa-sm">
+            <q-icon name="warning" class="q-mr-sm" />
+            Klik tombol muat ulang untuk memperbarui data!
+        </q-banner>
         <QCardSection class="q-pa-sm bg-orange-1">
             <div class="flex items-center justify-between q-gutter-y-sm">
                 <QSelect
                     outlined
                     v-model="filterKomisariat"
-                    :options="optionsKomisariat"
+                    :options="komisariatOptions"
                     label="Filter Komisariat"
                     class="full-width"
                     behavior="menu"
@@ -64,7 +68,7 @@
         </QCardSection>
         <q-card-section class="relative-position">
             <LoadingFixed v-if="isLoading" />
-            <DataTable class="display" :options="optionsDT" :data="filteredData" ref="table" />
+            <DataTable class="display" :options="optionsDT" :data="filteredMembers" ref="table" />
         </q-card-section>
     </q-card>
     <QDialog v-model="dialog">
@@ -74,7 +78,7 @@
 
 <script setup>
 import 'datatables.net-select-dt';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-dt';
 import { useRouter } from 'vue-router';
@@ -89,52 +93,26 @@ const table = ref(null);
 const isLoading = ref(false);
 const router = useRouter();
 const dialog = ref(false);
+const warning = ref(true);
 
 const membersStore = useMembersStore();
-const { filterKomisariat, filterStatus, members } = storeToRefs(membersStore);
+const { filterKomisariat, filterStatus, members, komisariatOptions, filteredMembers } =
+    storeToRefs(membersStore);
 
 DataTable.use(DataTablesCore);
-
-const filteredData = computed(() => {
-    const filteredByKomisariat = filterKomisariat.value
-        ? members.value.filter(
-              (item) =>
-                  item.komisariat?.toLowerCase() === filterKomisariat.value?.toLocaleLowerCase(),
-          )
-        : members.value;
-
-    const filterByStatus = filteredByKomisariat.filter((item) => {
-        if (filterStatus.value === 'all') return true;
-        if (filterStatus.value === 'active') return item.status_max?.toLowerCase() === 'aktif';
-        if (filterStatus.value === 'non-active') return item.status_max?.toLowerCase() !== 'aktif';
-        return true;
-    });
-
-    return filterByStatus;
-});
 
 async function loadData() {
     try {
         isLoading.value = true;
         const res = await Member.getAll();
-        // anggota.value = res.members;
         membersStore.setMembers(res.members);
+        warning.value = false;
     } catch (e) {
         console.log('error get members ', e);
     } finally {
         isLoading.value = false;
     }
 }
-
-const optionsKomisariat = computed(() => {
-    const komSet = new Set();
-    members.value.forEach((item) => {
-        if (item.komisariat) {
-            komSet.add(item.komisariat);
-        }
-    });
-    return Array.from(komSet).sort((a, b) => a.localeCompare(b));
-});
 
 const optionsDT = ref({
     responsive: true,
