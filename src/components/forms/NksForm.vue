@@ -95,6 +95,9 @@ let btnClose = null;
 
 onMounted(async () => {
     Object.assign(inputs.value, props.data);
+    if (inputs.value.tgl_m) {
+        inputs.value.tgl_m = formatDate(new Date(inputs.value.tgl_m), 'yyyy-MM-dd');
+    }
     btnClose = document.getElementById('btn-close-form');
 });
 
