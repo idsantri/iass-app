@@ -68,7 +68,13 @@
         </QCardSection>
         <q-card-section class="relative-position">
             <LoadingFixed v-if="isLoading" />
-            <DataTable class="display" :options="optionsDT" :data="filteredMembers" ref="table" />
+            <DataTable
+                class="display"
+                :options="optionsDT"
+                :data="filteredMembers"
+                ref="table"
+                @draw="onDataTableDraw"
+            />
         </q-card-section>
     </q-card>
     <QDialog v-model="dialog">
@@ -78,7 +84,7 @@
 
 <script setup>
 import 'datatables.net-select-dt';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-dt';
 import { useRouter } from 'vue-router';
@@ -96,8 +102,14 @@ const dialog = ref(false);
 const warning = ref(true);
 
 const membersStore = useMembersStore();
-const { filterKomisariat, filterStatus, members, komisariatOptions, filteredMembers } =
-    storeToRefs(membersStore);
+const {
+    filterKomisariat,
+    filterStatus,
+    members,
+    komisariatOptions,
+    filteredMembers,
+    getPaginationState, // Tambah pagination state dari store
+} = storeToRefs(membersStore);
 
 DataTable.use(DataTablesCore);
 
@@ -114,13 +126,33 @@ async function loadData() {
     }
 }
 
-const optionsDT = ref({
+// Function untuk handle DataTable draw event
+function onDataTableDraw(eDt, settings) {
+    // console.log('DataTable redraw');
+
+    // 1. Tangkap informasi halaman
+    const displayStart = settings._iDisplayStart;
+    const pageLength = settings._iDisplayLength;
+
+    // console.log('Page info:', {
+    //     displayStart,
+    //     pageLength,
+    //     currentPage: Math.floor(displayStart / pageLength) + 1,
+    //     totalRecords: settings.fnRecordsTotal ? settings.fnRecordsTotal() : 0,
+    // });
+
+    // 2. Simpan ke store (sessionStorage via persist)
+    membersStore.updatePagination(displayStart, pageLength);
+}
+
+// Computed untuk DataTable options dengan pagination state dari store
+const optionsDT = computed(() => ({
     responsive: true,
     order: [],
-    select: {
-        style: 'single',
-        info: false,
-    },
+    select: true,
+    // 3. Gunakan pagination state dari store
+    displayStart: getPaginationState.value.displayStart,
+    pageLength: getPaginationState.value.pageLength,
     columns: [
         {
             title: 'ID',
@@ -135,7 +167,6 @@ const optionsDT = ref({
             render: function (data, type, row) {
                 return `${row.jl ?? ''} ${row.desa ?? ''} ${row.kecamatan ?? ''}`;
             },
-            // data: 'alamat_singkat',
         },
         {
             title: 'Komisariat',
@@ -151,7 +182,6 @@ const optionsDT = ref({
         },
         {
             title: 'Keanggotaan',
-            // data: 'iass',
             render: function (data, type, row) {
                 return `${row.alumni == true ? 'IASS' : 'Sidogirian'}`;
             },
@@ -164,7 +194,7 @@ const optionsDT = ref({
     language: {
         search: 'Cari:',
         zeroRecords: 'Tidak data data untuk ditampilkan. Coba kata kunci yang lain!',
-        info: 'Menampilkan _START_ hingga _END_, dari total _TOTAL_ data',
+        info: 'Menampilkan _START_ hingga _END_ dari total _TOTAL_ data',
         infoFiltered: '(disaring dari _MAX_ total data)',
         paginate: { first: '↑', previous: '←', next: '→', last: '↓' },
         lengthMenu: '_MENU_ Perhalaman',
@@ -172,7 +202,26 @@ const optionsDT = ref({
     autoWidth: true,
     dom: 'bftip',
     scrollX: true,
-});
+}));
+
+// Watch untuk perubahan filter - validasi pagination
+watch(
+    [filterKomisariat, filterStatus],
+    () => {
+        // Tunggu sampai filteredMembers terupdate
+        setTimeout(() => {
+            const totalRecords = filteredMembers.value.length;
+            const wasAdjusted = membersStore.validatePagination(totalRecords);
+
+            if (wasAdjusted && table.value) {
+                // Redraw DataTable dengan pagination yang sudah disesuaikan
+                // console.log('Redrawing DataTable after pagination adjustment');
+                table.value.dt.page(getPaginationState.value.currentPage - 1).draw(false);
+            }
+        }, 0);
+    },
+    { immediate: false },
+);
 
 onMounted(async () => {
     if (!members.value.length) {
@@ -190,10 +239,18 @@ onMounted(async () => {
         });
     }
 });
+
+// Helper functions (optional)
+function _resetTablePagination() {
+    membersStore.resetPagination();
+}
+
+function _goToPage(pageNumber) {
+    membersStore.setPage(pageNumber, getPaginationState.value.pageLength);
+}
 </script>
 
 <style lang="scss">
 @import 'datatables.net-dt';
-// @import 'datatables.net-select-dt';
 @import 'datatables.net-responsive-dt';
 </style>

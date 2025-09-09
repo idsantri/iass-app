@@ -5,12 +5,14 @@ export default defineStore('members', {
         members: [],
         filterKomisariat: '',
         filterStatus: 'active',
+        // DataTable pagination state
+        datatablePagination: {
+            displayStart: 0,
+            pageLength: 10,
+            currentPage: 1,
+        },
     }),
 
-    /**
-     * TODO:
-     * remove console.log in getters
-     */
     getters: {
         filteredMembers: (state) => {
             // First filter by komisariat
@@ -20,7 +22,7 @@ export default defineStore('members', {
                           item.komisariat?.toLowerCase() === state.filterKomisariat?.toLowerCase(),
                   )
                 : state.members;
-            console.log('komisariat', state.filterKomisariat, filteredByKomisariat);
+            // console.log('komisariat', state.filterKomisariat, filteredByKomisariat);
 
             // Then filter by status
             const filterByStatus = filteredByKomisariat.filter((item) => {
@@ -31,7 +33,7 @@ export default defineStore('members', {
                     return item.status_max?.toLowerCase() !== 'aktif';
                 return true;
             });
-            console.log('status', state.filterStatus, filterByStatus);
+            // console.log('status', state.filterStatus, filterByStatus);
             return filterByStatus;
         },
 
@@ -44,6 +46,9 @@ export default defineStore('members', {
             });
             return Array.from(_set).sort((a, b) => a.localeCompare(b));
         },
+
+        // Getter untuk pagination state
+        getPaginationState: (state) => state.datatablePagination,
     },
 
     actions: {
@@ -55,6 +60,58 @@ export default defineStore('members', {
         },
         setStatus(value) {
             this.filterStatus = value;
+        },
+
+        // Actions untuk DataTable pagination
+        updatePagination(displayStart, pageLength) {
+            const currentPage = Math.floor(displayStart / pageLength) + 1;
+            this.datatablePagination = {
+                displayStart,
+                pageLength,
+                currentPage,
+                timestamp: new Date().toISOString(),
+            };
+            // console.log('DataTable pagination updated:', this.datatablePagination);
+        },
+
+        // Validasi dan adjustment pagination berdasarkan jumlah data
+        validatePagination(totalRecords) {
+            const { displayStart, pageLength } = this.datatablePagination;
+            const totalPages = Math.ceil(totalRecords / pageLength);
+            const currentPage = Math.floor(displayStart / pageLength) + 1;
+
+            // Jika halaman saat ini melebihi total halaman yang tersedia
+            if (currentPage > totalPages && totalPages > 0) {
+                // Fallback ke halaman terakhir yang memungkinkan
+                const lastPageStart = (totalPages - 1) * pageLength;
+                // console.log(`Pagination adjusted: Page ${currentPage} -> Page ${totalPages} (${totalRecords} records)`);
+
+                this.datatablePagination = {
+                    displayStart: lastPageStart,
+                    pageLength,
+                    currentPage: totalPages,
+                    timestamp: new Date().toISOString(),
+                };
+
+                return true; // Menandakan bahwa ada adjustment
+            }
+
+            return false; // Tidak ada adjustment
+        },
+
+        resetPagination() {
+            this.datatablePagination = {
+                displayStart: 0,
+                pageLength: 10,
+                currentPage: 1,
+            };
+            // console.log('DataTable pagination reset');
+        },
+
+        // Set pagination ke halaman tertentu
+        setPage(pageNumber, pageLength = 10) {
+            const displayStart = (pageNumber - 1) * pageLength;
+            this.updatePagination(displayStart, pageLength);
         },
     },
     persist: {
