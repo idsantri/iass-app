@@ -43,7 +43,7 @@
                     <QInput
                         v-model="filterInput"
                         label="Cari data"
-                        placeholder="nama, komisariat, kelompok desa …"
+                        placeholder="nama, kelompok desa …"
                         outlined
                         dense
                         class=""
@@ -150,7 +150,6 @@ const filteredData = computed(() => {
         const isInputMatch =
             !filterInputValue ||
             item.nama?.toLowerCase().includes(filterInputValue) ||
-            item.komisariat?.toLowerCase().includes(filterInputValue) ||
             item.kelompok?.toLowerCase().includes(filterInputValue);
 
         return isKomisariatMatch && isInputMatch;
