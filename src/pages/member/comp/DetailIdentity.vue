@@ -51,7 +51,7 @@
                 <td>{{ anggota.komisariat }}</td>
             </tr>
             <tr>
-                <td>Kelompok Desa</td>
+                <td>Kelompok</td>
                 <td>{{ anggota.kelompok }}</td>
             </tr>
             <tr>
