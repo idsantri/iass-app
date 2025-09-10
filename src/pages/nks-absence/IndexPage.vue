@@ -43,7 +43,7 @@
                     <QInput
                         v-model="filterInput"
                         label="Cari data"
-                        placeholder="nama, kelompok desa …"
+                        placeholder="nama atau kelompok desa"
                         outlined
                         dense
                         class=""
