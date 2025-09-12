@@ -1,5 +1,5 @@
 <template>
-    <q-card flat bordered style="max-width: 600px">
+    <QCard flat bordered style="max-width: 600px">
         <SectionHeader title="Scan QR/Barcode" @on-reload="loadData"> </SectionHeader>
         <LoadingFixed v-if="loading" />
         <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
@@ -29,11 +29,12 @@
             <div v-if="!nks.locked" class="q-mt-sm">
                 <LoadingAbsolute v-if="loadingAbsence" />
                 <qrcode-stream
-                    :constraints="!!loadingAbsence ? null : selectedConstraints"
+                    :key="cameraKey"
+                    :constraints="selectedConstraints"
                     :track="paintBoundingBox"
                     :formats="['code_128', 'qr_code', 'linear_codes']"
                     @error="onError"
-                    @detect="onDetect"
+                    @detect="handleScan"
                     @camera-on="onCameraReady"
                 />
             </div>
@@ -44,7 +45,7 @@
         <q-card-section class="q-pa-sm bg-orange-1 text-orange-10">
             <div class="tw:text-xl tw:text-center">|| {{ result || '-' }} ||</div>
         </q-card-section>
-    </q-card>
+    </QCard>
 </template>
 
 <script setup>
@@ -55,7 +56,7 @@ import Nks from '@/models/Nks';
 import NksAbsence from '@/models/NksAbsence';
 import { formatDate } from '@/utils/date-operation';
 import { bacaHijri } from '@/utils/hijri';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
 import { useRoute } from 'vue-router';
 
@@ -65,6 +66,7 @@ const loadingAbsence = ref(false);
 const error = ref('');
 const { params } = useRoute();
 const nks = ref({});
+const cameraKey = ref(0); // Key untuk memaksa render ulang
 
 async function loadData() {
     try {
@@ -92,22 +94,32 @@ const onHadir = async (member_id) => {
         console.log('error hadir ', error);
     } finally {
         loadingAbsence.value = false;
-        result.value = '';
     }
 };
 
-watch(result, async (value) => {
-    if (value) {
-        await onHadir(value);
-    }
-});
-
 /*** detection handling ***/
-function onDetect(detectedCodes) {
-    // console.log(detectedCodes);
+async function handleScan(detectedCodes) {
+    if (detectedCodes.length === 0) {
+        return;
+    }
+
+    // Nonaktifkan pemindai untuk sementara waktu dengan mengubah key
+    cameraKey.value++;
+
     const lastDetected = detectedCodes.map((code) => code.rawValue);
     result.value = lastDetected.slice(-1)[0];
-    // console.log(result.value);
+
+    try {
+        await onHadir(result.value);
+    } catch (e) {
+        console.log('Error processing scan:', e);
+    } finally {
+        // Setelah selesai, beri jeda dan aktifkan kembali
+        setTimeout(() => {
+            cameraKey.value++;
+            result.value = '';
+        }, 1000); // Jeda 1 detik
+    }
 }
 
 /*** select camera ***/
@@ -117,11 +129,8 @@ const defaultConstraintOptions = [
     { label: 'Kamera Depan', constraints: { facingMode: 'user' } },
 ];
 const constraintOptions = ref(defaultConstraintOptions);
+
 async function onCameraReady() {
-    // NOTE: on iOS we can't invoke `enumerateDevices` before the user has given
-    // camera access permission. `QrcodeStream` internally takes care of
-    // requesting the permissions. The `camera-on` event should guarantee that this
-    // has happened.
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoDevices = devices.filter(({ kind }) => kind === 'videoinput');
 
@@ -132,7 +141,6 @@ async function onCameraReady() {
             constraints: { deviceId },
         })),
     ];
-
     error.value = '';
 }
 
@@ -152,7 +160,6 @@ function paintBoundingBox(detectedCodes, ctx) {
 /*** error handling ***/
 function onError(err) {
     error.value = `[${err.name}]: `;
-
     if (err.name === 'NotAllowedError') {
         error.value += 'you need to grant camera access permission';
     } else if (err.name === 'NotFoundError') {
