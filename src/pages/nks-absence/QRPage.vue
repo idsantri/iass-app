@@ -92,6 +92,7 @@ const onHadir = async (member_id) => {
         console.log('error hadir ', error);
     } finally {
         loadingAbsence.value = false;
+        result.value = '';
     }
 };
 
