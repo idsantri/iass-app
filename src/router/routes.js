@@ -37,6 +37,16 @@ export default [
                 meta: { title: 'NKS' },
             },
             {
+                path: 'nks/:nksId/notes',
+                component: () => import('@/pages/nks-note/IndexPage.vue'),
+                meta: { title: 'Catatan NKS' },
+            },
+            {
+                path: 'nks/:nksId/notes/form',
+                component: () => import('@/pages/nks-note/EditPage.vue'),
+                meta: { title: 'Catatan NKS' },
+            },
+            {
                 path: 'nks/:nksId/absence',
                 component: () => import('@/pages/nks-absence/IndexPage.vue'),
                 meta: { title: 'Absensi NKS' },

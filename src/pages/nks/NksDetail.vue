@@ -61,6 +61,19 @@
                         </td>
                     </tr>
                 </tbody>
+                <tfoot class="bg-orange-1">
+                    <tr>
+                        <td colspan="2" class="text-right text-orange-10">
+                            <QBtn
+                                label="Catatan NKS"
+                                :to="`/nks/${nks.id}/notes`"
+                                outline
+                                size="sm"
+                                no-caps
+                            />
+                        </td>
+                    </tr>
+                </tfoot>
             </QMarkupTable>
         </QCardSection>
         <QCardSection class="q-pa-sm">
@@ -135,5 +148,6 @@ onMounted(async () => {
 td {
     white-space: normal;
     word-wrap: break-word;
+    padding: 4px 8px;
 }
 </style>

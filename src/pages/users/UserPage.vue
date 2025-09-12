@@ -72,7 +72,7 @@ const columns = [
         name: 'roles',
         label: 'Group (Role)',
         align: 'left',
-        field: 'roles',
+        field: (row) => row.roles.join(', '),
         sortable: true,
     },
     {

@@ -9,7 +9,7 @@
             class="q-mr-xs"
             title="Muat ulang"
         />
-        <div>Rekap Absen Perkomisariat</div>
+        <div>Rekap Absensi</div>
         <QSpace />
         <QBtn
             :to="`/nks/${nksId}/absence`"
@@ -66,11 +66,13 @@
             <tr>
                 <td>
                     <QBtn
-                        label="Reset Data"
+                        label="Reset"
                         color="negative"
                         no-caps
                         @click="resetAbsence"
                         :disable="!report.length"
+                        dense
+                        class="q-px-sm"
                     />
                 </td>
                 <td class="text-center">{{ sumActive }}</td>
@@ -152,3 +154,10 @@ async function resetAbsence() {
     }
 }
 </script>
+<style scoped>
+td {
+    white-space: normal;
+    word-wrap: break-word;
+    padding: 4px 8px;
+}
+</style>

@@ -173,6 +173,9 @@ async function loadData() {
 onMounted(async () => {
     if (nksId) {
         await loadData();
+        if (optionsKomisariat.value.length === 1) {
+            filterSelect.value = optionsKomisariat.value[0];
+        }
     }
 });
 

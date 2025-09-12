@@ -15,7 +15,14 @@
             @click="$emit('onReset')"
         />
         <q-space />
-        <q-btn label="Tutup" v-close-popup class="bg-orange-11" no-caps="" id="btn-close-form" />
+        <q-btn
+            v-if="btnClose"
+            label="Tutup"
+            v-close-popup
+            class="bg-orange-11"
+            no-caps=""
+            id="btn-close-form"
+        />
         <q-btn type="submit" label="Simpan" class="bg-orange-10 text-orange-1" no-caps="" />
     </q-card-actions>
 </template>
@@ -23,6 +30,7 @@
 defineProps({
     btnDelete: Boolean,
     btnReset: Boolean,
+    btnClose: { type: Boolean, default: true },
 });
 </script>
 <style lang=""></style>
