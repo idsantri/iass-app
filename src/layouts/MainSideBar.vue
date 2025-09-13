@@ -1,6 +1,15 @@
 <template>
     <q-scroll-area class="fit">
         <q-list>
+            <q-item to="/">
+                <q-item-section>
+                    <div class="text-center">
+                        <q-avatar round color="" size="100px">
+                            <img alt="logo" src="/icons/icon-512x512.png" />
+                        </q-avatar>
+                    </div>
+                </q-item-section>
+            </q-item>
             <template v-for="(item, index) in menus" :key="index">
                 <q-item
                     clickable
