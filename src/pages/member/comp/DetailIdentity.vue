@@ -56,7 +56,24 @@
             </tr>
             <tr>
                 <td>Nomor HP</td>
-                <td>{{ anggota.no_hp }}</td>
+                <td class="flex items-center justify-between">
+                    <span>
+                        {{ anggota.no_hp }}
+                    </span>
+                    <QBtn
+                        v-if="anggota.no_hp"
+                        dense
+                        icon="phone_enabled"
+                        color="orange-7"
+                        glossy=""
+                        round
+                        outline
+                        type="a"
+                        :href="`https://wa.me/${anggota?.no_hp?.replace(/^0/, '62') ?? ''}?text=Assalamualaikum%20${anggota?.nama}`"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    />
+                </td>
             </tr>
             <tr>
                 <td>Email</td>
