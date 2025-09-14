@@ -8,9 +8,34 @@
                     outline=""
                     icon="add"
                     no-caps
-                    class="q-px-md q-mr-sm text-orange-1"
+                    class="q-px-sm q-mr-sm text-orange-1"
                     @click="dialog = true"
                 />
+            </template>
+            <template #right>
+                <q-btn-dropdown
+                    flat
+                    dense
+                    class=""
+                    color="orange-1"
+                    no-caps
+                    dropdown-icon="more_vert"
+                >
+                    <q-list clickable v-close-popup class="text-orange-10">
+                        <q-item clickable="" @click="download('aktif')">
+                            <q-item-section>Download Aktif</q-item-section>
+                            <q-item-section avatar>
+                                <q-icon color="orange" name="sym_o_download" />
+                            </q-item-section>
+                        </q-item>
+                        <q-item clickable="" @click="download('semua')">
+                            <q-item-section>Download Semua</q-item-section>
+                            <q-item-section avatar>
+                                <q-icon color="orange" name="sym_o_download" />
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </q-btn-dropdown>
             </template>
         </SectionHeader>
         <q-banner v-if="warning" class="bg-yellow-2 text-black text-center q-pa-sm">
@@ -94,6 +119,7 @@ import Member from '@/models/Member';
 import SectionHeader from '@/components/SectionHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
+import FileDownloader from '@/models/FileDownloader';
 
 const table = ref(null);
 const isLoading = ref(false);
@@ -112,6 +138,21 @@ const {
 } = storeToRefs(membersStore);
 
 DataTable.use(DataTablesCore);
+
+async function download(status) {
+    try {
+        isLoading.value = true;
+        const params = status === 'aktif' ? { status_max: 'aktif' } : {};
+        await FileDownloader.downloadMember(
+            `anggota-${status}-${new Date().toISOString().slice(0, 10)}.xlsx`,
+            params,
+        );
+    } catch (e) {
+        console.log('error download excel ', e);
+    } finally {
+        isLoading.value = false;
+    }
+}
 
 async function loadData() {
     try {
