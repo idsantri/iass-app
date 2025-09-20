@@ -233,7 +233,7 @@ const optionsDT = computed(() => ({
         },
     ],
     language: {
-        search: 'Cari:',
+        // search: 'Cari:',
         zeroRecords: 'Tidak data data untuk ditampilkan. Coba kata kunci yang lain!',
         info: 'Menampilkan _START_ hingga _END_ dari total _TOTAL_ data',
         infoFiltered: '(disaring dari _MAX_ total data)',
@@ -241,7 +241,19 @@ const optionsDT = computed(() => ({
         lengthMenu: '_MENU_ Perhalaman',
     },
     autoWidth: true,
-    //    dom: 'bftip',
+    layout: {
+        topStart: {
+            pageLength: {
+                menu: [10, 25, 50, 100, -1],
+            },
+        },
+        topEnd: {
+            search: {
+                placeholder: 'Cari anggota...',
+                text: 'Cari _INPUT_',
+            },
+        },
+    },
     scrollX: true,
 }));
 
@@ -294,4 +306,18 @@ function _goToPage(pageNumber) {
 <style lang="scss">
 @import 'datatables.net-dt';
 @import 'datatables.net-responsive-dt';
+
+// Responsive adjustments for small screens
+// sm or smaller
+@media screen and (max-width: 767px) {
+    .dt-search {
+        label {
+            display: none !important;
+        }
+        input {
+            width: 100% !important;
+            text-align: center;
+        }
+    }
+}
 </style>
