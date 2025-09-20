@@ -241,7 +241,7 @@ const optionsDT = computed(() => ({
         lengthMenu: '_MENU_ Perhalaman',
     },
     autoWidth: true,
-    dom: 'bftip',
+    //    dom: 'bftip',
     scrollX: true,
 }));
 
