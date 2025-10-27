@@ -134,7 +134,7 @@ const {
     members,
     komisariatOptions,
     filteredMembers,
-    getPaginationState, // Tambah pagination state dari store
+    getPaginationState,
 } = storeToRefs(membersStore);
 
 DataTable.use(DataTablesCore);
@@ -169,32 +169,60 @@ async function loadData() {
 
 // Function untuk handle DataTable draw event
 function onDataTableDraw(eDt, settings) {
-    // console.log('DataTable redraw');
-
-    // 1. Tangkap informasi halaman
     const displayStart = settings._iDisplayStart;
     const pageLength = settings._iDisplayLength;
-
-    // console.log('Page info:', {
-    //     displayStart,
-    //     pageLength,
-    //     currentPage: Math.floor(displayStart / pageLength) + 1,
-    //     totalRecords: settings.fnRecordsTotal ? settings.fnRecordsTotal() : 0,
-    // });
-
-    // 2. Simpan ke store (sessionStorage via persist)
     membersStore.updatePagination(displayStart, pageLength);
+
+    // Attach event listener untuk link setelah draw
+    attachLinkListeners();
 }
 
-// Computed untuk DataTable options dengan pagination state dari store
+// Function untuk attach event listener ke link
+function attachLinkListeners() {
+    const links = document.querySelectorAll('.btn-member-info');
+    links.forEach((link) => {
+        link.onclick = function (e) {
+            e.preventDefault();
+            const memberId = this.getAttribute('data-member-id');
+            router.push(`/members/${memberId}`);
+        };
+    });
+}
+
+// Computed untuk DataTable options dengan kolom aksi
 const optionsDT = computed(() => ({
     responsive: true,
     order: [],
-    select: true,
-    // 3. Gunakan pagination state dari store
+    select: false, // Nonaktifkan select karena tidak digunakan lagi
     displayStart: getPaginationState.value.displayStart,
     pageLength: getPaginationState.value.pageLength,
     columns: [
+        {
+            title: `
+                <button disabled title="Detail anggota" 
+                    class="q-btn q-btn-item non-selectable no-outline q-btn--flat q-btn--rectangle q-btn--actionable q-focusable q-hoverable q-btn--dense" 
+                    style="color: #f57c00; text-decoration: none;">
+                    <span class="q-focus-helper"></span>
+                    <span class="q-btn__content text-center col items-center q-anchor--skip justify-center row">
+                        <i class="q-icon notranslate material-icons" aria-hidden="true" role="img">info</i>
+                    </span>
+                </button>`,
+            data: null,
+            orderable: false,
+            searchable: false,
+            // width: '60px',
+            render: function (data, type, row) {
+                return `
+                    <a href="/members/${row.id}" data-member-id="${row.id}" title="Detail anggota"
+                        class="btn-member-info q-btn q-btn-item non-selectable no-outline q-btn--flat q-btn--rectangle q-btn--actionable q-focusable q-hoverable q-btn--dense" 
+                        style="color: #f57c00; text-decoration: none;">
+                        <span class="q-focus-helper"></span>
+                        <span class="q-btn__content text-center col items-center q-anchor--skip justify-center row">
+                            <i class="q-icon notranslate material-icons" aria-hidden="true" role="img">info</i>
+                        </span>
+                    </a>`;
+            },
+        },
         {
             title: 'ID',
             data: 'id',
@@ -233,7 +261,6 @@ const optionsDT = computed(() => ({
         },
     ],
     language: {
-        // search: 'Cari:',
         zeroRecords: 'Tidak data data untuk ditampilkan. Coba kata kunci yang lain!',
         info: 'Menampilkan _START_ hingga _END_ dari total _TOTAL_ data',
         infoFiltered: '(disaring dari _MAX_ total data)',
@@ -261,14 +288,11 @@ const optionsDT = computed(() => ({
 watch(
     [filterKomisariat, filterStatus],
     () => {
-        // Tunggu sampai filteredMembers terupdate
         setTimeout(() => {
             const totalRecords = filteredMembers.value.length;
             const wasAdjusted = membersStore.validatePagination(totalRecords);
 
             if (wasAdjusted && table.value) {
-                // Redraw DataTable dengan pagination yang sudah disesuaikan
-                // console.log('Redrawing DataTable after pagination adjustment');
                 table.value.dt.page(getPaginationState.value.currentPage - 1).draw(false);
             }
         }, 0);
@@ -281,16 +305,10 @@ onMounted(async () => {
         await loadData();
     }
 
-    if (table.value) {
-        const dt = table.value.dt;
-        dt.on('select', (e, dt, type, indexes) => {
-            const selectedData = dt.rows(indexes).data().toArray();
-            if (selectedData.length > 0) {
-                const selected = selectedData[0];
-                router.push(`/members/${selected.id}`);
-            }
-        });
-    }
+    // Attach link listeners setelah mount
+    setTimeout(() => {
+        attachLinkListeners();
+    }, 100);
 });
 
 // Helper functions (optional)
@@ -307,8 +325,20 @@ function _goToPage(pageNumber) {
 @import 'datatables.net-dt';
 @import 'datatables.net-responsive-dt';
 
+// Style untuk link info
+.btn-member-info {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex !important;
+    text-align: center !important;
+
+    &:hover {
+        background-color: rgba(245, 124, 0, 0.1);
+        transform: scale(1.1);
+    }
+}
+
 // Responsive adjustments for small screens
-// sm or smaller
 @media screen and (max-width: 767px) {
     .dt-search {
         label {
