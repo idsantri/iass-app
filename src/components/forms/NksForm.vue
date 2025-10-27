@@ -1,7 +1,7 @@
 <template>
     <q-card class="full-width" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
-            <FormHeader title="Input Status" :is-new="!id" />
+            <FormHeader title="Input Kegiatan" :is-new="!id" />
             <LoadingAbsolute v-if="loading" />
 
             <q-card-section class="q-pa-sm">

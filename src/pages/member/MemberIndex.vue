@@ -120,6 +120,7 @@ import SectionHeader from '@/components/SectionHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import FileDownloader from '@/models/FileDownloader';
+import { notifySuccess } from '@/utils/notify';
 
 const table = ref(null);
 const isLoading = ref(false);
@@ -173,8 +174,13 @@ function onDataTableDraw(eDt, settings) {
     const pageLength = settings._iDisplayLength;
     membersStore.updatePagination(displayStart, pageLength);
 
-    // Attach event listener untuk link setelah draw
+    // Attach event listener setelah draw
+    attachListeners();
+}
+
+function attachListeners() {
     attachLinkListeners();
+    attachCopyListeners();
 }
 
 // Function untuk attach event listener ke link
@@ -185,6 +191,19 @@ function attachLinkListeners() {
             e.preventDefault();
             const memberId = this.getAttribute('data-member-id');
             router.push(`/members/${memberId}`);
+        };
+    });
+}
+
+// Function untuk attach event listener ke tombol copy
+function attachCopyListeners() {
+    const buttons = document.querySelectorAll('.btn-copy-id');
+    buttons.forEach((btn) => {
+        btn.onclick = function (e) {
+            e.preventDefault();
+            const id = this.getAttribute('data-id');
+            navigator.clipboard.writeText(id);
+            notifySuccess(`ID anggota ${id} disalin ke clipboard`);
         };
     });
 }
@@ -226,6 +245,9 @@ const optionsDT = computed(() => ({
         {
             title: 'ID',
             data: 'id',
+            render: function (data, type, row) {
+                return `<button class="btn-copy-id" data-id="${row.id}" title="Klik untuk menyalin ID ${row.id}">${row.id}</button>`;
+            },
         },
         {
             title: 'Nama',
@@ -305,9 +327,9 @@ onMounted(async () => {
         await loadData();
     }
 
-    // Attach link listeners setelah mount
+    // Attach listeners setelah mount
     setTimeout(() => {
-        attachLinkListeners();
+        attachListeners();
     }, 100);
 });
 
@@ -335,6 +357,23 @@ function _goToPage(pageNumber) {
     &:hover {
         background-color: rgba(245, 124, 0, 0.1);
         transform: scale(1.1);
+    }
+}
+
+.btn-copy-id {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    padding: 3px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    transform: scale(0.9);
+    transition: all 0.2s ease;
+    &:hover {
+        background-color: rgba(245, 124, 0, 0.1);
+        border-color: '#f57c00';
+        transform: scale(1);
     }
 }
 
