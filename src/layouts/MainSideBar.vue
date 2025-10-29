@@ -10,45 +10,35 @@
                     </div>
                 </q-item-section>
             </q-item>
-            <template v-for="(item, index) in menus" :key="index">
-                <q-item
-                    clickable
-                    :active="item.label === 'Outbox'"
-                    v-ripple
-                    :to="item.route"
-                    :disable="item.disable"
-                >
-                    <q-item-section avatar>
-                        <q-icon :name="item.icon" />
-                    </q-item-section>
-                    <q-item-section>
-                        <q-item-label>{{ item.label }}</q-item-label>
-                        <q-item-label caption v-if="item.caption">
-                            {{ item.caption }}
-                        </q-item-label>
-                    </q-item-section>
-                </q-item>
-                <q-separator :key="'sep' + index" v-if="item.separator" />
-            </template>
+            <MainSideItem :data="master" title="Master" />
+            <q-separator />
+            <MainSideItem :data="wilayah" title="Wilayah" />
+            <q-separator />
+            <MainSideItem :data="komisariat" title="Komisariat" />
+            <q-separator />
+            <MainSideItem :data="setting" title="Pengaturan" />
         </q-list>
     </q-scroll-area>
 </template>
 <script setup>
-const menus = [
+import MainSideItem from './MainSideItem.vue';
+
+const master = [
     {
         icon: 'groups',
         label: 'Anggota',
         caption: 'IASS Bangkalan',
         route: '/members',
-        separator: true,
         disable: false,
     },
+];
+
+const wilayah = [
     {
         icon: 'sym_o_history_2',
         label: 'NKS',
         caption: 'Jadwal NKS',
         route: '/nks',
-        separator: false,
         disable: false,
     },
 
@@ -57,7 +47,6 @@ const menus = [
         label: 'Rekap Komisariat',
         caption: 'Absensi by Komisariat',
         route: '/nks/absence/rekap-komisariat',
-        separator: false,
         disable: false,
     },
     {
@@ -68,34 +57,30 @@ const menus = [
         separator: true,
         disable: false,
     },
+];
 
+const komisariat = [
+    {
+        icon: 'sym_o_history_2',
+        label: 'Kegiatan',
+        caption: 'Kegiatan Komisariat',
+        route: '/komisariat/activities',
+        disable: false,
+    },
+];
+
+const setting = [
     {
         icon: 'sym_o_grading',
         label: 'List',
         caption: 'Input AutoComplete',
         route: '/settings/lists',
-        separator: false,
         disable: false,
     },
     {
         icon: 'manage_accounts',
         label: 'Pengaturan Pengguna',
         route: '/settings/users',
-        separator: true,
-        disable: false,
-    },
-    // {
-    //     icon: 'info',
-    //     label: 'Tentang',
-    //     route: '/about',
-    //     separator: true,
-    //     disable: false,
-    // },
-    {
-        icon: 'logout',
-        label: 'Keluar',
-        route: '/logout',
-        separator: false,
         disable: false,
     },
 ];

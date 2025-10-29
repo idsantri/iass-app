@@ -77,6 +77,19 @@ export default [
                 component: () => import('../pages/member/MemberDetail.vue'),
             },
 
+            // KOMISARIAT
+            {
+                path: 'komisariat',
+                children: [
+                    {
+                        path: 'activities',
+                        component: () => import('../pages/komisariat/activities/IndexPage.vue'),
+                        meta: { title: 'Komisariat: Kegiatan' },
+                    },
+                ],
+            },
+
+            // SETTING
             {
                 path: 'settings',
                 children: [
