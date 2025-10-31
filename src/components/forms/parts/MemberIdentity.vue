@@ -32,7 +32,7 @@
         v-model="inputs.nik"
         :rules="[(val) => !val || (val?.length == 16 && !isNaN(val)) || '16 digit angka!']"
     />
-    <InputSelectKotaLahir v-model="inputs" />
+    <InputSelectKotaLahir v-model="inputs.tmp_lahir" />
     <q-input
         dense
         class="q-my-sm"

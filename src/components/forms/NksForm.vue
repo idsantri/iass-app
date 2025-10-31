@@ -112,9 +112,6 @@ watch(
 
 const onSubmit = async () => {
     const data = JSON.parse(JSON.stringify(inputs.value));
-    // console.log(id);
-    // console.log(data.id);
-    // return;
     try {
         loading.value = true;
         let response = null;
@@ -123,7 +120,6 @@ const onSubmit = async () => {
             emit('successCreate', response?.nks);
         } else {
             response = await Nks.update(id, data);
-            console.log('🚀 ~ onSubmit ~ response:', response);
             emit('successUpdate', response?.nks);
         }
         emit('successSubmit', response?.nks);

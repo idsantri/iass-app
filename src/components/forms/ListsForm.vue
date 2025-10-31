@@ -1,7 +1,7 @@
 <template lang="">
     <q-card class="full-width" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
-            <FormHeader :title="inputs.key || 'List'" :is-new="!id" />
+            <FormHeader :title="'Lists ' + inputs.key || 'List'" :is-new="!id" />
             <LoadingAbsolute size="4em" v-if="loading" />
 
             <q-card-section class="q-pa-sm">

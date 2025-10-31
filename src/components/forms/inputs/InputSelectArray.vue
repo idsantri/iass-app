@@ -8,10 +8,10 @@
         :loading="loading"
         behavior="menu"
         clearable
-        :hint="textHint()"
+        v-model="input"
     >
         <template v-slot:after>
-            <DropDownAfter v-if="btnSetting" :route-to="url" @reload="fetchList" />
+            <drop-down-after v-if="btnSetting" :route-to="url" @reload="fetchList" />
         </template>
     </q-select>
 </template>
@@ -21,6 +21,7 @@ import { onMounted, ref } from 'vue';
 import DropDownAfter from './DropDownAfter.vue';
 import List from '@/models/List';
 
+const input = defineModel();
 const props = defineProps({
     url: {
         type: String,
@@ -29,10 +30,6 @@ const props = defineProps({
     sort: {
         type: String,
         default: 'asc',
-    },
-    selected: {
-        type: String,
-        default: '',
     },
     btnSetting: {
         type: Boolean,
@@ -43,23 +40,15 @@ const props = defineProps({
 const loading = ref(false);
 const options = ref([]);
 const store = listsStore();
-
-function textHint() {
-    let result = '';
-    if (props.selected && props.url == 'tahun-ajaran') {
-        const data = store.getByStateName(props.url);
-        result = data.find((th) => th.val0 === props.selected)?.val1;
-    }
-    return result;
-}
+const key = props.url.replace(/-/g, '_');
 
 onMounted(async () => {
-    const data = store.getByStateName_arr(props.url);
+    const data = store.getStateByKey_Arr(key, props.sort);
     if (data.length) {
         options.value = data;
     } else {
         await fetchList();
-        options.value = store.getByStateName_arr(props.url);
+        options.value = store.getStateByKey_Arr(key, props.sort);
     }
 });
 
@@ -67,9 +56,9 @@ async function fetchList() {
     try {
         loading.value = true;
         const data = await List.getByKey(props.url);
-        store.$patch({ [props.url]: data[props.url] });
+        store.$patch({ [key]: data[key] });
     } catch (error) {
-        console.log('error get list input ', error);
+        console.log('error get list ', error);
     } finally {
         loading.value = false;
     }

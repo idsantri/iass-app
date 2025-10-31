@@ -31,7 +31,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import listData from './lists-data';
 
 import ListsForm from '@/components/forms/ListsForm.vue';
 import ListsSingle from './ListsStyleSingle.vue';
@@ -45,6 +44,8 @@ const loading = ref(false);
 const listGet = ref([]);
 const objList = ref({});
 const showInput = ref({});
+const store = listsStore();
+const { listData } = store;
 
 onMounted(async () => {
     await fetchData();
@@ -55,14 +56,12 @@ const selected = listData.find(({ url }) => url == params.listKey);
 async function fetchData() {
     try {
         loading.value = true;
-
         const data = await List.getByKey(selected.url);
-        listGet.value = data[selected.url];
+        listGet.value = data[selected.key];
 
-        const store = listsStore();
-        const checkState = store.checkState(selected.url);
+        const checkState = store.checkState(selected.key);
         if (checkState) {
-            store.$patch({ [selected.url]: data[selected.url] });
+            store.$patch({ [selected.key]: data[selected.key] });
         }
     } catch (error) {
         console.log('error get list ', error);

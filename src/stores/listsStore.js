@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia';
-import listData from '@/pages/lists/lists-data';
+import listData from '@/stores/lists-data';
+import ArrayCrud from '@/services/ArrayCrud';
 
 function organizeData(data) {
     const organizedData = {};
     data.forEach((item) => {
-        organizedData[item.url] = [];
+        organizedData[item.key] = [];
     });
 
     return organizedData;
@@ -19,12 +20,14 @@ export default defineStore('lists-input', {
         // };
     },
 
-    getters: {},
+    getters: {
+        listData: () => listData,
+    },
 
     actions: {
-        checkState(stateName) {
+        checkState(key) {
             // Check if the state property exists
-            if (Object.prototype.hasOwnProperty.call(this.$state, stateName)) {
+            if (Object.prototype.hasOwnProperty.call(this.$state, key)) {
                 // Property exists
                 return true;
             } else {
@@ -32,11 +35,15 @@ export default defineStore('lists-input', {
                 return false;
             }
         },
-        getByStateName(stateName) {
-            return this[stateName];
+
+        getStateByKey(key, sort) {
+            const result = this[key];
+            return ArrayCrud.sort(result, 'val0', sort);
         },
-        getByStateName_arr(stateName) {
-            return this[stateName].map((v) => v.val0);
+
+        getStateByKey_Arr(key, sort) {
+            const result = this[key].map((v) => v.val0);
+            return ArrayCrud.sortPrimitiveArray(result, sort);
         },
     },
 

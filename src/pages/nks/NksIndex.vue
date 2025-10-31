@@ -1,32 +1,34 @@
 <template>
-    <q-card flat bordered style="max-width: 1024px">
-        <CardHeader title="Data NKS" @on-reload="loadData">
-            <template #buttons>
-                <QBtn
-                    dense
-                    label="Tambah"
-                    outline=""
-                    icon="add"
-                    no-caps
-                    class="q-px-md q-mr-sm text-orange-1"
-                    @click="dialog = true"
-                />
-            </template>
-        </CardHeader>
+    <div>
+        <q-card flat bordered style="max-width: 1024px">
+            <CardHeader title="Data NKS" @on-reload="loadData">
+                <template #buttons>
+                    <QBtn
+                        dense
+                        label="Tambah"
+                        outline=""
+                        icon="add"
+                        no-caps
+                        class="q-px-md q-mr-sm text-orange-1"
+                        @click="dialog = true"
+                    />
+                </template>
+            </CardHeader>
 
-        <q-card-section class="q-pa-sm">
-            <QTable
-                :rows="nks"
-                :columns="columns"
-                flat
-                :loading="loading"
-                @row-click="(evt, row, index) => $router.push(`/nks/${row.id}`)"
-            />
-        </q-card-section>
-    </q-card>
-    <QDialog v-model="dialog">
-        <NksForm @success-submit="(res) => $router.push(`/nks/${res.id}`)" />
-    </QDialog>
+            <q-card-section class="q-pa-sm">
+                <QTable
+                    :rows="nks"
+                    :columns="columns"
+                    flat
+                    :loading="loading"
+                    @row-click="(evt, row, index) => $router.push(`/nks/${row.id}`)"
+                />
+            </q-card-section>
+        </q-card>
+        <QDialog v-model="dialog">
+            <NksForm @success-submit="(res) => $router.push(`/nks/${res.id}`)" />
+        </QDialog>
+    </div>
 </template>
 <script setup>
 import CardHeader from '@/components/cards/CardHeader.vue';

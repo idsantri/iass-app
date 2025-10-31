@@ -49,22 +49,17 @@ const props = defineProps({
 });
 const emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
 
-const inputs = ref({});
+const inputs = ref({ ...props.data });
 const loading = ref(false);
 let btnClose = null;
 const id = props.data?.id;
 
 onMounted(async () => {
-    Object.assign(inputs.value, props.data);
     btnClose = document.getElementById('btn-close-form');
 });
 
 const onSubmit = async () => {
-    const data = {
-        member_id: inputs.value.member_id,
-        status: inputs.value.status,
-        keterangan: inputs.value.keterangan,
-    };
+    const data = JSON.parse(JSON.stringify(inputs.value));
 
     try {
         loading.value = true;
