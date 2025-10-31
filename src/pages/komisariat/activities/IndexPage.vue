@@ -1,15 +1,3 @@
-<script setup>
-import Member from '@/services/Member';
-
-const {
-    data,
-    loading,
-    execute: loadData,
-    errorMessage,
-    successMessage,
-} = Member.getAll({}, { immediate: false, sMessage: false, resetDataOnRequest: true });
-</script>
-
 <template>
     <div>
         <q-btn @click="loadData()" :loading="loading">load data</q-btn>
@@ -29,3 +17,14 @@ const {
         </div>
     </div>
 </template>
+<script setup>
+import Member from '@/services/Member';
+
+const {
+    data,
+    loading,
+    execute: loadData,
+    errorMessage,
+    successMessage,
+} = Member.getAll({}, { immediate: false, resetDataOnRequest: true });
+</script>

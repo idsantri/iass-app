@@ -1,7 +1,7 @@
 <template>
     <q-card flat bordered style="max-width: 1024px">
-        <SectionHeader title="Data NKS" @on-reload="loadData">
-            <template #left>
+        <CardHeader title="Data NKS" @on-reload="loadData">
+            <template #buttons>
                 <QBtn
                     dense
                     label="Tambah"
@@ -12,7 +12,7 @@
                     @click="dialog = true"
                 />
             </template>
-        </SectionHeader>
+        </CardHeader>
 
         <q-card-section class="q-pa-sm">
             <QTable
@@ -29,8 +29,8 @@
     </QDialog>
 </template>
 <script setup>
+import CardHeader from '@/components/cards/CardHeader.vue';
 import NksForm from '@/components/forms/NksForm.vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import Nks from '@/models/Nks';
 import { onMounted, ref } from 'vue';
 
