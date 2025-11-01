@@ -98,6 +98,11 @@ export default [
                         component: () => import('../pages/komisariat/absences/AbsencesIndex.vue'),
                         meta: { title: 'Komisariat: Absensi' },
                     },
+                    {
+                        path: 'activities/:id/absences/qr',
+                        component: () => import('../pages/komisariat/absences/AbsencesQR.vue'),
+                        meta: { title: 'Komisariat: Absensi' },
+                    },
                 ],
             },
 

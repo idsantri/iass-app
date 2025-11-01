@@ -1,20 +1,14 @@
 <template lang="">
     <div>
         <q-card flat bordered style="max-width: 1024px">
-            <CardHeader :title="`Detail Kegiatan Komisariat ${komisariat}`" @on-reload="loadData">
-                <template #buttons>
-                    <QBtn
-                        dense
-                        label="Edit"
-                        outline=""
-                        icon="edit"
-                        no-caps
-                        class="q-px-md"
-                        @click="dialog = true"
-                        :disable="!komisariat"
-                    />
-                </template>
-            </CardHeader>
+            <CardHeader
+                :title="`Kegiatan Komisariat`"
+                @on-reload="loadData"
+                :show-edit="true"
+                :disable-edit="!komisariat"
+                @on-edit="dialog = true"
+            />
+
             <q-card-section class="q-pa-sm relative-position">
                 <LoadingAbsolute v-if="loading" />
                 <QMarkupTable flat bordered>

@@ -32,6 +32,30 @@
                         <slot name="buttons"> </slot>
                     </div>
                     <q-btn
+                        v-if="showEdit"
+                        no-caps
+                        :label="$q.screen.lt.sm ? '' : 'Edit'"
+                        icon="edit"
+                        dense
+                        class="q-px-sm"
+                        outline
+                        @click="$emit('onEdit')"
+                        title="Sunting data"
+                        :disable="disableEdit"
+                    />
+                    <q-btn
+                        v-if="showAdd"
+                        no-caps
+                        :label="$q.screen.lt.sm ? '' : 'Tambah'"
+                        icon="add"
+                        dense
+                        class="q-px-sm"
+                        outline
+                        @click="$emit('onAdd')"
+                        title="Tambah data baru"
+                        :disable="disableAdd"
+                    />
+                    <q-btn
                         v-if="showBack"
                         no-caps
                         :label="$q.screen.lt.sm ? '' : 'Kembali'"
@@ -64,6 +88,11 @@ import { useSlots } from 'vue';
 defineProps({
     showReload: { type: Boolean, default: true },
     showBack: { type: Boolean, default: true },
+    showEdit: { type: Boolean, default: false },
+    showAdd: { type: Boolean, default: false },
+    disableEdit: { type: Boolean, default: false },
+    disableAdd: { type: Boolean, default: false },
+
     title: { type: String, required: true },
 });
 const slots = useSlots();

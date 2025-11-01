@@ -1,30 +1,31 @@
 <template>
     <q-card flat bordered style="max-width: 1024px">
-        <SectionHeader title="Absensi NKS" @on-reload="loadData">
-            <template #left>
+        <CardHeader :title="`Absensi Kegiatan`" @on-reload="loadData">
+            <template #buttons>
                 <QBtn
                     dense
                     label="Scan QR"
                     outline=""
                     icon="qr_code"
                     no-caps
-                    class="q-px-md q-mr-sm text-orange-1"
-                    :to="`/nks/${nksId}/absence/qr`"
+                    class="q-px-md"
+                    :to="`/komisariat/activities/${activityId}/absences/qr`"
                 />
             </template>
-        </SectionHeader>
+        </CardHeader>
 
         <LoadingFixed v-if="loading" />
 
         <QCardSection class="q-px-md q-pt-sm q-pb-none text-center">
-            NKS {{ nks.komisariat }} <br />
+            <strong> {{ activity.nama }}</strong> <br />
+            Komisariat {{ activity.komisariat }}<br />
             <small>
-                {{ formatDate(nks.tgl_m, 'cccc, dd MMMM yyyy') }} |
-                {{ bacaHijri(nks.tgl_h) }}
+                {{ formatDate(activity.tgl_m, 'cccc, dd MMMM yyyy') }} |
+                {{ bacaHijri(activity.tgl_h) }}
             </small>
         </QCardSection>
-        <div v-if="nks.locked" class="q-mt-sm q-pa-md text-center text-negative bg-orange-3">
-            Data dikunci oleh Admin
+        <div v-if="activity.locked" class="q-mt-sm q-pa-md text-center text-negative bg-orange-3">
+            Data terkunci
         </div>
         <q-card-section class="q-px-sm q-pt-none q-pb-sm">
             <div class="flex justify-between">
@@ -92,38 +93,38 @@
                                 v-model="absence.hadir"
                                 color="orange"
                                 label="Hadir"
-                                @click="() => (nks.locked ? null : setHadir(absence))"
+                                @click="() => (activity.locked ? null : setHadir(absence))"
                                 :true-value="1"
                                 :false-value="0"
-                                :disable="!!nks.locked"
+                                :disable="!!activity.locked"
                             />
                         </td>
                     </tr>
                 </tbody>
             </table>
         </q-card-section>
+        <QCard class="q-mt-sm q-pa-sm text-center bg-orange-14 text-orange-1" flat bordered>
+            Menampilkan {{ filteredData?.length }} anggota (aktif)
+        </QCard>
     </q-card>
-    <QCard class="q-mt-sm q-pa-sm text-center bg-orange-14 text-orange-1" flat bordered>
-        Menampilkan {{ filteredData?.length }} anggota (aktif)
-    </QCard>
 
     <!-- <pre>{{ absences }}</pre> -->
 </template>
 <script setup>
+import CardHeader from '@/components/cards/CardHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import ArrayCrud from '@/models/ArrayCrud';
-import NksAbsence from '@/models/NksAbsence';
+import KomisariatAbsences from '@/models/KomisariatAbsences';
 import { formatDate } from '@/utils/date-operation';
 import { bacaHijri } from '@/utils/hijri';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const { params } = useRoute();
-const nksId = params.nksId;
+const activityId = params.id;
 const loading = ref(false);
 const absences = ref([]);
-const nks = ref({});
+const activity = ref({});
 const filterSelect = ref('');
 const filterInput = ref('');
 
@@ -159,10 +160,9 @@ const filteredData = computed(() => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await NksAbsence.byNks(nksId);
+        const res = await KomisariatAbsences.getByActivity(activityId);
         absences.value = res.absences;
-        nks.value = res.nks;
-        // console.log(res);
+        activity.value = res.activity;
     } catch (e) {
         console.log('error get absences ', e);
     } finally {
@@ -171,7 +171,7 @@ async function loadData() {
 }
 
 onMounted(async () => {
-    if (nksId) {
+    if (activityId) {
         await loadData();
         if (optionsKomisariat.value.length === 1) {
             filterSelect.value = optionsKomisariat.value[0];
@@ -181,7 +181,7 @@ onMounted(async () => {
 
 async function setHadir(item) {
     try {
-        await NksAbsence.update(item.id, { hadir: item.hadir });
+        await KomisariatAbsences.update(item.id, { hadir: item.hadir });
     } catch (error) {
         absences.value = ArrayCrud.update(absences.value, item.id, { hadir: item.hadir ? 0 : 1 });
         console.log('error update absen by id ', error);
