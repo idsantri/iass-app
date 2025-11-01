@@ -101,13 +101,13 @@ export default [
                             },
                             {
                                 path: 'notes',
-                                component: () => import('../pages/komisariat/notes/IndexNotes.vue'),
+                                component: () => import('../pages/common/note/IndexNotes.vue'),
                             },
                         ],
                     },
                     {
                         path: 'activities/:id/notes/form',
-                        component: () => import('../pages/komisariat/notes/EditNote.vue'),
+                        component: () => import('../pages/common/note/EditNote.vue'),
                         meta: { title: 'Komisariat: Absensi' },
                     },
                     {

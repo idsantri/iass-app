@@ -21,7 +21,6 @@
                 icon="add"
                 @click="goEdit"
             />
-            <!-- :to="{ path: `/komisariat/${nksId}/notes/form`, state: { note: { nks_id: nksId } } }" -->
         </QCardActions>
         <LoadingAbsolute v-if="loading" />
         <div v-if="activity.locked" class="q-mt-sm q-pa-md text-center text-negative bg-orange-3">
@@ -72,21 +71,38 @@
 <script setup>
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import KomisariatNotes from '@/models/KomisariatNotes';
+import NksNote from '@/models/NksNote';
 import { onMounted, ref, shallowRef } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
     activityId: { required: true },
+    scope: { type: String, required: true },
 });
 
 const loading = ref(false);
 const notes = shallowRef([]);
 const activity = shallowRef({});
+let model = null;
+
+onMounted(async () => {
+    if (props.scope.toLocaleLowerCase() === 'komisariat') {
+        model = KomisariatNotes;
+    }
+    if (props.scope.toLocaleLowerCase() === 'wilayah') {
+        model = NksNote;
+    }
+
+    if (!props.activityId) return;
+    if (props.activityId) {
+        await loadData();
+    }
+});
 
 async function loadData() {
     try {
         loading.value = true;
-        const res = await KomisariatNotes.getAll({ activity_id: props.activityId });
+        const res = await model.getAll({ activity_id: props.activityId });
         notes.value = res.notes;
         activity.value = res.activity;
     } catch (e) {
@@ -96,20 +112,14 @@ async function loadData() {
     }
 }
 
-onMounted(async () => {
-    if (props.activityId) {
-        await loadData();
-    }
-});
-
 const router = useRouter();
 function goEdit(note = {}) {
     router.push({
-        path: `/komisariat/activities/${props.activityId}/notes/form`,
+        path: `/${props.scope}/activities/${props.activityId}/notes/form`,
         state: {
             note: { activity_id: activity.value.id, ...note },
             activity: { ...activity.value },
-            scope: 'Komisariat',
+            scope: props.scope,
         },
     });
 }

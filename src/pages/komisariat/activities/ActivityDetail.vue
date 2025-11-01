@@ -70,7 +70,7 @@
                             no-caps
                         />
                     </q-tabs>
-                    <RouterView :key="$route.fullPath" :activityId="id" />
+                    <RouterView :key="$route.fullPath" :activityId="id" scope="Komisariat" />
                 </q-card>
             </q-card-section>
         </q-card>

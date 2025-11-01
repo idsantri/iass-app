@@ -11,7 +11,7 @@
             </small>
         </QCardSection>
         <ActivityNoteForm
-            :data="note"
+            :dataInputs="note"
             :scope="scope"
             @successDelete="$router.back()"
             @successSubmit="$router.back()"

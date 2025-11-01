@@ -23,12 +23,12 @@ import KomisariatNotes from '@/models/KomisariatNotes';
 
 const emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
 const props = defineProps({
-    data: { type: Object, required: true },
+    dataInputs: { type: Object, required: true },
     scope: { type: String, required: true },
 });
 
-const inputs = ref({ ...props.data });
-const id = props.data?.id;
+const inputs = ref({ ...props.dataInputs });
+const id = props.dataInputs?.id;
 const loading = ref(false);
 let service = null;
 
