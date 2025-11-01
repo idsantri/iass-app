@@ -92,6 +92,23 @@ export default [
                         component: () =>
                             import('../pages/komisariat/activities/ActivityDetail.vue'),
                         meta: { title: 'Komisariat: Kegiatan' },
+                        redirect: (to) => `${to.path}/absence-summaries`,
+                        children: [
+                            {
+                                path: 'absence-summaries',
+                                component: () =>
+                                    import('../pages/komisariat/absences/AbsenceSummary.vue'),
+                            },
+                            {
+                                path: 'notes',
+                                component: () => import('../pages/komisariat/notes/IndexNotes.vue'),
+                            },
+                        ],
+                    },
+                    {
+                        path: 'activities/:id/notes/form',
+                        component: () => import('../pages/komisariat/notes/EditNote.vue'),
+                        meta: { title: 'Komisariat: Absensi' },
                     },
                     {
                         path: 'activities/:id/absences',

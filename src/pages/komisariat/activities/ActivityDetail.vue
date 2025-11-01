@@ -51,8 +51,27 @@
                     </tbody>
                 </QMarkupTable>
             </q-card-section>
+            <q-separator />
             <q-card-section class="q-pa-sm">
-                <ActivityDetailAbsence :activityId="id" />
+                <q-card class="" flat bordered>
+                    <q-tabs class="bg-orange-1 text-orange-10" align="left" inline-label>
+                        <q-route-tab
+                            :to="'/komisariat/activities/' + id + '/absence-summaries'"
+                            icon="sym_o_planner_review"
+                            label="Absensi"
+                            outline
+                            no-caps
+                        />
+                        <q-route-tab
+                            :to="'/komisariat/activities/' + id + '/notes'"
+                            icon="sym_o_comment"
+                            label="Catatan"
+                            outline
+                            no-caps
+                        />
+                    </q-tabs>
+                    <RouterView :key="$route.fullPath" :activityId="id" />
+                </q-card>
             </q-card-section>
         </q-card>
         <QDialog v-model="dialog">
@@ -74,7 +93,6 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
-import ActivityDetailAbsence from './ActivityDetailAbsence.vue';
 
 const { params } = useRoute();
 const id = params.id;
