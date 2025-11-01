@@ -12,11 +12,15 @@
                 dense
                 class="q-pl-md"
                 color="orange-1"
-                :label="user.name"
                 no-caps
                 dropdown-icon="more_vert"
-                :icon="$q.screen.lt.sm ? '' : 'account_circle'"
             >
+                <template #label>
+                    <span class="">
+                        {{ user.name }}
+                    </span>
+                    <q-icon v-if="!$q.screen.lt.sm" name="account_circle" class="q-ml-xs" />
+                </template>
                 <q-list clickable v-close-popup>
                     <q-item to="/profile">
                         <q-item-section>Profil</q-item-section>
