@@ -5,9 +5,5 @@ class Member extends ApiCrud {
         super(path);
         this.path = 'members';
     }
-
-    getMembersByActivityId(activityId) {
-        // url = `${this.path}/activity/${activityId}
-    }
 }
 export default new Member();

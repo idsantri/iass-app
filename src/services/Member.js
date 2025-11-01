@@ -6,4 +6,4 @@ class Member extends ApiCrud {
     }
 }
 
-export default new Member();
+// export default new Member();

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import listData from '@/stores/lists-data';
-import ArrayCrud from '@/services/ArrayCrud';
+import ArrayCrud from '@/models/ArrayCrud';
 
 function organizeData(data) {
     const organizedData = {};

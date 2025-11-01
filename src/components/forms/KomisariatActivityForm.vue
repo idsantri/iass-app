@@ -80,7 +80,7 @@ import FormActions from './parts/FormActions.vue';
 import { isValid } from 'date-fns';
 import { formatDate } from '@/utils/date-operation';
 import { bacaHijri, m2h } from '@/utils/hijri';
-import KomisariatActivities from '@/services/KomisariatActivities';
+import KomisariatActivities from '@/models/KomisariatActivities';
 
 const props = defineProps({
     dataInputs: { type: Object },
@@ -114,10 +114,10 @@ const onSubmit = async () => {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await KomisariatActivities.asyncCreate(data);
+            response = await KomisariatActivities.create(data);
             emit('successCreate', response?.activity);
         } else {
-            response = await KomisariatActivities.asyncUpdate(id, data);
+            response = await KomisariatActivities.update(id, data);
             emit('successUpdate', response?.activity);
         }
         emit('successSubmit', response?.activity);
@@ -135,7 +135,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await KomisariatActivities.asyncRemove(id);
+        await KomisariatActivities.remove(id);
         btnClose.click();
         emit('successDelete', id);
     } catch (error) {

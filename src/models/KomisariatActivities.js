@@ -5,5 +5,4 @@ class KomisariatActivities extends ApiCrud {
         super('komisariat/activities');
     }
 }
-
-// export default new KomisariatActivities();
+export default new KomisariatActivities();

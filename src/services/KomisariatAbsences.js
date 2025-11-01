@@ -41,4 +41,4 @@ class KomisariatAbsences extends ApiCrud {
     }
 }
 
-export default new KomisariatAbsences();
+// export default new KomisariatAbsences();

@@ -9,7 +9,7 @@ const ArrayCrud = (() => {
 
     const _validatePosition = (position) => {
         if (position !== 'first' && position !== 'last') {
-            throw new Error('Position harus "first" atau "back"');
+            throw new Error('Position harus "first" atau "last"');
         }
     };
 
@@ -17,7 +17,7 @@ const ArrayCrud = (() => {
      * CREATE - Menambahkan object baru ke array
      * @param {Array} currentArray - Array saat ini (ref.value)
      * @param {Object} newObject - Object yang akan ditambahkan
-     * @param {string} position - Posisi penambahan ("first" atau "back")
+     * @param {string} position - Posisi penambahan ("first" atau "last")
      * @returns {Array} Array baru untuk update state
      */
     function create(currentArray, newObject, position = 'last') {
@@ -109,23 +109,61 @@ const ArrayCrud = (() => {
         const newArray = [...currentArray];
 
         if (typeof sortBy === 'string') {
-            // Sort by key
             newArray.sort((a, b) => {
-                const aVal = a[sortBy];
-                const bVal = b[sortBy];
+                let aVal = a[sortBy];
+                let bVal = b[sortBy];
 
-                if (order === 'asc') {
-                    return aVal > bVal ? 1 : -1;
-                } else {
-                    return aVal < bVal ? 1 : -1;
+                // Tambahkan pengecekan dan konversi untuk string agar case-insensitive
+                if (typeof aVal === 'string' && typeof bVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
                 }
+
+                // Aturan perbandingan
+                if (aVal < bVal) {
+                    return order === 'asc' ? -1 : 1;
+                }
+                if (aVal > bVal) {
+                    return order === 'asc' ? 1 : -1;
+                }
+                return 0; // Kedua nilai sama
             });
         } else if (typeof sortBy === 'function') {
-            // Sort by function
+            // Sort by function (tetap menggunakan fungsi kustom yang disediakan)
             newArray.sort(sortBy);
         }
-
         return newArray;
+    }
+    /**
+     * Mengurutkan array string secara case-insensitive (mengabaikan huruf besar/kecil).
+     *
+     * @param {string[]} dataArray - Array string primitif yang akan diurutkan.
+     * @param {string} [order='asc'] - Urutan pengurutan: 'asc' (ascending) atau 'desc' (descending).
+     * @returns {string[]} Array yang sudah diurutkan.
+     */
+    function sortPrimitiveArray(dataArray, order = 'asc') {
+        // Buat salinan array agar fungsi tidak memodifikasi array asli (immutable)
+        const sortedData = [...dataArray];
+
+        sortedData.sort((a, b) => {
+            // Menggunakan localeCompare untuk perbandingan string yang baik.
+            // Opsi { sensitivity: 'base' } memastikan perbandingan case-insensitive
+            // (mengabaikan huruf besar/kecil dan aksen).
+            const comparisonResult = a.localeCompare(b, undefined, {
+                sensitivity: 'base',
+            });
+
+            // Tentukan hasil pengurutan berdasarkan parameter 'order'
+            if (order.toLowerCase() === 'desc') {
+                // Untuk descending, balikkan hasil perbandingan
+                return -comparisonResult;
+            } else {
+                // Untuk ascending (default), gunakan hasil perbandingan aslinya
+                return comparisonResult;
+            }
+        });
+
+        return sortedData;
     }
 
     return {
@@ -136,6 +174,7 @@ const ArrayCrud = (() => {
         exists,
         filter,
         sort,
+        sortPrimitiveArray,
     };
 })();
 export default ArrayCrud;

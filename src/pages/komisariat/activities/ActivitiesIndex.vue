@@ -39,16 +39,32 @@
 <script setup>
 import CardHeader from '@/components/cards/CardHeader.vue';
 import KomisariatActivityForm from '@/components/forms/KomisariatActivityForm.vue';
-import KomisariatActivities from '@/services/KomisariatActivities';
+import KomisariatActivities from '@/models/KomisariatActivities';
 import authStore from '@/stores/authStore';
 import { formatDate } from '@/utils/date-operation';
-import { computed, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const komisariat = authStore().user.komisariat;
 const params = komisariat ? { komisariat } : {};
-const { data, loading, execute: loadData } = KomisariatActivities.useGetAll(params);
-const activities = computed(() => data.value?.activities || []);
+const activities = ref([]);
+const loading = ref(false);
 const dialog = ref(false);
+
+async function loadData() {
+    try {
+        loading.value = true;
+        const data = await KomisariatActivities.getAll(params);
+        activities.value = data.activities;
+    } catch (error) {
+        console.log('error get activities ', error);
+    } finally {
+        loading.value = false;
+    }
+}
+onMounted(async () => {
+    await loadData();
+});
+
 const columns = [
     // {
     //     name: 'tahun_bulan',

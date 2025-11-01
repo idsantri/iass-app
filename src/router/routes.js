@@ -93,6 +93,11 @@ export default [
                             import('../pages/komisariat/activities/ActivityDetail.vue'),
                         meta: { title: 'Komisariat: Kegiatan' },
                     },
+                    {
+                        path: 'activities/:id/absences',
+                        component: () => import('../pages/komisariat/absences/AbsencesIndex.vue'),
+                        meta: { title: 'Komisariat: Absensi' },
+                    },
                 ],
             },
 

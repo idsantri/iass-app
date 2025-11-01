@@ -12,7 +12,7 @@
         <div>Rekap Absensi</div>
         <QSpace />
         <QBtn
-            :to="`/komisariat/activities/${activityId}/absence`"
+            :to="`/komisariat/activities/${activityId}/absences`"
             label="Detail Absen"
             dense
             color="orange-10"
@@ -88,13 +88,14 @@
 </template>
 <script setup>
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
-import KomisariatAbsences from '@/services/KomisariatAbsences';
+import KomisariatAbsences from '@/models/KomisariatAbsences';
 import { notifyConfirm } from '@/utils/notify';
 import { computed, ref, watchEffect } from 'vue';
 
 const props = defineProps({
     activityId: { required: true },
 });
+
 const loading = ref(false);
 const report = ref([]);
 
@@ -113,7 +114,7 @@ const sumHadir = computed(() => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await KomisariatAbsences.asyncGetSummaryByActivity(props.activityId);
+        const res = await KomisariatAbsences.getSummaryByActivity(props.activityId);
         report.value = res.absence_summaries;
     } catch (e) {
         console.log('error report absence', e);
@@ -125,7 +126,7 @@ async function loadData() {
 async function createAbsence() {
     try {
         loading.value = true;
-        const res = await KomisariatAbsences.asyncCreateByActivity(props.activityId);
+        const res = await KomisariatAbsences.createByActivity(props.activityId);
         report.value = res.absence_summaries;
     } catch (e) {
         console.log('error report absence', e);
@@ -146,7 +147,7 @@ async function resetAbsence() {
 
     try {
         loading.value = true;
-        await KomisariatAbsences.asyncRemoveByActivity(props.activityId);
+        await KomisariatAbsences.removeByActivity(props.activityId);
         report.value = [];
     } catch (error) {
         console.log('error on reset absence ', error);

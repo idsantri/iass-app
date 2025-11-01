@@ -45,10 +45,10 @@
                             <td>Lock data</td>
                             <td class="no-padding">
                                 <q-toggle
-                                    v-if="data?.activity"
-                                    v-model="data.activity.locked"
+                                    v-model="activity.locked"
                                     color="orange"
-                                    :label="data.activity.locked ? 'Locked' : 'Unlocked'"
+                                    :label="activity.locked ? 'Locked' : 'Unlocked'"
+                                    @click="lockActivity(activity)"
                                     :true-value="1"
                                     :false-value="0"
                                 />
@@ -74,9 +74,9 @@
 import CardHeader from '@/components/cards/CardHeader.vue';
 import KomisariatActivityForm from '@/components/forms/KomisariatActivityForm.vue';
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
-import KomisariatActivities from '@/services/KomisariatActivities';
+import KomisariatActivities from '@/models/KomisariatActivities';
 import authStore from '@/stores/authStore';
-import { computed, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
@@ -86,14 +86,28 @@ const { params } = useRoute();
 const id = params.id;
 const komisariat = authStore().user.komisariat;
 const dialog = ref(false);
+const activity = ref({});
+const loading = ref(false);
 
-const { data, loading, execute: loadData } = KomisariatActivities.useGetById(id);
-// const activity = computed(() => data.value?.activity || [])
-const activity = ref({ ...data.value?.activity });
+async function loadData() {
+    try {
+        loading.value = true;
+        const res = await KomisariatActivities.getById(id);
+        activity.value = res.activity;
+    } catch (e) {
+        console.log('error get activity id ', e);
+    } finally {
+        loading.value = false;
+    }
+}
+
+onMounted(async () => {
+    if (id) await loadData();
+});
 
 async function lockActivity(act) {
     try {
-        await KomisariatActivities.asyncUpdate(act.id, { locked: act.locked });
+        await KomisariatActivities.update(act.id, { locked: act.locked });
     } catch (e) {
         activity.value.locked = act.locked ? 0 : 1;
         console.log('error lock nks ', e);
