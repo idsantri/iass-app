@@ -223,7 +223,7 @@ export default class Api {
      *   eMessage: false
      * });
      */
-    async createFetch(url, fetchOptions = {}) {
+    async createAsyncFetch(url, fetchOptions = {}) {
         const options = {
             method: 'GET',
             headers: this.getHeaders(),

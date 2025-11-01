@@ -83,7 +83,14 @@ export default [
                 children: [
                     {
                         path: 'activities',
-                        component: () => import('../pages/komisariat/activities/IndexPage.vue'),
+                        component: () =>
+                            import('../pages/komisariat/activities/ActivitiesIndex.vue'),
+                        meta: { title: 'Komisariat: Kegiatan' },
+                    },
+                    {
+                        path: 'activities/:id',
+                        component: () =>
+                            import('../pages/komisariat/activities/ActivityDetail.vue'),
                         meta: { title: 'Komisariat: Kegiatan' },
                     },
                 ],

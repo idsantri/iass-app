@@ -17,11 +17,22 @@
             </CardHeader>
 
             <q-card-section class="q-pa-sm">
-                <QTable :rows="activities" :columns="columns" flat :loading="loading" />
+                <QTable
+                    :rows="activities"
+                    :columns="columns"
+                    flat
+                    :loading="loading"
+                    @row-click="
+                        (evt, row, index) => $router.push(`/komisariat/activities/${row.id}`)
+                    "
+                />
             </q-card-section>
         </q-card>
         <QDialog v-model="dialog">
-            <KomisariatActivityForm @success-submit="loadData" :dataInputs="{ komisariat }" />
+            <KomisariatActivityForm
+                @success-create="(res) => $router.push(`/komisariat/activities/${res.id}`)"
+                :dataInputs="{ komisariat }"
+            />
         </QDialog>
     </div>
 </template>

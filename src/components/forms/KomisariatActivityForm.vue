@@ -71,7 +71,7 @@
     </q-card>
 </template>
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import LoadingAbsolute from '../LoadingAbsolute.vue';
 import InputSelectArray from './inputs/InputSelectArray.vue';
 import { notifyConfirm } from '@/utils/notify';
@@ -110,41 +110,38 @@ watch(
 
 const onSubmit = async () => {
     const data = JSON.parse(JSON.stringify(inputs.value));
-    const {
-        data: dataCreated,
-        loading: loadingCreate,
-        execute: executeCreate,
-    } = KomisariatActivities.create(data);
-    const {
-        data: dataUpdated,
-        loading: loadingUpdate,
-        execute: executeUpdate,
-    } = KomisariatActivities.update(id, data);
-    let response = null;
-    loading.value = true;
-    if (id) {
-        await executeUpdate();
-        response = dataUpdated?.activity;
-        emit('successUpdate', response);
-        emit('successSubmit', response);
-        loading.value = false;
-        btnClose?.click();
-    } else {
-        await executeCreate();
-        response = dataCreated?.activity;
-        emit('successCreate', response);
-        emit('successSubmit', response);
-        loading.value = false;
+    try {
+        loading.value = true;
+        let response = null;
+        if (!id) {
+            response = await KomisariatActivities.asyncCreate(data);
+            emit('successCreate', response?.activity);
+        } else {
+            response = await KomisariatActivities.asyncUpdate(id, data);
+            emit('successUpdate', response?.activity);
+        }
+        emit('successSubmit', response?.activity);
         btnClose.click();
+    } catch (error) {
+        console.log('error komisariat activity ', error);
+    } finally {
+        loading.value = false;
     }
 };
 
 const onDelete = async () => {
     const isConfirmed = await notifyConfirm('Hapus data ini?', true);
     if (!isConfirmed) return;
-    const { execute: executeDelete } = KomisariatActivities.remove(inputs.value.id || 0);
-    await executeDelete();
-    emit('successDelete', id);
-    btnClose.click();
+
+    try {
+        loading.value = true;
+        await KomisariatActivities.asyncRemove(id);
+        btnClose.click();
+        emit('successDelete', id);
+    } catch (error) {
+        console.log('error delete komisariat activity ', error);
+    } finally {
+        loading.value = false;
+    }
 };
 </script>

@@ -44,6 +44,10 @@ export default class ApiCrud extends Api {
      * @returns {object} Reactive fetch state
      */
     useGetById(id, fetchOptions = {}) {
+        if (!id && id !== 0) {
+            throw new Error('ID diperlukan untuk get');
+        }
+
         return this.createUseFetch(this.getUrl(id.toString()), {
             method: 'GET',
             immediate: true,
@@ -60,6 +64,10 @@ export default class ApiCrud extends Api {
      * @returns {object} Reactive fetch state
      */
     useCreate(payload, fetchOptions = {}) {
+        if (!payload || typeof payload !== 'object') {
+            throw new Error('Payload harus berupa object');
+        }
+
         return this.createUseFetch(this.getUrl(), {
             method: 'POST',
             body: payload,
@@ -78,6 +86,13 @@ export default class ApiCrud extends Api {
      * @returns {object} Reactive fetch state
      */
     useUpdate(id, payload, fetchOptions = {}) {
+        if (!id && id !== 0) {
+            throw new Error('ID diperlukan untuk update');
+        }
+        if (!payload || typeof payload !== 'object') {
+            throw new Error('Payload harus berupa object');
+        }
+
         return this.createUseFetch(this.getUrl(id.toString()), {
             method: 'PUT',
             body: payload,
@@ -95,6 +110,10 @@ export default class ApiCrud extends Api {
      * @returns {object} Reactive fetch state
      */
     useRemove(id, fetchOptions = {}) {
+        if (!id && id !== 0) {
+            throw new Error('ID diperlukan untuk delete');
+        }
+
         return this.createUseFetch(this.getUrl(id.toString()), {
             method: 'DELETE',
             immediate: false,
@@ -116,7 +135,7 @@ export default class ApiCrud extends Api {
         const queryString = new URLSearchParams(params).toString();
         const endpoint = queryString ? `${this.getUrl()}?${queryString}` : this.getUrl();
 
-        return this.createFetch(endpoint, {
+        return this.createAsyncFetch(endpoint, {
             method: 'GET',
             ...fetchOptions,
         });
@@ -129,7 +148,11 @@ export default class ApiCrud extends Api {
      * @returns {Promise<object>} Response data
      */
     async asyncGetById(id, fetchOptions = {}) {
-        return this.createFetch(this.getUrl(id.toString()), {
+        if (!id && id !== 0) {
+            throw new Error('ID diperlukan untuk get');
+        }
+
+        return this.createAsyncFetch(this.getUrl(id.toString()), {
             method: 'GET',
             ...fetchOptions,
         });
@@ -142,12 +165,11 @@ export default class ApiCrud extends Api {
      * @returns {Promise<object>} Response data
      */
     async asyncCreate(payload, fetchOptions = {}) {
-        // Validasi payload
         if (!payload || typeof payload !== 'object') {
             throw new Error('Payload harus berupa object');
         }
 
-        return this.createFetch(this.getUrl(), {
+        return this.createAsyncFetch(this.getUrl(), {
             method: 'POST',
             body: payload,
             ...fetchOptions,
@@ -169,7 +191,7 @@ export default class ApiCrud extends Api {
             throw new Error('Payload harus berupa object');
         }
 
-        return this.createFetch(this.getUrl(id.toString()), {
+        return this.createAsyncFetch(this.getUrl(id.toString()), {
             method: 'PUT',
             body: payload,
             ...fetchOptions,
@@ -186,7 +208,8 @@ export default class ApiCrud extends Api {
         if (!id && id !== 0) {
             throw new Error('ID diperlukan untuk delete');
         }
-        return this.createFetch(this.getUrl(id.toString()), {
+
+        return this.createAsyncFetch(this.getUrl(id.toString()), {
             method: 'DELETE',
             ...fetchOptions,
         });

@@ -19,13 +19,6 @@
             <QMarkupTable flat bordered>
                 <tbody>
                     <tr>
-                        <td>ID</td>
-                        <td class="flex items-center justify-between">
-                            <span>{{ nks.id }}</span>
-                            <span>({{ nks.tahun_bulan }})</span>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Tanggal</td>
                         <td>
                             {{ formatDate(nks.tgl_m, 'cccc, dd MMMM yyyy') }} |

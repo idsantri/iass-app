@@ -2,7 +2,7 @@ import Api from './Api';
 
 class Auth extends Api {
     login(credentials, fetchOptions = {}) {
-        return this.createFetch('auth/login', {
+        return this.createAsyncFetch('auth/login', {
             method: 'POST',
             body: credentials,
             immediate: false,
@@ -11,7 +11,7 @@ class Auth extends Api {
     }
 
     register(userData, fetchOptions = {}) {
-        return this.createFetch('auth/register', {
+        return this.createAsyncFetch('auth/register', {
             method: 'POST',
             body: userData,
             immediate: false,
