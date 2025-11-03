@@ -1,15 +1,15 @@
 <template lang="">
     <q-card-actions class="flex items-center bg-orange-6">
-        <q-btn v-if="btnDelete" class="bg-red text-red-1" no-caps="" @click="$emit('onDelete')">
+        <q-btn v-if="btnDelete" color="negative" no-caps="" @click="$emit('onDelete')">
             <q-icon v-if="iconDelete" :name="iconDelete" class="q-mr-xs" />
             <span>{{ labelDelete }}</span>
         </q-btn>
         <q-space />
-        <q-btn v-if="btnClose" v-close-popup class="bg-orange-2" no-caps="" id="btn-close-form">
+        <q-btn v-if="btnClose" v-close-popup color="warning" no-caps="" id="btn-close-form">
             <q-icon v-if="iconClose" :name="iconClose" class="q-mr-xs" />
             <span>{{ labelClose }}</span>
         </q-btn>
-        <q-btn type="submit" class="bg-orange-10 text-orange-1" no-caps="">
+        <q-btn type="submit" color="positive" no-caps="">
             <q-icon v-if="iconSubmit" :name="iconSubmit" class="q-mr-xs" />
             <span>{{ labelSubmit }}</span>
         </q-btn>
