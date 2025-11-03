@@ -18,8 +18,8 @@ import { onMounted, ref } from 'vue';
 import LoadingAbsolute from '../LoadingAbsolute.vue';
 import { notifyConfirm } from '@/utils/notify';
 import FormActions from './parts/FormActions.vue';
-import NksNote from '@/models/NksNote';
 import KomisariatNotes from '@/models/KomisariatNotes';
+import WilayahNotes from '@/models/WilayahNotes';
 
 const emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
 const props = defineProps({
@@ -30,14 +30,14 @@ const props = defineProps({
 const inputs = ref({ ...props.dataInputs });
 const id = props.dataInputs?.id;
 const loading = ref(false);
-let service = null;
+let model = null;
 
 onMounted(async () => {
     if (props.scope.toLocaleLowerCase() === 'komisariat') {
-        service = KomisariatNotes;
+        model = KomisariatNotes;
     }
     if (props.scope.toLocaleLowerCase() === 'wilayah') {
-        service = NksNote;
+        model = WilayahNotes;
     }
 });
 
@@ -48,10 +48,10 @@ const onSubmit = async () => {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await service.create(data);
+            response = await model.create(data);
             emit('successCreate', response?.note);
         } else {
-            response = await service.update(id, data);
+            response = await model.update(id, data);
             emit('successUpdate', response?.note);
         }
         emit('successSubmit', response?.note);
@@ -68,7 +68,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await service.remove(id);
+        await model.remove(id);
         emit('successDelete', id);
     } catch (error) {
         console.log('error delete note ', error);

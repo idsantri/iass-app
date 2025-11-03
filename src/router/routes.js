@@ -1,5 +1,6 @@
 import MainLayout from '@/layouts/MainLayout.vue';
 import HomeView from '@/pages/HomeView.vue';
+import _common from './_common';
 
 export default [
     {
@@ -79,48 +80,16 @@ export default [
 
             // KOMISARIAT
             {
+                path: 'wilayah',
+                meta: { scope: 'Wilayah' },
+                children: _common,
+            },
+
+            // KOMISARIAT
+            {
                 path: 'komisariat',
-                children: [
-                    {
-                        path: 'activities',
-                        component: () =>
-                            import('../pages/komisariat/activities/ActivitiesIndex.vue'),
-                        meta: { title: 'Komisariat: Kegiatan' },
-                    },
-                    {
-                        path: 'activities/:id',
-                        component: () =>
-                            import('../pages/komisariat/activities/ActivityDetail.vue'),
-                        meta: { title: 'Komisariat: Kegiatan' },
-                        redirect: (to) => `${to.path}/absence-summaries`,
-                        children: [
-                            {
-                                path: 'absence-summaries',
-                                component: () =>
-                                    import('../pages/komisariat/absences/AbsenceSummary.vue'),
-                            },
-                            {
-                                path: 'notes',
-                                component: () => import('../pages/common/note/IndexNotes.vue'),
-                            },
-                        ],
-                    },
-                    {
-                        path: 'activities/:id/notes/form',
-                        component: () => import('../pages/common/note/EditNote.vue'),
-                        meta: { title: 'Komisariat: Absensi' },
-                    },
-                    {
-                        path: 'activities/:id/absences',
-                        component: () => import('../pages/komisariat/absences/AbsencesIndex.vue'),
-                        meta: { title: 'Komisariat: Absensi' },
-                    },
-                    {
-                        path: 'activities/:id/absences/qr',
-                        component: () => import('../pages/komisariat/absences/AbsencesQR.vue'),
-                        meta: { title: 'Komisariat: Absensi' },
-                    },
-                ],
+                meta: { scope: 'Komisariat' },
+                children: _common,
             },
 
             // SETTING

@@ -36,9 +36,9 @@ const master = [
 const wilayah = [
     {
         icon: 'sym_o_history_2',
-        label: 'NKS',
-        caption: 'Jadwal NKS',
-        route: '/nks',
+        label: 'Kegiatan',
+        caption: 'Kegiatan Wilayah',
+        route: '/wilayah/activities',
         disable: false,
     },
 
