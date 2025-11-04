@@ -1,6 +1,6 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "iass-app",
-  "version": "0.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -19,7 +19,6 @@
   "dependencies": {
     "@quasar/extras": "^1.17.0",
     "@tailwindcss/vite": "^4.1.12",
-    "@vueuse/core": "^14.0.0",
     "datatables.net-dt": "^2.3.3",
     "datatables.net-responsive-dt": "^3.0.6",
     "datatables.net-select-dt": "^3.1.0",
