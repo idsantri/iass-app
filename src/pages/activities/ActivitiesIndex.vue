@@ -5,7 +5,6 @@
                 :title="titlePage"
                 @on-reload="loadData"
                 :show-add="true"
-                :disable-add="!komisariat"
                 @on-add="dialog = true"
             />
 

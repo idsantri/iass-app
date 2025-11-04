@@ -5,6 +5,8 @@
 
         <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
             <strong> {{ activity.nama }}</strong> <br />
+            <span class="text-caption"> Lingkup Kegiatan: {{ meta.scope }} </span>
+            <br />
             Komisariat {{ activity.komisariat }}<br />
             <small>
                 {{ formatDate(activity.tgl_m, 'cccc, dd MMMM yyyy') }} |

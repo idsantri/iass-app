@@ -1,18 +1,12 @@
 <template lang="">
     <q-card class="" style="max-width: 600px">
-        <SectionHeader title="Detail Pengguna" @on-reload="loadData">
-            <template #left>
-                <QBtn
-                    dense
-                    label="Edit"
-                    outline=""
-                    icon="edit"
-                    no-caps
-                    class="q-px-md q-mr-sm text-orange-1"
-                    @click="dialog = true"
-                />
-            </template>
-        </SectionHeader>
+        <CardHeader
+            title="Detail Pengguna"
+            @on-reload="loadData"
+            :show-edit="true"
+            @on-edit="dialog = true"
+        >
+        </CardHeader>
 
         <q-card-section class="q-pa-sm relative-position">
             <LoadingAbsolute v-if="loading" />
@@ -114,9 +108,9 @@
     </pre> -->
 </template>
 <script setup>
+import CardHeader from '@/components/cards/CardHeader.vue';
 import UserForm from '@/components/forms/UserForm.vue';
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import User from '@/models/User';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';

@@ -1,6 +1,6 @@
 <template lang="">
     <q-card flat bordered style="max-width: 1024px">
-        <SectionHeader title="Catatan Kegiatan" :show-reload="false"> </SectionHeader>
+        <CardHeader title="Catatan Kegiatan" :show-reload="false"> </CardHeader>
         <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
             <strong> {{ activity.nama }}</strong> <br />
             Lingkup Kegiatan: {{ scope }}<br />
@@ -19,8 +19,8 @@
     </q-card>
 </template>
 <script setup>
+import CardHeader from '@/components/cards/CardHeader.vue';
 import ActivityNoteForm from '@/components/forms/ActivityNoteForm.vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import { formatDate } from '@/utils/date-operation';
 import { bacaHijri } from '@/utils/hijri';
 

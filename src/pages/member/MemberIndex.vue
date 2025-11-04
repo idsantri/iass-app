@@ -1,43 +1,28 @@
 <template>
     <q-card flat bordered>
-        <SectionHeader title="Data Anggota" @on-reload="loadData">
-            <template #left>
-                <QBtn
-                    dense
-                    label="Tambah"
-                    outline=""
-                    icon="add"
-                    no-caps
-                    class="q-px-sm q-mr-sm text-orange-1"
-                    @click="dialog = true"
-                />
+        <CardHeader
+            title="Data Anggota"
+            @on-reload="loadData"
+            :show-add="true"
+            @on-add="dialog = true"
+        >
+            <template #more>
+                <q-list clickable v-close-popup class="text-orange-10">
+                    <q-item clickable="" @click="download('aktif')">
+                        <q-item-section>Download Aktif</q-item-section>
+                        <q-item-section avatar>
+                            <q-icon color="orange" name="sym_o_download" />
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable="" @click="download('semua')">
+                        <q-item-section>Download Semua</q-item-section>
+                        <q-item-section avatar>
+                            <q-icon color="orange" name="sym_o_download" />
+                        </q-item-section>
+                    </q-item>
+                </q-list>
             </template>
-            <template #right>
-                <q-btn-dropdown
-                    flat
-                    dense
-                    class=""
-                    color="orange-1"
-                    no-caps
-                    dropdown-icon="more_vert"
-                >
-                    <q-list clickable v-close-popup class="text-orange-10">
-                        <q-item clickable="" @click="download('aktif')">
-                            <q-item-section>Download Aktif</q-item-section>
-                            <q-item-section avatar>
-                                <q-icon color="orange" name="sym_o_download" />
-                            </q-item-section>
-                        </q-item>
-                        <q-item clickable="" @click="download('semua')">
-                            <q-item-section>Download Semua</q-item-section>
-                            <q-item-section avatar>
-                                <q-icon color="orange" name="sym_o_download" />
-                            </q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-btn-dropdown>
-            </template>
-        </SectionHeader>
+        </CardHeader>
         <q-banner v-if="warning" class="bg-yellow-2 text-black text-center q-pa-sm">
             <q-icon name="warning" class="q-mr-sm" />
             Data tidak realtime. Klik tombol muat ulang untuk memperbarui data!
@@ -116,11 +101,11 @@ import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import useMembersStore from '@/stores/membersStore';
 import Member from '@/models/Member';
-import SectionHeader from '@/components/SectionHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import FileDownloader from '@/models/FileDownloader';
 import { notifySuccess } from '@/utils/notify';
+import CardHeader from '@/components/cards/CardHeader.vue';
 
 const table = ref(null);
 const isLoading = ref(false);

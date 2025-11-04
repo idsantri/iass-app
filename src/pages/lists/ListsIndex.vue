@@ -1,6 +1,6 @@
 <template>
     <q-card style="max-width: 600px" flat bordered class="bg-transparent">
-        <SectionHeader title="Input Auto Complete" :show-reload="false" />
+        <CardHeader title="Input Auto Complete" :show-reload="false" />
         <q-card-section class="q-ma-sm no-padding">
             <q-select
                 dense
@@ -31,8 +31,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import SectionHeader from '@/components/SectionHeader.vue';
 import listsStore from '@/stores/listsStore';
+import CardHeader from '@/components/cards/CardHeader.vue';
 
 const router = useRouter();
 const { params } = useRoute();

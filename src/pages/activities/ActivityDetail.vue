@@ -2,7 +2,7 @@
     <div>
         <q-card flat bordered style="max-width: 1024px">
             <CardHeader
-                :title="`Kegiatan Komisariat`"
+                :title="titlePage"
                 @on-reload="loadData"
                 :show-edit="true"
                 :disable-edit="!komisariat"
@@ -100,14 +100,20 @@ import { useRoute } from 'vue-router';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
 
-const { params, meta, fullPath } = useRoute();
-console.log('🚀 ~ fullPath:', fullPath);
+const { params, meta } = useRoute();
 const id = params.id;
 const komisariat = authStore().user.komisariat;
 const dialog = ref(false);
 const activity = ref({});
 const loading = ref(false);
 let model = null;
+
+const titlePage =
+    meta.scope == 'Wilayah'
+        ? 'Detail Kegiatan Wilayah'
+        : meta.scope == 'Komisariat'
+          ? 'Detail Kegiatan Komisariat ' + komisariat
+          : 'Detail Kegiatan';
 
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {

@@ -1,6 +1,6 @@
 <template lang="">
     <q-card class="" style="max-width: 600px">
-        <SectionHeader @on-reload="loadData" title="Profil Saya" />
+        <CardHeader @on-reload="loadData" title="Profil Saya" />
         <LoadingAbsolute v-if="loading" />
         <q-card-section class="q-pa-sm">
             <div v-if="user.must_change_password" class="text-center q-mb-sm">
@@ -69,12 +69,12 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import User from '@/models/User';
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import PasswordForm from './PasswordForm.vue';
 import authStore from '@/stores/authStore';
 import { useRouter } from 'vue-router';
+import CardHeader from '@/components/cards/CardHeader.vue';
 
 const user = ref({});
 const loading = ref(false);

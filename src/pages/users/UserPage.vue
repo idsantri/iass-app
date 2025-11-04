@@ -1,18 +1,12 @@
 <template>
     <q-card>
-        <SectionHeader title="Data Pengguna" @on-reload="loadData">
-            <template #left>
-                <QBtn
-                    dense
-                    label="Tambah"
-                    outline=""
-                    icon="add"
-                    no-caps
-                    class="q-px-md q-mr-sm text-orange-1"
-                    @click="dialog = true"
-                />
-            </template>
-        </SectionHeader>
+        <CardHeader
+            title="Data Pengguna"
+            @on-reload="loadData"
+            :show-add="true"
+            @on-add="dialog = true"
+        >
+        </CardHeader>
 
         <q-table
             class="q-px-sm"
@@ -42,8 +36,8 @@
     <!-- <pre>{{ users }}</pre> -->
 </template>
 <script setup>
+import CardHeader from '@/components/cards/CardHeader.vue';
 import UserForm from '@/components/forms/UserForm.vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import User from '@/models/User';
 import { onMounted, ref, shallowRef } from 'vue';
 

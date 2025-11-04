@@ -1,6 +1,6 @@
 <template lang="">
     <q-card flat bordered>
-        <SectionHeader title="Rekap Absensi per Komisariat" :show-reload="false"> </SectionHeader>
+        <CardHeader title="Rekap Absensi per Komisariat" :show-reload="false"> </CardHeader>
         <LoadingFixed v-if="loading" />
         <q-card-section class="q-pa-sm bg-orange-1">
             <QSelect
@@ -264,8 +264,8 @@
     <!-- <pre>{{ reports }}</pre> -->
 </template>
 <script setup>
+import CardHeader from '@/components/cards/CardHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import AbsenceNks from '@/models/AbsenceNks';
 import WilayahActivities from '@/models/WilayahActivities';
 import { ref, onMounted, watch, shallowRef } from 'vue';

@@ -1,6 +1,6 @@
 <template lang="">
     <q-card flat bordered>
-        <SectionHeader title="Rekap Absensi per Anggota" :show-reload="false"> </SectionHeader>
+        <CardHeader title="Rekap Absensi per Anggota" :show-reload="false"> </CardHeader>
         <LoadingFixed v-if="loading" />
 
         <q-card-section class="q-pa-sm bg-orange-1">
@@ -165,9 +165,9 @@
 <script setup>
 import { ref, onMounted, watch, shallowRef, computed } from 'vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import AbsenceNks from '@/models/AbsenceNks';
 import WilayahActivities from '@/models/WilayahActivities';
+import CardHeader from '@/components/cards/CardHeader.vue';
 
 const loading = ref(false);
 const loadingNks = ref(false);

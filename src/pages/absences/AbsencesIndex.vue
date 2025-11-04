@@ -9,7 +9,7 @@
                     icon="qr_code"
                     no-caps
                     class="q-px-md"
-                    :to="`/komisariat/activities/${activityId}/absences/qr`"
+                    :to="`/${meta.scope}/activities/${activityId}/absences/qr`"
                 />
             </template>
         </CardHeader>
@@ -18,6 +18,8 @@
 
         <QCardSection class="q-px-md q-pt-sm q-pb-none text-center">
             <strong> {{ activity.nama }}</strong> <br />
+            <span class="text-caption"> Lingkup Kegiatan: {{ meta.scope }} </span>
+            <br />
             Komisariat {{ activity.komisariat }}<br />
             <small>
                 {{ formatDate(activity.tgl_m, 'cccc, dd MMMM yyyy') }} |

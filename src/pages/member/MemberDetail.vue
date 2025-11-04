@@ -1,11 +1,11 @@
 <template>
     <QCard flat bordered class="relative-position" style="max-width: 1024px">
-        <SectionHeader title="Detail Anggota" @on-reload="loadData"> </SectionHeader>
+        <CardHeader title="Detail Anggota" @on-reload="loadData"> </CardHeader>
         <LoadingFixed v-if="loading" />
         <QCardSection class="q-pa-sm">
             <DetailIdentity :anggota="anggota" @set-edit="dialog = true" />
             <DetailStatus
-                :statuses="anggota?.statuses"
+                :statuses="anggota?.statuses || []"
                 :member="{ id: anggota.id, nama: anggota.nama }"
                 @create-status="onCreateStatus"
                 @update-status="onUpdateStatus"
@@ -28,13 +28,13 @@
 import Member from '@/models/Member';
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
-import SectionHeader from '@/components/SectionHeader.vue';
 import DetailIdentity from './comp/DetailIdentity.vue';
 import DetailStatus from './comp/DetailStatus.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import { useRouter } from 'vue-router';
 import ArrayCrud from '@/models/ArrayCrud';
+import CardHeader from '@/components/cards/CardHeader.vue';
 
 const { params } = useRoute();
 const id = params.id;
