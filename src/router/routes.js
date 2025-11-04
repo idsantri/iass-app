@@ -22,11 +22,14 @@ export default [
         path: '/',
         component: MainLayout,
         children: [
+            // Home
             {
                 path: '',
                 name: 'home',
                 component: HomeView,
             },
+
+            // Members
             {
                 path: 'members',
                 meta: { title: 'Anggota' },
@@ -41,46 +44,6 @@ export default [
                     },
                 ],
             },
-            // {
-            //     path: 'nks',
-            //     component: () => import('@/pages/nks/NksIndex.vue'),
-            //     meta: { title: 'NKS' },
-            // },
-            // {
-            //     path: 'nks/:id',
-            //     component: () => import('@/pages/nks/NksDetail.vue'),
-            //     meta: { title: 'NKS' },
-            // },
-            // {
-            //     path: 'nks/:nksId/notes',
-            //     component: () => import('@/pages/nks-note/IndexPage.vue'),
-            //     meta: { title: 'Catatan NKS' },
-            // },
-            // {
-            //     path: 'nks/:nksId/notes/form',
-            //     component: () => import('@/pages/nks-note/EditPage.vue'),
-            //     meta: { title: 'Catatan NKS' },
-            // },
-            // {
-            //     path: 'nks/:nksId/absence',
-            //     component: () => import('@/pages/nks-absence/IndexPage.vue'),
-            //     meta: { title: 'Absensi NKS' },
-            // },
-            // {
-            //     path: 'nks/:nksId/absence/qr',
-            //     component: () => import('@/pages/nks-absence/QRPage.vue'),
-            //     meta: { title: 'Absensi NKS' },
-            // },
-            // {
-            //     path: 'nks/absence/rekap-komisariat',
-            //     component: () => import('@/pages/nks-absence/RekapKomisariat.vue'),
-            //     meta: { title: 'Absensi NKS | Rekap Komisariat' },
-            // },
-            // {
-            //     path: 'nks/absence/rekap-member',
-            //     component: () => import('@/pages/nks-absence/RekapMember.vue'),
-            //     meta: { title: 'Absensi NKS | Rekap Anggota' },
-            // },
 
             // Wilayah
             {

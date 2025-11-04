@@ -266,7 +266,7 @@
 <script setup>
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
-import ReportAbsence from '@/models/ReportAbsence';
+import AbsenceNks from '@/models/AbsenceNks';
 import WilayahActivities from '@/models/WilayahActivities';
 import { ref, onMounted, watch, shallowRef } from 'vue';
 
@@ -315,7 +315,7 @@ watch(thAjaranH, async (newVal) => {
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        const data = await ReportAbsence.byKomisariat({ th_ajaran_h });
+        const data = await AbsenceNks.byKomisariat({ th_ajaran_h });
         // console.log(data);
         reports.value = data.reports;
     } catch (error) {

@@ -267,7 +267,7 @@
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
 import Nks from '@/models/Nks';
-import ReportAbsence from '@/models/ReportAbsence';
+import AbsenceNks from '@/models/AbsenceNks';
 import { ref, onMounted, watch, shallowRef } from 'vue';
 
 const reports = shallowRef([]);
@@ -279,7 +279,7 @@ const thAjaranH = ref('');
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        const data = await ReportAbsence.byKomisariat({ th_ajaran_h });
+        const data = await AbsenceNks.byKomisariat({ th_ajaran_h });
         // console.log(data);
         reports.value = data.reports;
     } catch (error) {

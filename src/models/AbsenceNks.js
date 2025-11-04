@@ -1,10 +1,10 @@
 import Api from './Api';
 
-class ReportAbsence extends Api {
+class AbsenceNks extends Api {
     constructor() {
         super();
         this.setNotifyGet();
-        this.path = 'reports-absences-nks';
+        this.path = 'absence-nks';
     }
 
     async byMember(params) {
@@ -24,4 +24,4 @@ class ReportAbsence extends Api {
     }
 }
 
-export default new ReportAbsence();
+export default new AbsenceNks();

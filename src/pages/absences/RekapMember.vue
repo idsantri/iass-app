@@ -166,7 +166,7 @@
 import { ref, onMounted, watch, shallowRef, computed } from 'vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
-import ReportAbsence from '@/models/ReportAbsence';
+import AbsenceNks from '@/models/AbsenceNks';
 import WilayahActivities from '@/models/WilayahActivities';
 
 const loading = ref(false);
@@ -240,7 +240,7 @@ const loadActivityNks = async () => {
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        const data = await ReportAbsence.byMember({ th_ajaran_h });
+        const data = await AbsenceNks.byMember({ th_ajaran_h });
         // console.log(data);
         reports.value = data.reports;
         // set options komisariat
