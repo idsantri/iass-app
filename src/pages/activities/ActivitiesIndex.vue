@@ -50,7 +50,7 @@ const titlePage =
     meta.scope == 'Wilayah'
         ? 'Data Kegiatan Wilayah'
         : meta.scope == 'Komisariat'
-          ? 'Data Kegiatan Komisariat ' + komisariat
+          ? 'Data Kegiatan Komisariat ' + (komisariat || '(?)')
           : 'Data Kegiatan';
 
 onMounted(async () => {

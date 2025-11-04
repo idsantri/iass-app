@@ -5,7 +5,6 @@
                 :title="titlePage"
                 @on-reload="loadData"
                 :show-edit="true"
-                :disable-edit="!komisariat"
                 @on-edit="dialog = true"
             />
 

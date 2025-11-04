@@ -4,14 +4,7 @@
         <LoadingFixed v-if="loading" />
 
         <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
-            <strong> {{ activity.nama }}</strong> <br />
-            <span class="text-caption"> Lingkup Kegiatan: {{ meta.scope }} </span>
-            <br />
-            Komisariat {{ activity.komisariat }}<br />
-            <small>
-                {{ formatDate(activity.tgl_m, 'cccc, dd MMMM yyyy') }} |
-                {{ bacaHijri(activity.tgl_h) }}
-            </small>
+            <ActivityHeader :activity="activity" :scope="meta.scope" />
         </QCardSection>
 
         <QCard v-if="error" class="q-pa-sm text-center bg-red-1 text-red-10" flat bordered>
@@ -61,11 +54,10 @@ import KomisariatAbsences from '@/models/KomisariatAbsences';
 import KomisariatActivities from '@/models/KomisariatActivities';
 import WilayahAbsences from '@/models/WilayahAbsences';
 import WilayahActivities from '@/models/WilayahActivities';
-import { formatDate } from '@/utils/date-operation';
-import { bacaHijri } from '@/utils/hijri';
 import { onMounted, ref } from 'vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
 import { useRoute } from 'vue-router';
+import ActivityHeader from '@/pages/activities/ActivityHeader.vue';
 
 const result = ref('');
 const loading = ref(false);

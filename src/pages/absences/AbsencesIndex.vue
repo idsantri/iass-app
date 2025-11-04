@@ -17,14 +17,7 @@
         <LoadingFixed v-if="loading" />
 
         <QCardSection class="q-px-md q-pt-sm q-pb-none text-center">
-            <strong> {{ activity.nama }}</strong> <br />
-            <span class="text-caption"> Lingkup Kegiatan: {{ meta.scope }} </span>
-            <br />
-            Komisariat {{ activity.komisariat }}<br />
-            <small>
-                {{ formatDate(activity.tgl_m, 'cccc, dd MMMM yyyy') }} |
-                {{ bacaHijri(activity.tgl_h) }}
-            </small>
+            <ActivityHeader :activity="activity" :scope="meta.scope" />
         </QCardSection>
         <div v-if="activity.locked" class="q-mt-sm q-pa-md text-center text-negative bg-orange-3">
             Data terkunci
@@ -118,10 +111,9 @@ import LoadingFixed from '@/components/LoadingFixed.vue';
 import ArrayCrud from '@/models/ArrayCrud';
 import KomisariatAbsences from '@/models/KomisariatAbsences';
 import WilayahAbsences from '@/models/WilayahAbsences';
-import { formatDate } from '@/utils/date-operation';
-import { bacaHijri } from '@/utils/hijri';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import ActivityHeader from '@/pages/activities/ActivityHeader.vue';
 
 const { params, meta } = useRoute();
 const activityId = params.id;
