@@ -16,7 +16,7 @@
         <q-page-container>
             <q-page class="q-pa-sm">
                 <!-- START HERE -->
-                <router-view :key="$route.fullPath" />
+                <router-view :key="$route.meta.title" />
             </q-page>
         </q-page-container>
         <MainFooter />

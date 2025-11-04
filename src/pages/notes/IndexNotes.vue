@@ -93,7 +93,6 @@ onMounted(async () => {
         model = WilayahNotes;
     }
 
-    if (!props.activityId) return;
     if (props.activityId) {
         await loadData();
     }

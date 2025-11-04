@@ -28,78 +28,95 @@ export default [
                 component: HomeView,
             },
             {
-                path: 'nks',
-                component: () => import('@/pages/nks/NksIndex.vue'),
-                meta: { title: 'NKS' },
-            },
-            {
-                path: 'nks/:id',
-                component: () => import('@/pages/nks/NksDetail.vue'),
-                meta: { title: 'NKS' },
-            },
-            {
-                path: 'nks/:nksId/notes',
-                component: () => import('@/pages/nks-note/IndexPage.vue'),
-                meta: { title: 'Catatan NKS' },
-            },
-            {
-                path: 'nks/:nksId/notes/form',
-                component: () => import('@/pages/nks-note/EditPage.vue'),
-                meta: { title: 'Catatan NKS' },
-            },
-            {
-                path: 'nks/:nksId/absence',
-                component: () => import('@/pages/nks-absence/IndexPage.vue'),
-                meta: { title: 'Absensi NKS' },
-            },
-            {
-                path: 'nks/:nksId/absence/qr',
-                component: () => import('@/pages/nks-absence/QRPage.vue'),
-                meta: { title: 'Absensi NKS' },
-            },
-            {
-                path: 'nks/absence/rekap-komisariat',
-                component: () => import('@/pages/nks-absence/RekapKomisariat.vue'),
-                meta: { title: 'Absensi NKS | Rekap Komisariat' },
-            },
-            {
-                path: 'nks/absence/rekap-member',
-                component: () => import('@/pages/nks-absence/RekapMember.vue'),
-                meta: { title: 'Absensi NKS | Rekap Anggota' },
-            },
-            {
                 path: 'members',
                 meta: { title: 'Anggota' },
-                component: () => import('../pages/member/MemberIndex.vue'),
+                children: [
+                    {
+                        path: '',
+                        component: () => import('../pages/member/MemberIndex.vue'),
+                    },
+                    {
+                        path: ':id',
+                        component: () => import('../pages/member/MemberDetail.vue'),
+                    },
+                ],
             },
-            {
-                path: 'members/:id',
-                meta: { title: 'Anggota' },
-                component: () => import('../pages/member/MemberDetail.vue'),
-            },
+            // {
+            //     path: 'nks',
+            //     component: () => import('@/pages/nks/NksIndex.vue'),
+            //     meta: { title: 'NKS' },
+            // },
+            // {
+            //     path: 'nks/:id',
+            //     component: () => import('@/pages/nks/NksDetail.vue'),
+            //     meta: { title: 'NKS' },
+            // },
+            // {
+            //     path: 'nks/:nksId/notes',
+            //     component: () => import('@/pages/nks-note/IndexPage.vue'),
+            //     meta: { title: 'Catatan NKS' },
+            // },
+            // {
+            //     path: 'nks/:nksId/notes/form',
+            //     component: () => import('@/pages/nks-note/EditPage.vue'),
+            //     meta: { title: 'Catatan NKS' },
+            // },
+            // {
+            //     path: 'nks/:nksId/absence',
+            //     component: () => import('@/pages/nks-absence/IndexPage.vue'),
+            //     meta: { title: 'Absensi NKS' },
+            // },
+            // {
+            //     path: 'nks/:nksId/absence/qr',
+            //     component: () => import('@/pages/nks-absence/QRPage.vue'),
+            //     meta: { title: 'Absensi NKS' },
+            // },
+            // {
+            //     path: 'nks/absence/rekap-komisariat',
+            //     component: () => import('@/pages/nks-absence/RekapKomisariat.vue'),
+            //     meta: { title: 'Absensi NKS | Rekap Komisariat' },
+            // },
+            // {
+            //     path: 'nks/absence/rekap-member',
+            //     component: () => import('@/pages/nks-absence/RekapMember.vue'),
+            //     meta: { title: 'Absensi NKS | Rekap Anggota' },
+            // },
 
-            // KOMISARIAT
+            // Wilayah
             {
                 path: 'wilayah',
-                meta: { scope: 'Wilayah' },
-                children: _common,
+                meta: { scope: 'Wilayah', title: 'Kegiatan Wilayah' },
+                children: [
+                    ..._common,
+                    {
+                        path: 'absence-nks/rekap-komisariat',
+                        component: () => import('@/pages/absences/RekapKomisariat.vue'),
+                        meta: { title: 'Absensi NKS | Rekap Komisariat' },
+                    },
+                    {
+                        path: 'absence-nks/rekap-member',
+                        component: () => import('@/pages/absences/RekapMember.vue'),
+                        meta: { title: 'Absensi NKS | Rekap Anggota' },
+                    },
+                ],
             },
 
-            // KOMISARIAT
+            // Komisariat
             {
                 path: 'komisariat',
-                meta: { scope: 'Komisariat' },
+                meta: { scope: 'Komisariat', title: 'Kegiatan Komisariat' },
                 children: _common,
             },
 
-            // SETTING
+            // Settings
             {
                 path: 'settings',
+                meta: { title: 'Pengaturan' },
                 children: [
                     {
                         path: 'lists',
                         component: () => import('../pages/lists/ListsIndex.vue'),
-                        meta: { title: 'Setting: List' },
+                        meta: { title: 'Pengaturan: List' },
                         children: [
                             {
                                 path: ':listKey',
@@ -110,17 +127,20 @@ export default [
                     {
                         path: 'users',
                         component: () => import('../pages/users/UserPage.vue'),
-                        meta: { title: 'Setting: User' },
+                        meta: { title: 'Pengaturan: Pengguna' },
                     },
                     {
                         path: 'users/:id',
                         component: () => import('../pages/users/UserId.vue'),
-                        meta: { title: 'Setting: User' },
+                        meta: { title: 'Pengaturan: Pengguna' },
                     },
                 ],
             },
+
+            // Profile
             {
                 path: 'profile',
+                meta: { title: 'Profil Saya' },
                 component: () => import('../pages/profile/ProfileUser.vue'),
             },
         ],

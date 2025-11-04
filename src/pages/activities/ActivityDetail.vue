@@ -100,7 +100,8 @@ import { useRoute } from 'vue-router';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
 
-const { params, meta } = useRoute();
+const { params, meta, fullPath } = useRoute();
+console.log('🚀 ~ fullPath:', fullPath);
 const id = params.id;
 const komisariat = authStore().user.komisariat;
 const dialog = ref(false);

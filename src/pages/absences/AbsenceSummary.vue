@@ -94,7 +94,7 @@ import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import KomisariatAbsences from '@/models/KomisariatAbsences';
 import WilayahAbsences from '@/models/WilayahAbsences';
 import { notifyConfirm } from '@/utils/notify';
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
@@ -112,6 +112,10 @@ onMounted(async () => {
     }
     if (meta.scope == 'Wilayah') {
         model = WilayahAbsences;
+    }
+
+    if (props.activityId) {
+        await loadData();
     }
 });
 
@@ -150,12 +154,6 @@ async function createAbsence() {
         loading.value = false;
     }
 }
-
-watchEffect(async () => {
-    if (props.activityId) {
-        await loadData();
-    }
-});
 
 async function resetAbsence() {
     const isConfirmed = await notifyConfirm('Hapus data absensi untuk NKS ini?', true);
