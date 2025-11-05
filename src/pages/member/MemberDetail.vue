@@ -1,16 +1,18 @@
 <template>
-    <QCard flat bordered class="relative-position" style="max-width: 1024px">
+    <QCard>
         <CardHeader title="Detail Anggota" @on-reload="loadData"> </CardHeader>
-        <LoadingFixed v-if="loading" />
-        <QCardSection class="q-pa-sm">
-            <DetailIdentity :anggota="anggota" @set-edit="dialog = true" />
-            <DetailStatus
-                :statuses="anggota?.statuses || []"
-                :member="{ id: anggota.id, nama: anggota.nama }"
-                @create-status="onCreateStatus"
-                @update-status="onUpdateStatus"
-                @delete-status="onDeleteStatus"
-            />
+        <QCardSection class="q-pa-sm" style="max-width: 1024px">
+            <QCard bordered flat>
+                <LoadingFixed v-if="loading" />
+                <DetailIdentity :anggota="anggota" @set-edit="dialog = true" />
+                <DetailStatus
+                    :statuses="anggota?.statuses || []"
+                    :member="{ id: anggota.id, nama: anggota.nama }"
+                    @create-status="onCreateStatus"
+                    @update-status="onUpdateStatus"
+                    @delete-status="onDeleteStatus"
+                />
+            </QCard>
         </QCardSection>
         <!-- <pre>
       {{ anggota }}

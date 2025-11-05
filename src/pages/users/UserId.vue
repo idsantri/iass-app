@@ -1,5 +1,5 @@
 <template lang="">
-    <q-card class="" style="max-width: 600px">
+    <q-card class="">
         <CardHeader
             title="Detail Pengguna"
             @on-reload="loadData"
@@ -8,7 +8,7 @@
         >
         </CardHeader>
 
-        <q-card-section class="q-pa-sm relative-position">
+        <q-card-section class="q-pa-sm relative-position" style="max-width: 600px">
             <LoadingAbsolute v-if="loading" />
             <q-markup-table flat bordered>
                 <tbody>

@@ -1,25 +1,24 @@
 <template>
-    <div>
-        <q-card flat bordered style="max-width: 1024px">
-            <CardHeader
-                :title="titlePage"
-                @on-reload="loadData"
-                :show-add="true"
-                @on-add="dialog = true"
-            />
+    <q-card>
+        <CardHeader
+            :title="titlePage"
+            @on-reload="loadData"
+            :show-add="true"
+            @on-add="dialog = true"
+        />
 
-            <q-card-section class="q-pa-sm">
-                <QTable
-                    :rows="activities"
-                    :columns="columns"
-                    flat
-                    :loading="loading"
-                    @row-click="
-                        (evt, row, index) => $router.push(`/${meta.scope}/activities/${row.id}`)
-                    "
-                />
-            </q-card-section>
-        </q-card>
+        <q-card-section class="q-pa-sm" style="max-width: 1024px">
+            <QTable
+                :rows="activities"
+                :columns="columns"
+                flat
+                bordered
+                :loading="loading"
+                @row-click="
+                    (evt, row, index) => $router.push(`/${meta.scope}/activities/${row.id}`)
+                "
+            />
+        </q-card-section>
         <QDialog v-model="dialog">
             <ActivityForm
                 @success-create="(res) => $router.push(`/${meta.scope}/activities/${res.id}`)"
@@ -27,7 +26,7 @@
                 :scope="meta.scope"
             />
         </QDialog>
-    </div>
+    </q-card>
 </template>
 <script setup>
 import CardHeader from '@/components/cards/CardHeader.vue';

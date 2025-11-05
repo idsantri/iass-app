@@ -1,5 +1,5 @@
 <template lang="">
-    <q-card flat bordered>
+    <q-card>
         <CardHeader title="Rekap Absensi per Anggota" :show-reload="false"> </CardHeader>
         <LoadingFixed v-if="loading" />
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-sm bg-orange-1 q-my-sm flex items-center justify-between">
+    <div class="q-pa-sm bg-orange-1 flex items-center justify-between">
         <div>Riwayat Status</div>
         <QBtn
             label="Tambah"

@@ -1,29 +1,34 @@
 <template>
-    <q-card style="max-width: 600px" flat bordered class="bg-transparent">
+    <q-card>
         <CardHeader title="Input Auto Complete" :show-reload="false" />
-        <q-card-section class="q-ma-sm no-padding">
-            <q-select
-                dense
-                outlined
-                label="Pilih List"
-                v-model="listModel"
-                :options="options"
-                emit-value
-                map-options
-                @update:model-value="(v) => routerPush(v)"
-                behavior="menu"
-            />
-        </q-card-section>
-        <q-card-section class="q-ma-sm no-padding">
-            <q-card v-if="listModel" class="" flat bordered>
-                <router-view :key="$route.fullPath" />
-            </q-card>
-            <q-card v-else class="" flat bordered>
-                <q-card-section class="bg-orange-1 text-center text-italic text-subtitle1 q-pa-lg">
-                    Silakan pilih lists yang tersedia!
-                </q-card-section>
-            </q-card>
-        </q-card-section>
+        <QCardSection class="q-pa-sm" style="max-width: 600px">
+            <QCard bordered flat>
+                <QCardSection class="q-pa-sm">
+                    <q-select
+                        class="q-mb-sm"
+                        dense
+                        outlined
+                        label="Pilih List"
+                        v-model="listModel"
+                        :options="options"
+                        emit-value
+                        map-options
+                        @update:model-value="(v) => routerPush(v)"
+                        behavior="menu"
+                    />
+                    <q-card v-if="listModel" class="" flat bordered>
+                        <router-view :key="$route.fullPath" />
+                    </q-card>
+                    <q-card v-else class="" flat bordered>
+                        <q-card-section
+                            class="bg-orange-1 text-center text-italic text-subtitle1 q-pa-lg"
+                        >
+                            Silakan pilih lists yang tersedia!
+                        </q-card-section>
+                    </q-card>
+                </QCardSection>
+            </QCard>
+        </QCardSection>
     </q-card>
     <!-- <pre>list model:{{ listModel }}</pre> -->
     <!-- <pre>list data:{{ listData }}</pre> -->

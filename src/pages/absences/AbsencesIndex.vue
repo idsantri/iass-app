@@ -1,5 +1,5 @@
 <template>
-    <q-card flat bordered style="max-width: 1024px">
+    <q-card>
         <CardHeader :title="`Absensi Kegiatan`" @on-reload="loadData">
             <template #buttons>
                 <QBtn
@@ -13,94 +13,99 @@
                 />
             </template>
         </CardHeader>
-
-        <LoadingFixed v-if="loading" />
-
-        <QCardSection class="q-px-md q-pt-sm q-pb-none text-center">
-            <ActivityHeader :activity="activity" :scope="meta.scope" />
-        </QCardSection>
-        <div v-if="activity.locked" class="q-mt-sm q-pa-md text-center text-negative bg-orange-3">
-            Data terkunci
-        </div>
-        <q-card-section class="q-px-sm q-pt-none q-pb-sm">
-            <div class="flex justify-between">
-                <div class="q-ma-sm full-width" style="max-width: 450px">
-                    <QSelect
-                        outlined
-                        v-model="filterSelect"
-                        :options="optionsKomisariat"
-                        label="Filter Komisariat"
-                        behavior="menu"
-                        clearable=""
-                        dense
-                    />
+        <QCardSection class="q-pa-sm" style="max-width: 1024px">
+            <QCard bordered flat>
+                <LoadingFixed v-if="loading" />
+                <QCardSection class="q-px-md q-pt-sm q-pb-none text-center">
+                    <ActivityHeader :activity="activity" :scope="meta.scope" />
+                </QCardSection>
+                <div
+                    v-if="activity.locked"
+                    class="q-mt-sm q-pa-md text-center text-negative bg-orange-3"
+                >
+                    Data terkunci
                 </div>
-                <div class="q-ma-sm full-width" style="max-width: 450px">
-                    <QInput
-                        v-model="filterInput"
-                        label="Cari data"
-                        placeholder="nama atau kelompok desa"
-                        outlined
-                        dense
-                        class=""
-                        clearable
-                        type="search"
-                    />
-                </div>
-            </div>
-
-            <table class="full-width">
-                <thead>
-                    <tr class="bg-orange-1">
-                        <th class="tw:p-2">Nama</th>
-                        <th class="tw:p-2">Hadir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="absence in filteredData"
-                        :key="absence.id"
-                        class="tw:border-b tw:border-orange-200/50"
-                    >
-                        <td class="tw:flex tw:items-center tw:gap-x-1 tw:p-2">
-                            <QBtn
-                                icon="info"
+                <q-card-section class="q-px-sm q-pt-none q-pb-sm">
+                    <div class="flex justify-between">
+                        <div class="q-ma-sm full-width" style="max-width: 450px">
+                            <QSelect
+                                outlined
+                                v-model="filterSelect"
+                                :options="optionsKomisariat"
+                                label="Filter Komisariat"
+                                behavior="menu"
+                                clearable=""
                                 dense
-                                class="q-mr-sm"
-                                flat
-                                round=""
-                                color="orange-4"
-                                :to="`/members/${absence.member_id}`"
                             />
-                            <div>
-                                <span class="tw:font-medium">
-                                    {{ absence.nama }}
-                                </span>
-                                <br />
-                                <small class="tw:font-light">
-                                    {{ absence.komisariat }} | {{ absence.kelompok }}
-                                </small>
-                            </div>
-                        </td>
-                        <td class="tw:p-2">
-                            <q-toggle
-                                class="q-px-sm"
-                                v-model="absence.hadir"
-                                color="orange"
-                                label="Hadir"
-                                @click="() => (activity.locked ? null : setHadir(absence))"
-                                :true-value="1"
-                                :false-value="0"
-                                :disable="!!activity.locked"
+                        </div>
+                        <div class="q-ma-sm full-width" style="max-width: 450px">
+                            <QInput
+                                v-model="filterInput"
+                                label="Cari data"
+                                placeholder="nama atau kelompok desa"
+                                outlined
+                                dense
+                                class=""
+                                clearable
+                                type="search"
                             />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </q-card-section>
-        <QCard class="q-mt-sm q-pa-sm text-center bg-orange-14 text-orange-1" flat bordered>
-            Menampilkan {{ filteredData?.length }} anggota (aktif)
-        </QCard>
+                        </div>
+                    </div>
+
+                    <table class="full-width">
+                        <thead>
+                            <tr class="bg-orange-1">
+                                <th class="tw:p-2">Nama</th>
+                                <th class="tw:p-2">Hadir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="absence in filteredData"
+                                :key="absence.id"
+                                class="tw:border-b tw:border-orange-200/50"
+                            >
+                                <td class="tw:flex tw:items-center tw:gap-x-1 tw:p-2">
+                                    <QBtn
+                                        icon="info"
+                                        dense
+                                        class="q-mr-sm"
+                                        flat
+                                        round=""
+                                        color="orange-4"
+                                        :to="`/members/${absence.member_id}`"
+                                    />
+                                    <div>
+                                        <span class="tw:font-medium">
+                                            {{ absence.nama }}
+                                        </span>
+                                        <br />
+                                        <small class="tw:font-light">
+                                            {{ absence.komisariat }} | {{ absence.kelompok }}
+                                        </small>
+                                    </div>
+                                </td>
+                                <td class="tw:p-2">
+                                    <q-toggle
+                                        class="q-px-sm"
+                                        v-model="absence.hadir"
+                                        color="orange"
+                                        label="Hadir"
+                                        @click="() => (activity.locked ? null : setHadir(absence))"
+                                        :true-value="1"
+                                        :false-value="0"
+                                        :disable="!!activity.locked"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </q-card-section>
+                <QCard class="q-mt-sm q-pa-sm text-center bg-orange-14 text-orange-1" flat bordered>
+                    Menampilkan {{ filteredData?.length }} anggota (aktif)
+                </QCard>
+            </QCard>
+        </QCardSection>
     </q-card>
 
     <!-- <pre>{{ absences }}</pre> -->

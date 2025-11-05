@@ -1,47 +1,51 @@
 <template>
-    <QCard flat bordered style="max-width: 600px">
+    <QCard>
         <CardHeader title="Scan QR/Barcode" @on-reload="loadData"> </CardHeader>
-        <LoadingFixed v-if="loading" />
+        <q-card-section class="q-pa-sm" style="max-width: 600px">
+            <QCard flat bordered>
+                <LoadingFixed v-if="loading" />
 
-        <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
-            <ActivityHeader :activity="activity" :scope="meta.scope" />
-        </QCardSection>
+                <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
+                    <ActivityHeader :activity="activity" :scope="meta.scope" />
+                </QCardSection>
 
-        <QCard v-if="error" class="q-pa-sm text-center bg-red-1 text-red-10" flat bordered>
-            Terjadi kesalahan: <br />
-            {{ error }}
-        </QCard>
-        <q-card-section class="q-pa-sm">
-            <q-select
-                :options="constraintOptions"
-                v-model="selectedConstraints"
-                class=""
-                option-value="constraints"
-                emit-value
-                map-options
-                behavior="menu"
-                outlined
-                dense
-                label="Pilih Kamera"
-            />
-            <div v-if="!activity.locked" class="q-mt-sm">
-                <LoadingAbsolute v-if="loadingAbsence" />
-                <qrcode-stream
-                    :key="cameraKey"
-                    :constraints="selectedConstraints"
-                    :track="paintBoundingBox"
-                    :formats="['code_128', 'qr_code', 'linear_codes']"
-                    @error="onError"
-                    @detect="handleScan"
-                    @camera-on="onCameraReady"
-                />
-            </div>
-            <div v-else class="q-mt-sm q-pa-lg text-center text-negative bg-orange-3">
-                Fitur dikunci oleh Admin!
-            </div>
-        </q-card-section>
-        <q-card-section class="q-pa-sm bg-orange-1 text-orange-10">
-            <div class="tw:text-xl tw:text-center">|| {{ result || '-' }} ||</div>
+                <QCard v-if="error" class="q-pa-sm text-center bg-red-1 text-red-10" flat bordered>
+                    Terjadi kesalahan: <br />
+                    {{ error }}
+                </QCard>
+                <q-card-section class="q-pa-sm">
+                    <q-select
+                        :options="constraintOptions"
+                        v-model="selectedConstraints"
+                        class=""
+                        option-value="constraints"
+                        emit-value
+                        map-options
+                        behavior="menu"
+                        outlined
+                        dense
+                        label="Pilih Kamera"
+                    />
+                    <div v-if="!activity.locked" class="q-mt-sm">
+                        <LoadingAbsolute v-if="loadingAbsence" />
+                        <qrcode-stream
+                            :key="cameraKey"
+                            :constraints="selectedConstraints"
+                            :track="paintBoundingBox"
+                            :formats="['code_128', 'qr_code', 'linear_codes']"
+                            @error="onError"
+                            @detect="handleScan"
+                            @camera-on="onCameraReady"
+                        />
+                    </div>
+                    <div v-else class="q-mt-sm q-pa-lg text-center text-negative bg-orange-3">
+                        Fitur dikunci oleh Admin!
+                    </div>
+                </q-card-section>
+                <q-card-section class="q-pa-sm bg-orange-1 text-orange-10">
+                    <div class="tw:text-xl tw:text-center">|| {{ result || '-' }} ||</div>
+                </q-card-section>
+            </QCard>
         </q-card-section>
     </QCard>
 </template>

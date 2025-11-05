@@ -1,5 +1,5 @@
 <template>
-    <q-card flat bordered>
+    <q-card>
         <CardHeader
             title="Data Anggota"
             @on-reload="loadData"

@@ -1,8 +1,8 @@
 <template lang="">
-    <q-card class="" style="max-width: 600px">
+    <q-card class="">
         <CardHeader @on-reload="loadData" title="Profil Saya" />
         <LoadingAbsolute v-if="loading" />
-        <q-card-section class="q-pa-sm">
+        <q-card-section class="q-pa-sm" style="max-width: 600px">
             <div v-if="user.must_change_password" class="text-center q-mb-sm">
                 <div class="q-pa-md text-negative bg-red-1" style="border-radius: 10px">
                     Anda perlu mengganti password <br />sebelum memulai!
