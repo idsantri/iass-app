@@ -1,10 +1,12 @@
 <template>
     <QCard>
         <CardHeader title="Detail Anggota" @on-reload="loadData"> </CardHeader>
-        <QCardSection class="q-pa-sm" style="max-width: 1024px">
+        <QCardSection class="q-pa-sm q-gutter-sm" style="max-width: 1024px">
             <QCard bordered flat>
                 <LoadingFixed v-if="loading" />
                 <DetailIdentity :anggota="anggota" @set-edit="dialog = true" />
+            </QCard>
+            <QCard bordered flat>
                 <DetailStatus
                     :statuses="anggota?.statuses || []"
                     :member="{ id: anggota.id, nama: anggota.nama }"
