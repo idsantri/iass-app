@@ -6,7 +6,7 @@
             :show-edit="true"
             @on-edit="dialog = true"
         >
-            <template #buttons>
+            <!-- <template #buttons>
                 <QBtn
                     label="Foto"
                     no-caps
@@ -16,12 +16,12 @@
                     @click="dialogAvatar = true"
                     outline=""
                 />
-            </template>
+            </template> -->
         </CardHeader>
         <QCardSection class="q-pa-sm q-gutter-sm" style="max-width: 1024px">
             <QCard bordered flat>
                 <LoadingFixed v-if="loading" />
-                <DetailIdentity :anggota="anggota" />
+                <DetailIdentity :anggota="anggota" @on-click-upload="dialogAvatar = true" />
                 <DetailStatus
                     :statuses="anggota?.statuses || []"
                     :member="{ id: anggota.id, nama: anggota.nama }"

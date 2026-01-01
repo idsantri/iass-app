@@ -2,7 +2,8 @@
     <div class="q-pa-sm tw:flex tw:flex-col tw:gap-y-4 tw:gap-x-2 tw:items-center tw:sm:flex-row">
         <q-avatar
             size="200px"
-            class="text-center tw:ring-4 tw:ring-orange-300/75 tw:shadow-lg tw:shadow-orange-500/75 tw:mx-2"
+            class="text-center tw:ring-4 tw:ring-orange-300/75 tw:shadow-lg tw:shadow-orange-500/75 tw:m-2"
+            @click="emit('onClickUpload')"
         >
             <q-img
                 :src="anggota?.avatar || '/user-default.png'"
@@ -10,6 +11,7 @@
                 ratio="1"
                 width="200px"
             />
+            <q-tooltip class="bg-orange"> Klik/tap untuk upload foto </q-tooltip>
         </q-avatar>
         <QMarkupTable class="tw:grow" flat>
             <tbody>
@@ -94,6 +96,7 @@ defineProps({
         required: true,
     },
 });
+const emit = defineEmits(['onAvatarClick']);
 </script>
 <style scoped>
 td {
