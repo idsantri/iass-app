@@ -63,6 +63,7 @@
                         label="Absensi"
                         outline
                         no-caps
+                        replace
                     />
                     <q-route-tab
                         :to="`/${meta.scope}/activities/${id}/notes`"
@@ -70,9 +71,10 @@
                         label="Catatan"
                         outline
                         no-caps
+                        replace
                     />
                 </q-tabs>
-                <RouterView :key="$route.fullPath" :activityId="id" :scope="meta.scope" />
+                <RouterView :key="$route.path" :activityId="id" :scope="meta.scope" />
             </q-card>
         </q-card-section>
         <QDialog v-model="dialog">

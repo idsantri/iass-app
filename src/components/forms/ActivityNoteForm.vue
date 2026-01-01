@@ -27,7 +27,7 @@ const props = defineProps({
     scope: { type: String, required: true },
 });
 
-const inputs = ref({ ...props.dataInputs });
+const inputs = ref({ ...props.dataInputs, content: props.dataInputs?.content || '' });
 const id = props.dataInputs?.id;
 const loading = ref(false);
 let model = null;
