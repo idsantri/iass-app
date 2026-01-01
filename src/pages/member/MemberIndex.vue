@@ -33,7 +33,7 @@
                     outlined
                     v-model="filterKomisariat"
                     :options="komisariatOptions"
-                    label="Filter Kelompok"
+                    label="Filter Komisariat"
                     class="full-width"
                     behavior="menu"
                     clearable=""
@@ -270,6 +270,10 @@ const optionsDT = computed(() => ({
         {
             title: 'Alamat',
             data: 'alamat_singkat',
+        },
+        {
+            title: 'Komisariat',
+            data: 'komisariat',
         },
         {
             title: 'Kelompok',
