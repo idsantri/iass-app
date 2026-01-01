@@ -33,7 +33,7 @@
                     outlined
                     v-model="filterKomisariat"
                     :options="komisariatOptions"
-                    label="Filter Komisariat"
+                    label="Filter Kelompok"
                     class="full-width"
                     behavior="menu"
                     clearable=""
@@ -86,10 +86,10 @@
                 @draw="onDataTableDraw"
             />
         </q-card-section>
+        <QDialog v-model="dialog">
+            <MemberForm @success-submit="(res) => $router.push(`/members/${res.id}`)" />
+        </QDialog>
     </CardPage>
-    <QDialog v-model="dialog">
-        <MemberForm @success-submit="(res) => $router.push(`/members/${res.id}`)" />
-    </QDialog>
 </template>
 
 <script setup>
@@ -105,6 +105,7 @@ import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import FileDownloader from '@/models/FileDownloader';
 import { notifySuccess } from '@/utils/notify';
+import CardHeader from '@/components/cards/CardHeader.vue';
 
 const table = ref(null);
 const isLoading = ref(false);
@@ -116,6 +117,7 @@ const membersStore = useMembersStore();
 const {
     filterKomisariat,
     filterStatus,
+    filterAlamat,
     members,
     komisariatOptions,
     filteredMembers,
@@ -165,6 +167,7 @@ function onDataTableDraw(eDt, settings) {
 function attachListeners() {
     attachLinkListeners();
     attachCopyListeners();
+    attachAddressSearchListener();
 }
 
 // Function untuk attach event listener ke link
@@ -190,6 +193,33 @@ function attachCopyListeners() {
             notifySuccess(`ID anggota ${id} disalin ke clipboard`);
         };
     });
+}
+
+let addressSearchTimeout = null;
+function attachAddressSearchListener() {
+    const addressSearchInput = document.querySelector('#dt-input-search-address');
+
+    if (addressSearchInput) {
+        // Set nilai awal dari store
+        addressSearchInput.value = filterAlamat.value || '';
+
+        const handleAddressSearch = (e) => {
+            const searchValue = e.target.value.trim();
+
+            // Clear timeout sebelumnya
+            clearTimeout(addressSearchTimeout);
+
+            addressSearchTimeout = setTimeout(() => {
+                // Hanya filter jika kosong atau minimal 3 karakter
+                if (searchValue === '' || searchValue.length >= 3) {
+                    membersStore.filterAlamat = searchValue;
+                }
+            }, 300);
+        };
+
+        addressSearchInput.removeEventListener('input', handleAddressSearch); // Hapus listener lama jika ada
+        addressSearchInput.addEventListener('input', handleAddressSearch);
+    }
 }
 
 // Computed untuk DataTable options dengan kolom aksi
@@ -239,13 +269,7 @@ const optionsDT = computed(() => ({
         },
         {
             title: 'Alamat',
-            render: function (data, type, row) {
-                return `${row.jl ?? ''} ${row.desa ?? ''} ${row.kecamatan ?? ''}`;
-            },
-        },
-        {
-            title: 'Komisariat',
-            data: 'komisariat',
+            data: 'alamat_singkat',
         },
         {
             title: 'Kelompok',
@@ -257,9 +281,7 @@ const optionsDT = computed(() => ({
         },
         {
             title: 'Keanggotaan',
-            render: function (data, type, row) {
-                return `${row.alumni == true ? 'IASS' : 'Sidogirian'}`;
-            },
+            data: 'keanggotaan',
         },
         {
             title: 'NIK',
@@ -275,24 +297,47 @@ const optionsDT = computed(() => ({
     },
     autoWidth: true,
     layout: {
-        topStart: {
-            pageLength: {
-                menu: [10, 25, 50, 100, -1],
+        top: [
+            {
+                pageLength: {
+                    menu: [10, 25, 50, 100, -1],
+                },
             },
-        },
-        topEnd: {
-            search: {
-                placeholder: 'Cari anggota...',
-                text: 'Cari _INPUT_',
+            {
+                div: {
+                    className: 'dt-search',
+                    html: `<label for="dt-input-search-address">Cari Alamat</label>
+                           <input type="search" class="dt-input" id="dt-input-search-address" placeholder="cari alamat (min. 3 karakter)">`,
+                },
             },
-        },
+            {
+                search: {
+                    placeholder: 'cari apapun...',
+                    text: 'Cari _INPUT_',
+                },
+            },
+        ],
+        topStart: null, // Menghilangkan default
+        topEnd: null, // Menghilangkan default
+        // topStart: {
+        //     pageLength: {
+        //         menu: [10, 25, 50, 100, -1],
+        //     },
+        // },
+        // top2Start: 'info',
+        // topEnd: {
+        //     search: {
+        //         placeholder: 'Cari anggota...',
+        //         text: 'Cari _INPUT_',
+        //     },
+        // },
     },
     scrollX: true,
 }));
 
 // Watch untuk perubahan filter - validasi pagination
 watch(
-    [filterKomisariat, filterStatus],
+    [filterKomisariat, filterStatus, filterAlamat],
     () => {
         setTimeout(() => {
             const totalRecords = filteredMembers.value.length;

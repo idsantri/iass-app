@@ -1,12 +1,27 @@
 <template>
     <CardPage>
-        <CardHeader title="Detail Anggota" @on-reload="loadData"> </CardHeader>
+        <CardHeader
+            title="Detail Anggota"
+            @on-reload="loadData"
+            :show-edit="true"
+            @on-edit="dialog = true"
+        >
+            <template #buttons>
+                <QBtn
+                    label="Foto"
+                    no-caps
+                    dense
+                    icon="camera"
+                    class="q-px-sm"
+                    @click="dialogAvatar = true"
+                    outline=""
+                />
+            </template>
+        </CardHeader>
         <QCardSection class="q-pa-sm q-gutter-sm" style="max-width: 1024px">
             <QCard bordered flat>
                 <LoadingFixed v-if="loading" />
-                <DetailIdentity :anggota="anggota" @set-edit="dialog = true" />
-            </QCard>
-            <QCard bordered flat>
+                <DetailIdentity :anggota="anggota" />
                 <DetailStatus
                     :statuses="anggota?.statuses || []"
                     :member="{ id: anggota.id, nama: anggota.nama }"
@@ -16,14 +31,24 @@
                 />
             </QCard>
         </QCardSection>
-        <!-- <pre>
-      {{ anggota }}
-    </pre> -->
         <QDialog v-model="dialog">
             <MemberForm
                 :data="anggota"
                 @success-delete="() => $router.go(-1)"
                 @success-submit="onSubmit"
+            />
+        </QDialog>
+        <QDialog v-model="dialogAvatar">
+            <MemberAvatarForm
+                :member-id="$route.params.id"
+                :member-avatar-url="anggota?.avatar || '/user-default.png'"
+                @upload-success="
+                    (member) => {
+                        anggota.avatar = member.avatar;
+                        dialogAvatar = false;
+                    }
+                "
+                @upload-error="null"
             />
         </QDialog>
     </CardPage>
@@ -38,6 +63,8 @@ import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import { useRouter } from 'vue-router';
 import ArrayCrud from '@/models/ArrayCrud';
+import CardHeader from '@/components/cards/CardHeader.vue';
+import MemberAvatarForm from '@/components/forms/MemberAvatarForm.vue';
 
 const { params } = useRoute();
 const id = params.id;
@@ -45,6 +72,7 @@ const loading = ref(false);
 const anggota = ref({});
 const dialog = ref(false);
 const router = useRouter();
+const dialogAvatar = ref(false);
 
 async function loadData() {
     try {
@@ -63,8 +91,8 @@ function onSubmit(res) {
         router.push(`/members/${res.id}`);
     }
     Object.assign(anggota.value, res);
-    // console.log(anggota.value);
 }
+
 onMounted(async () => {
     if (id) await loadData();
 });
