@@ -1,5 +1,5 @@
 <template>
-    <q-card>
+    <CardPage>
         <CardHeader :title="`Absensi Kegiatan`" @on-reload="loadData">
             <template #buttons>
                 <QBtn
@@ -106,12 +106,11 @@
                 </QCard>
             </QCard>
         </QCardSection>
-    </q-card>
+    </CardPage>
 
     <!-- <pre>{{ absences }}</pre> -->
 </template>
 <script setup>
-import CardHeader from '@/components/cards/CardHeader.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import ArrayCrud from '@/models/ArrayCrud';
 import KomisariatAbsences from '@/models/KomisariatAbsences';

@@ -1,5 +1,5 @@
 <template lang="">
-    <q-card class="">
+    <CardPage>
         <CardHeader @on-reload="loadData" title="Profil Saya" />
         <LoadingAbsolute v-if="loading" />
         <q-card-section class="q-pa-sm" style="max-width: 600px">
@@ -65,7 +65,7 @@
                 </q-item>
             </q-list>
         </q-card-section>
-    </q-card>
+    </CardPage>
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
@@ -74,7 +74,6 @@ import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import PasswordForm from './PasswordForm.vue';
 import authStore from '@/stores/authStore';
 import { useRouter } from 'vue-router';
-import CardHeader from '@/components/cards/CardHeader.vue';
 
 const user = ref({});
 const loading = ref(false);

@@ -1,5 +1,5 @@
 <template>
-    <q-card>
+    <CardPage>
         <CardHeader
             :title="titlePage"
             @on-reload="loadData"
@@ -26,10 +26,9 @@
                 :scope="meta.scope"
             />
         </QDialog>
-    </q-card>
+    </CardPage>
 </template>
 <script setup>
-import CardHeader from '@/components/cards/CardHeader.vue';
 import ActivityForm from '@/components/forms/ActivityForm.vue';
 import KomisariatActivities from '@/models/KomisariatActivities';
 import WilayahActivities from '@/models/WilayahActivities';

@@ -1,5 +1,5 @@
 <template lang="">
-    <q-card class="">
+    <CardPage>
         <CardHeader
             title="Detail Pengguna"
             @on-reload="loadData"
@@ -95,7 +95,7 @@
                 </q-item>
             </q-list>
         </q-card-section>
-    </q-card>
+    </CardPage>
     <QDialog v-model="dialog">
         <UserForm
             @success-delete="() => $router.go(-1)"
@@ -108,7 +108,6 @@
     </pre> -->
 </template>
 <script setup>
-import CardHeader from '@/components/cards/CardHeader.vue';
 import UserForm from '@/components/forms/UserForm.vue';
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import User from '@/models/User';

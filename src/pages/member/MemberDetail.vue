@@ -1,5 +1,5 @@
 <template>
-    <QCard>
+    <CardPage>
         <CardHeader title="Detail Anggota" @on-reload="loadData"> </CardHeader>
         <QCardSection class="q-pa-sm q-gutter-sm" style="max-width: 1024px">
             <QCard bordered flat>
@@ -26,7 +26,7 @@
                 @success-submit="onSubmit"
             />
         </QDialog>
-    </QCard>
+    </CardPage>
 </template>
 <script setup>
 import Member from '@/models/Member';
@@ -38,7 +38,6 @@ import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import { useRouter } from 'vue-router';
 import ArrayCrud from '@/models/ArrayCrud';
-import CardHeader from '@/components/cards/CardHeader.vue';
 
 const { params } = useRoute();
 const id = params.id;

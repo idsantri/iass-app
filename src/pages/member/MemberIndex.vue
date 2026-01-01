@@ -1,5 +1,5 @@
 <template>
-    <q-card>
+    <CardPage :dynamic-height="false">
         <CardHeader
             title="Data Anggota"
             @on-reload="loadData"
@@ -86,7 +86,7 @@
                 @draw="onDataTableDraw"
             />
         </q-card-section>
-    </q-card>
+    </CardPage>
     <QDialog v-model="dialog">
         <MemberForm @success-submit="(res) => $router.push(`/members/${res.id}`)" />
     </QDialog>
@@ -105,7 +105,6 @@ import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import FileDownloader from '@/models/FileDownloader';
 import { notifySuccess } from '@/utils/notify';
-import CardHeader from '@/components/cards/CardHeader.vue';
 
 const table = ref(null);
 const isLoading = ref(false);

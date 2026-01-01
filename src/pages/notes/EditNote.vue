@@ -1,5 +1,5 @@
 <template lang="">
-    <q-card flat bordered>
+    <CardPage>
         <CardHeader title="Catatan Kegiatan" :show-reload="false"> </CardHeader>
         <q-card-section class="q-pa-sm" style="max-width: 1024px">
             <QCard flat bordered>
@@ -14,10 +14,9 @@
                 />
             </QCard>
         </q-card-section>
-    </q-card>
+    </CardPage>
 </template>
 <script setup>
-import CardHeader from '@/components/cards/CardHeader.vue';
 import ActivityNoteForm from '@/components/forms/ActivityNoteForm.vue';
 import ActivityHeader from '../activities/ActivityHeader.vue';
 

@@ -1,5 +1,5 @@
 <template lang="">
-    <q-card>
+    <CardPage>
         <CardHeader title="Rekap Absensi per Anggota" :show-reload="false"> </CardHeader>
         <LoadingFixed v-if="loading" />
 
@@ -160,14 +160,13 @@
         <!-- <pre>
             {{ filteredReports }}
         </pre> -->
-    </q-card>
+    </CardPage>
 </template>
 <script setup>
 import { ref, onMounted, watch, shallowRef, computed } from 'vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import AbsenceNks from '@/models/AbsenceNks';
 import WilayahActivities from '@/models/WilayahActivities';
-import CardHeader from '@/components/cards/CardHeader.vue';
 
 const loading = ref(false);
 const loadingNks = ref(false);

@@ -25,11 +25,20 @@ import 'quasar/src/css/index.sass';
 
 import App from './App.vue';
 import router from './router';
+import CardPage from './components/cards/CardPage.vue';
+import CardHeader from './components/cards/CardHeader.vue';
+import CardLoading from './components/cards/CardLoading.vue';
+import CardListTabel from './components/cards/CardListTabel.vue';
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
 const app = createApp(App);
+app.component('CardPage', CardPage);
+app.component('CardHeader', CardHeader);
+app.component('CardLoading', CardLoading);
+app.component('CardListTabel', CardListTabel);
+
 app.use(pinia);
 app.use(router);
 app.use(Quasar, {

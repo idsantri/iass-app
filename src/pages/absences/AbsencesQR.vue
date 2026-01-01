@@ -1,5 +1,5 @@
 <template>
-    <QCard>
+    <CardPage>
         <CardHeader title="Scan QR/Barcode" @on-reload="loadData"> </CardHeader>
         <q-card-section class="q-pa-sm" style="max-width: 600px">
             <QCard flat bordered>
@@ -47,11 +47,10 @@
                 </q-card-section>
             </QCard>
         </q-card-section>
-    </QCard>
+    </CardPage>
 </template>
 
 <script setup>
-import CardHeader from '@/components/cards/CardHeader.vue';
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import KomisariatAbsences from '@/models/KomisariatAbsences';

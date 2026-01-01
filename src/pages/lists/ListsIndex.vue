@@ -1,5 +1,5 @@
 <template>
-    <q-card>
+    <CardPage>
         <CardHeader title="Input Auto Complete" :show-reload="false" />
         <QCardSection class="q-pa-sm" style="max-width: 600px">
             <QCard bordered flat>
@@ -29,7 +29,7 @@
                 </QCardSection>
             </QCard>
         </QCardSection>
-    </q-card>
+    </CardPage>
     <!-- <pre>list model:{{ listModel }}</pre> -->
     <!-- <pre>list data:{{ listData }}</pre> -->
 </template>
@@ -37,7 +37,6 @@
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import listsStore from '@/stores/listsStore';
-import CardHeader from '@/components/cards/CardHeader.vue';
 
 const router = useRouter();
 const { params } = useRoute();
