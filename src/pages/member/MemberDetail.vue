@@ -41,10 +41,10 @@
         <QDialog v-model="dialogAvatar">
             <MemberAvatarForm
                 :member-id="$route.params.id"
-                :member-avatar-url="anggota?.avatar || '/user-default.png'"
+                :member-avatar-url="anggota?.avatar_url || '/user-default.png'"
                 @upload-success="
                     (member) => {
-                        anggota.avatar = member.avatar;
+                        anggota.avatar_url = member.avatar_url;
                         dialogAvatar = false;
                     }
                 "

@@ -16,6 +16,8 @@
             <q-separator />
             <MainSideItem :data="komisariat" title="Komisariat" />
             <q-separator />
+            <MainSideItem :data="bansus" title="Bansus" />
+            <q-separator />
             <MainSideItem :data="setting" title="Pengaturan" />
         </q-list>
     </q-scroll-area>
@@ -65,6 +67,15 @@ const komisariat = [
         label: 'Kegiatan',
         caption: 'Kegiatan Komisariat',
         route: '/komisariat/activities',
+        disable: false,
+    },
+];
+const bansus = [
+    {
+        icon: 'sym_o_person_shield',
+        label: 'Personil',
+        caption: 'Data Anggota',
+        route: '/bansuses',
         disable: false,
     },
 ];

@@ -6,7 +6,7 @@
             @click="emit('onClickUpload')"
         >
             <q-img
-                :src="anggota?.avatar || '/user-default.png'"
+                :src="anggota?.avatar_url || '/user-default.png'"
                 fit="cover"
                 ratio="1"
                 width="200px"
