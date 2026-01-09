@@ -1,55 +1,33 @@
 <template>
     <CardPage>
-        <CardHeader
-            title="Detail Anggota"
-            @on-reload="loadData"
-            :show-edit="true"
-            @on-edit="dialog = true"
-        >
-            <!-- <template #buttons>
-                <QBtn
-                    label="Foto"
-                    no-caps
-                    dense
-                    icon="camera"
-                    class="q-px-sm"
-                    @click="dialogAvatar = true"
-                    outline=""
-                />
-            </template> -->
+        <CardHeader title="Detail Anggota" @on-reload="loadData" :show-edit="true" @on-edit="dialog = true">
+            <template #buttons>
+                <QBtn :label="$q.screen.lt.sm ? '' : 'QR Code'" no-caps dense icon="sym_o_qr_code_2" class="q-px-sm"
+                    @click="dialogQR = true" outline="" />
+            </template>
         </CardHeader>
         <QCardSection class="q-pa-sm q-gutter-sm" style="max-width: 1024px">
             <QCard bordered flat>
                 <LoadingFixed v-if="loading" />
                 <DetailIdentity :anggota="anggota" @on-click-upload="dialogAvatar = true" />
-                <DetailStatus
-                    :statuses="anggota?.statuses || []"
-                    :member="{ id: anggota.id, nama: anggota.nama }"
-                    @create-status="onCreateStatus"
-                    @update-status="onUpdateStatus"
-                    @delete-status="onDeleteStatus"
-                />
+                <DetailStatus :statuses="anggota?.statuses || []" :member="{ id: anggota.id, nama: anggota.nama }"
+                    @create-status="onCreateStatus" @update-status="onUpdateStatus" @delete-status="onDeleteStatus" />
             </QCard>
         </QCardSection>
         <QDialog v-model="dialog">
-            <MemberForm
-                :data="anggota"
-                @success-delete="() => $router.go(-1)"
-                @success-submit="onSubmit"
-            />
+            <MemberForm :data="anggota" @success-delete="() => $router.go(-1)" @success-submit="onSubmit" />
         </QDialog>
         <QDialog v-model="dialogAvatar">
-            <MemberAvatarForm
-                :member-id="$route.params.id"
-                :member-avatar-url="anggota?.avatar_url || '/user-default.png'"
-                @upload-success="
+            <MemberAvatarForm :member-id="$route.params.id"
+                :member-avatar-url="anggota?.avatar_url || '/user-default.png'" @upload-success="
                     (member) => {
                         anggota.avatar_url = member.avatar_url;
                         dialogAvatar = false;
                     }
-                "
-                @upload-error="null"
-            />
+                " @upload-error="null" />
+        </QDialog>
+        <QDialog v-model="dialogQR">
+            <QrCode :member="anggota" />
         </QDialog>
     </CardPage>
 </template>
@@ -65,6 +43,7 @@ import { useRouter } from 'vue-router';
 import ArrayCrud from '@/models/ArrayCrud';
 import CardHeader from '@/components/cards/CardHeader.vue';
 import MemberAvatarForm from '@/components/forms/MemberAvatarForm.vue';
+import QrCode from './comp/QrCode.vue';
 
 const { params } = useRoute();
 const id = params.id;
@@ -73,6 +52,7 @@ const anggota = ref({});
 const dialog = ref(false);
 const router = useRouter();
 const dialogAvatar = ref(false);
+const dialogQR = ref(false);
 
 async function loadData() {
     try {
