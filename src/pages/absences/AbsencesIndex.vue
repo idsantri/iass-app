@@ -92,8 +92,8 @@
                                         color="orange"
                                         label="Hadir"
                                         @click="() => (activity.locked ? null : setHadir(absence))"
-                                        :true-value="1"
-                                        :false-value="0"
+                                        :true-value="true"
+                                        :false-value="false"
                                         :disable="!!activity.locked"
                                     />
                                 </td>
