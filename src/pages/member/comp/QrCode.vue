@@ -12,7 +12,7 @@
                 />
             </q-avatar> -->
         </q-card-section>
-        <q-card-section class="flex flex-center q-mx-xl q-my-none">
+        <q-card-section class="flex flex-center q-mx-xl q-my-none"  @click="captureQrCode" >
             <qrcode-vue :value="member.id.toString()" :size="200" level="H" render-as="svg" />
         </q-card-section>
         <q-card-section class="no-padding tw:text-center tw:text-xl tw:font-mono tw:font-bold">
@@ -35,23 +35,26 @@ import { domToPng } from 'modern-screenshot';
 import QrcodeVue from 'qrcode.vue'
 import { onMounted, nextTick } from 'vue';
 
-defineProps({
+const props = defineProps({
     member: {
         type: Object,
         required: true,
     },
 });
 
+async function captureQrCode() {
+    const dataUrl = await domToPng(document.querySelector('#qr'));
+    const link = document.createElement('a');
+    link.download = `iass-${props.member.id}-qr.png`;
+    link.href = dataUrl;
+    link.click();
+}
 
 onMounted(async () => {
     await nextTick();
 
     setTimeout(async () => {
-        const dataUrl = await domToPng(document.querySelector('#qr'));
-        const link = document.createElement('a');
-        link.download = 'screenshot.png';
-        link.href = dataUrl;
-        link.click();
+        await captureQrCode();
     }, 250);
 });
 </script>
