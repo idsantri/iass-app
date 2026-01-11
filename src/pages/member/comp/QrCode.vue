@@ -34,7 +34,7 @@
 import Member from '@/models/Member';
 import { domToPng } from 'modern-screenshot';
 import QrcodeVue from 'qrcode.vue';
-import { onMounted, nextTick, ref } from 'vue';
+import { onMounted, onUnmounted, nextTick, ref } from 'vue';
 
 const props = defineProps({
     member: {
@@ -89,6 +89,12 @@ onMounted(async () => {
         console.log('Attempting screenshot capture...');
         await captureQrCode();
     }, 500);
+});
+
+onUnmounted(() => {
+    if (avatarUrl.value && avatarUrl.value.startsWith('blob:')) {
+        URL.revokeObjectURL(avatarUrl.value);
+    }
 });
 </script>
 

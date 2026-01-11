@@ -54,13 +54,13 @@ class Member extends ApiCrud {
             }
 
             if (asBlob) {
+                // Return Blob object langsung (bukan URL)
+                return await response.blob();
+            } else {
+                // Return Object URL untuk langsung digunakan di img tag
                 const blob = await response.blob();
                 return URL.createObjectURL(blob);
             }
-
-            // Jika ingin langsung embed di img tag
-            const blob = await response.blob();
-            return URL.createObjectURL(blob);
         } catch (error) {
             console.error('Get image error:', error);
             throw error;
