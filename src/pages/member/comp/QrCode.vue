@@ -1,5 +1,8 @@
 <template lang="">
     <q-card id="qr">
+        <q-card-section class="q-pa-sm bg-orange-7 text-orange-1 text-center">
+            {{ env.VITE_APP_INSTANCE }}
+        </q-card-section>
         <q-card-section class="flex flex-center q-mx-xl q-mb-none q-mt-md">
             <q-avatar size="150px" class="text-center tw:ring-4 tw:ring-orange-300/75 tw:m-2">
                 <q-skeleton v-if="loadingAvatar" type="QAvatar" size="150px" />
@@ -46,6 +49,7 @@ const props = defineProps({
 const loadingAvatar = ref(false);
 const loadingCapture = ref(false);
 const avatarUrl = ref('/user-default.png');
+const env = import.meta.env;
 
 async function captureQrCode() {
     try {
