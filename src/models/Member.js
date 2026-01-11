@@ -29,5 +29,42 @@ class Member extends ApiCrud {
             throw error;
         }
     }
+
+    /**
+     * Get image URL untuk member
+     * @param {string|number} id - ID member
+     * @param {boolean} asBlob - Return sebagai Blob untuk preview
+     * @returns {Promise} Promise dengan URL gambar atau Blob
+     */
+    async getAvatar(id, asBlob = false) {
+        try {
+            const response = await fetch(`${this.BASE_URL}members/${id}/avatar`, {
+                method: 'GET',
+                headers: {
+                    Accept: 'image/*',
+                    Authorization: `bearer ${this.getAccessToken()}`,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                // credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Gambar tidak ditemukan: ${response.status}`);
+            }
+
+            if (asBlob) {
+                const blob = await response.blob();
+                return URL.createObjectURL(blob);
+            }
+
+            // Jika ingin langsung embed di img tag
+            const blob = await response.blob();
+            return URL.createObjectURL(blob);
+        } catch (error) {
+            console.error('Get image error:', error);
+            throw error;
+        }
+    }
 }
 export default new Member();
