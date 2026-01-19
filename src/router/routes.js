@@ -44,6 +44,21 @@ export default [
                     },
                 ],
             },
+            // Bansus
+            {
+                path: 'bansuses',
+                meta: { title: 'Bansus' },
+                children: [
+                    {
+                        path: '',
+                        component: () => import('../pages/bansuses/BansusPage.vue'),
+                    },
+                    {
+                        path: ':id',
+                        component: () => import('../pages/bansuses/BansusDetail.vue'),
+                    },
+                ],
+            },
 
             // Wilayah
             {

@@ -1,8 +1,10 @@
+import Member from '@/models/Member';
 import { defineStore } from 'pinia';
 
 export default defineStore('members', {
     state: () => ({
         members: [],
+        isLoading: false,
         filterKomisariat: '',
         filterStatus: 'active',
         filterAlamat: '',
@@ -15,6 +17,10 @@ export default defineStore('members', {
     }),
 
     getters: {
+        sortByName: (state) => {
+            return [...(state.members || [])].sort((a, b) => a.nama.localeCompare(b.nama));
+        },
+
         filteredMembers: (state) => {
             // First filter by komisariat
             const filteredByKomisariat = state.filterKomisariat
@@ -61,12 +67,26 @@ export default defineStore('members', {
     },
 
     actions: {
+        async loadMembers() {
+            try {
+                this.isLoading = true;
+                const data = await Member.getAll();
+                this.members = data.members;
+            } catch (e) {
+                console.log('error get members ', e);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
         setMembers(members) {
             this.members = members;
         },
+
         setKomisariat(value) {
             this.filterKomisariat = value;
         },
+
         setStatus(value) {
             this.filterStatus = value;
         },

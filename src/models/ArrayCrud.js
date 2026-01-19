@@ -56,6 +56,27 @@ const ArrayCrud = (() => {
     }
 
     /**
+     * UPDATE OR CREATE (UPSERT) - Update jika ada, create jika tidak ada
+     * @param {Array} currentArray - Array saat ini
+     * @param {Object} data - Data yang akan dimasukkan/diupdate
+     * @param {string} key - Key pencarian (default: 'id')
+     * @param {string} position - Posisi jika create ("first" atau "last" default)
+     * @returns {Array} Array baru untuk update state
+     */
+    function updateOrCreate(currentArray, data, key = 'id', position = 'last') {
+        _validateObject(data);
+        const objectId = data[key];
+
+        if (exists(currentArray, objectId)) {
+            // Jika data ada, gunakan fungsi update yang sudah ada
+            return update(currentArray, objectId, data, key);
+        } else {
+            // Jika data tidak ada, gunakan fungsi create yang sudah ada
+            return create(currentArray, data, position);
+        }
+    }
+
+    /**
      * DELETE - Menghapus object berdasarkan id
      * @param {Array} currentArray - Array saat ini (ref.value)
      * @param {number|string} objectId - ID object yang akan dihapus
@@ -166,6 +187,32 @@ const ArrayCrud = (() => {
         return sortedData;
     }
 
+    /**
+     * FLATTEN NESTED KEY - Flatten nested object dalam array of objects
+     * @param {Array} arrObj - Array of objects
+     * @param {string} key - Key dari nested object yang akan di-flatten
+     * @param {string} connector - Karakter penyambung antara key utama dan nested key (default: '_')
+     * @returns {Array} Array dengan nested object yang sudah di-flatten
+     */
+    function flattenNestedKey(arrObj, key, connector = '_') {
+        return arrObj.map((item) => {
+            // Buat salinan object tanpa nested key
+            const { [key]: nestedObj, ...rest } = item;
+
+            // Jika nested object tidak ada, kembalikan item asli
+            if (!nestedObj) return item;
+
+            // Flatten nested object dengan menambahkan prefix key
+            const flattened = {};
+            for (const [nestedKey, value] of Object.entries(nestedObj)) {
+                flattened[`${key}${connector}${nestedKey}`] = value;
+            }
+
+            // Gabungkan dengan rest of properties
+            return { ...rest, ...flattened };
+        });
+    }
+
     return {
         create,
         update,
@@ -175,6 +222,8 @@ const ArrayCrud = (() => {
         filter,
         sort,
         sortPrimitiveArray,
+        flattenNestedKey,
+        updateOrCreate,
     };
 })();
 export default ArrayCrud;

@@ -69,6 +69,7 @@
                 <tr>
                     <td>
                         <QBtn
+                            icon="sym_o_delete_forever"
                             label="Reset"
                             color="negative"
                             no-caps

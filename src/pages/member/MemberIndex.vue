@@ -2,7 +2,7 @@
     <CardPage :dynamic-height="false">
         <CardHeader
             title="Data Anggota"
-            @on-reload="loadData"
+            @on-reload="reload"
             :show-add="true"
             @on-add="dialog = true"
         >
@@ -23,10 +23,10 @@
                 </q-list>
             </template>
         </CardHeader>
-        <q-banner v-if="warning" class="bg-yellow-2 text-black text-center q-pa-sm">
+        <div v-if="!realtime" class="bg-yellow-2 text-black text-center q-pa-xs">
             <q-icon name="warning" class="q-mr-sm" />
             Data tidak realtime. Klik tombol muat ulang untuk memperbarui data!
-        </q-banner>
+        </div>
         <QCardSection class="q-pa-sm bg-orange-1">
             <div class="flex items-center justify-between q-gutter-y-sm">
                 <QSelect
@@ -46,7 +46,7 @@
                     class="q-px-sm bg-transparent flex items-center justify-between full-width"
                     style="max-width: 450px"
                 >
-                    <div class="text-caption">Status</div>
+                    <div class="text-caption text-italic">Status</div>
                     <div class="q-gutter-sm">
                         <q-radio
                             v-model="filterStatus"
@@ -94,13 +94,12 @@
 
 <script setup>
 import 'datatables.net-select-dt';
-import { onMounted, ref, computed, watch } from 'vue';
+import { onMounted, ref, computed, watch, nextTick } from 'vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-dt';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import useMembersStore from '@/stores/membersStore';
-import Member from '@/models/Member';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import FileDownloader from '@/models/FileDownloader';
@@ -108,13 +107,13 @@ import { notifySuccess } from '@/utils/notify';
 import CardHeader from '@/components/cards/CardHeader.vue';
 
 const table = ref(null);
-const isLoading = ref(false);
 const router = useRouter();
 const dialog = ref(false);
-const warning = ref(true);
+const realtime = ref(false);
 
-const membersStore = useMembersStore();
+const store = useMembersStore();
 const {
+    isLoading,
     filterKomisariat,
     filterStatus,
     filterAlamat,
@@ -122,7 +121,7 @@ const {
     komisariatOptions,
     filteredMembers,
     getPaginationState,
-} = storeToRefs(membersStore);
+} = storeToRefs(store);
 
 DataTable.use(DataTablesCore);
 
@@ -141,24 +140,16 @@ async function download(status) {
     }
 }
 
-async function loadData() {
-    try {
-        isLoading.value = true;
-        const res = await Member.getAll();
-        membersStore.setMembers(res.members);
-        warning.value = false;
-    } catch (e) {
-        console.log('error get members ', e);
-    } finally {
-        isLoading.value = false;
-    }
+async function reload() {
+    await store.loadMembers();
+    realtime.value = true;
 }
 
 // Function untuk handle DataTable draw event
 function onDataTableDraw(eDt, settings) {
     const displayStart = settings._iDisplayStart;
     const pageLength = settings._iDisplayLength;
-    membersStore.updatePagination(displayStart, pageLength);
+    store.updatePagination(displayStart, pageLength);
 
     // Attach event listener setelah draw
     attachListeners();
@@ -212,7 +203,7 @@ function attachAddressSearchListener() {
             addressSearchTimeout = setTimeout(() => {
                 // Hanya filter jika kosong atau minimal 3 karakter
                 if (searchValue === '' || searchValue.length >= 3) {
-                    membersStore.filterAlamat = searchValue;
+                    store.filterAlamat = searchValue;
                 }
             }, 300);
         };
@@ -345,7 +336,7 @@ watch(
     () => {
         setTimeout(() => {
             const totalRecords = filteredMembers.value.length;
-            const wasAdjusted = membersStore.validatePagination(totalRecords);
+            const wasAdjusted = store.validatePagination(totalRecords);
 
             if (wasAdjusted && table.value) {
                 table.value.dt.page(getPaginationState.value.currentPage - 1).draw(false);
@@ -356,10 +347,10 @@ watch(
 );
 
 onMounted(async () => {
-    if (!members.value.length) {
-        await loadData();
+    if (!members.value?.length) {
+        await reload();
     }
-
+    await nextTick();
     // Attach listeners setelah mount
     setTimeout(() => {
         attachListeners();
@@ -368,11 +359,11 @@ onMounted(async () => {
 
 // Helper functions (optional)
 function _resetTablePagination() {
-    membersStore.resetPagination();
+    store.resetPagination();
 }
 
 function _goToPage(pageNumber) {
-    membersStore.setPage(pageNumber, getPaginationState.value.pageLength);
+    store.setPage(pageNumber, getPaginationState.value.pageLength);
 }
 </script>
 

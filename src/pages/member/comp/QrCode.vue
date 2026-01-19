@@ -35,6 +35,7 @@
 
 <script setup>
 import Member from '@/models/Member';
+import { notifySuccess } from '@/utils/notify';
 import { domToPng } from 'modern-screenshot';
 import QrcodeVue from 'qrcode.vue';
 import { onMounted, onUnmounted, nextTick, ref } from 'vue';
@@ -65,6 +66,7 @@ async function captureQrCode() {
         link.click();
 
         console.log('Screenshot captured successfully');
+        notifySuccess('QR Code berhasil disimpan');
     } catch (error) {
         console.error('Failed to capture screenshot:', error);
     } finally {
