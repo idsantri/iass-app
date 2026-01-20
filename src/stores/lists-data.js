@@ -24,6 +24,14 @@ const data = [
         protected: false,
         sort: 'asc',
     },
+    {
+        url: 'jabatan-bansus',
+        label: 'Jabatan Bansus',
+        style: 'single',
+        column: 1,
+        protected: false,
+        sort: 'asc',
+    },
 ];
 
 const dataWithKey = data.map((item) => ({

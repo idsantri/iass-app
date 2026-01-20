@@ -7,7 +7,7 @@
             <div class="tw:py-3.5"></div>
         </q-card-section>
         <CardLoading :showing="isLoading" />
-        <q-markup-table class="q-pa-sm">
+        <q-markup-table class="q-pa-sm tw:min-h-[350px]">
             <tbody>
                 <tr>
                     <td class="label">ID Bansus</td>
@@ -50,7 +50,7 @@
                 </tr>
             </tbody>
         </q-markup-table>
-        <q-card-actions class="q-pa-sm bg-orange-11">
+        <q-card-actions class="q-pa-sm bg-orange-11 absolute-bottom">
             <q-btn
                 color="negative"
                 icon="sym_o_delete"

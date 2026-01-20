@@ -23,18 +23,19 @@
                     </QItemSection>
                 </QItem>
             </template>
+
             <template v-else>
                 <QItem
-                    v-for="(item, index) in statuses"
+                    v-for="item in statuses"
                     :key="item.id"
-                    :class="index == 0 ? 'bg-yellow-1' : ''"
+                    :class="item?.id == maxObj?.id ? 'bg-yellow-1' : ''"
                 >
                     <QItemSection>
                         <QItemLabel overline>
                             {{ item.status }}
                         </QItemLabel>
                         <QItemLabel caption>
-                            {{ formatDate(item.created_at, 'dd MMMM yyyy') }}
+                            {{ formatDate(item.cr_at, 'dd MMMM yyyy') }}
                         </QItemLabel>
                         <QItemLabel>
                             {{ item.keterangan ?? '-' }}
@@ -65,8 +66,9 @@
 </template>
 <script setup>
 import StatusForm from '@/components/forms/StatusForm.vue';
+import ArrayCrud from '@/models/ArrayCrud';
 import { formatDate } from '@/utils/date-operation';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const emit = defineEmits(['deleteStatus', 'createStatus', 'updateStatus']);
 const props = defineProps({
@@ -78,6 +80,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+});
+
+const maxObj = computed(() => {
+    return ArrayCrud.findMax(props.statuses, 'id');
 });
 
 const dialog = ref(false);

@@ -4,7 +4,12 @@
         </CardHeader>
         <q-card-section class="q-pa-sm tw:flex tw:flex-col tw:sm:grid tw:sm:grid-cols-2 tw:gap-2">
             <CardDetail :bansus="bansus" :onDelete="onDelete" :isLoading="isLoading" />
-            <CardRelations :bansus="bansus" />
+            <CardRelations
+                :bansus_id="bansus?.id"
+                :member="bansus?.member"
+                @setLastStatus="handleSetLastStatus"
+                @setLastPosition="handleSetLastPosition"
+            />
         </q-card-section>
     </CardPage>
 </template>
@@ -17,6 +22,7 @@ import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import CardDetail from './CardDetail.vue';
 import CardRelations from './CardRelations.vue';
+import ArrayCrud from '@/models/ArrayCrud';
 
 const store = useBansusesStore();
 const { isLoading, bansuses } = storeToRefs(store);
@@ -27,6 +33,18 @@ const bansus = computed(() => {
 
 const reload = () => {
     store.loadById(params.id);
+};
+
+const handleSetLastStatus = (val) => {
+    bansuses.value = ArrayCrud.update(bansuses.value, params.id, {
+        status_max: val,
+    });
+};
+
+const handleSetLastPosition = (val) => {
+    bansuses.value = ArrayCrud.update(bansuses.value, params.id, {
+        jabatan_max: val,
+    });
 };
 
 watch(
@@ -47,6 +65,7 @@ const onDelete = async () => {
     try {
         isLoading.value = true;
         await Bansus.remove(params.id);
+        bansuses.value = ArrayCrud.remove(bansuses.value, params.id);
         window.history.back();
     } catch (e) {
         console.error('Error deleting bansus:', e);
