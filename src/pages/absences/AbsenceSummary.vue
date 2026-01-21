@@ -9,18 +9,29 @@
                 flat
                 class="q-mr-xs"
                 title="Muat ulang"
-                label="Rekap Absensi"
             />
+            <div>Rekap Komisariat</div>
             <QSpace />
-            <QBtn
-                :to="`/${meta.scope}/activities/${activityId}/absences`"
-                label="Detail Absen"
-                color="orange-10"
-                no-caps
-                outline=""
-                class="q-px-sm text-orange-1"
-                icon="sym_o_list"
-            />
+            <div class="tw:flex tw:gap-2">
+                <QBtn
+                    :to="`/${meta.scope}/activities/${activityId}/absences/qr`"
+                    :label="$q.screen.lt.sm ? 'Scan' : 'Scan QR Code'"
+                    color="orange-10"
+                    no-caps
+                    outline=""
+                    class="q-px-sm text-orange-1"
+                    icon="sym_o_qr_code_scanner"
+                />
+                <QBtn
+                    :to="`/${meta.scope}/activities/${activityId}/absences`"
+                    :label="$q.screen.lt.sm ? 'Detail' : 'Detail Absensi'"
+                    color="orange-10"
+                    no-caps
+                    outline=""
+                    class="q-px-sm text-orange-1"
+                    icon="sym_o_list"
+                />
+            </div>
         </QCardActions>
         <QMarkupTable class="">
             <LoadingAbsolute v-if="loading" />

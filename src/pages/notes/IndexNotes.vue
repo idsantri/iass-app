@@ -9,8 +9,8 @@
                 flat
                 class="q-mr-xs"
                 title="Muat ulang"
-                label="Catatan Kegiatan"
             />
+            <div>Catatan Kegiatan</div>
             <QSpace />
             <QBtn
                 label="Tambah"

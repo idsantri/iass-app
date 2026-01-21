@@ -9,7 +9,7 @@
 
         <q-card-section class="q-pa-sm" style="max-width: 1024px">
             <QTable
-                :rows="activities"
+                :rows="filteredActivities"
                 :columns="columns"
                 flat
                 bordered
@@ -17,43 +17,80 @@
                 @row-click="
                     (evt, row, index) => $router.push(`/${meta.scope}/activities/${row.id}`)
                 "
-            />
+                :filter="filterText"
+            >
+                <template v-slot:top>
+                    <div
+                        class="tw:gap-y-2 tw:gap-x-8 tw:grid tw:grid-cols-1 tw:w-full tw:sm:flex tw:sm:items-center tw:sm:justify-between"
+                    >
+                        <InputSelectArray
+                            v-model="filterKomisariat"
+                            url="komisariat"
+                            label="Pilih Komisariat"
+                            class="tw:flex-1"
+                        />
+                        <q-input
+                            class="tw:flex-1"
+                            borderless
+                            dense
+                            debounce="300"
+                            v-model="filterText"
+                            placeholder="Cari"
+                            outlined
+                            clearable
+                        >
+                            <template v-slot:append>
+                                <q-icon name="search" />
+                            </template>
+                        </q-input>
+                    </div>
+                </template>
+            </QTable>
         </q-card-section>
         <QDialog v-model="dialog">
             <ActivityForm
                 @success-create="(res) => $router.push(`/${meta.scope}/activities/${res.id}`)"
-                :dataInputs="{ komisariat }"
+                :dataInputs="{ komisariat: komisariatUser }"
                 :scope="meta.scope"
             />
         </QDialog>
+        <!-- {{ filteredActivities }}
+        {{ filterKomisariat }} -->
     </CardPage>
 </template>
 <script setup>
 import ActivityForm from '@/components/forms/ActivityForm.vue';
+import InputSelectArray from '@/components/forms/inputs/InputSelectArray.vue';
 import KomisariatActivities from '@/models/KomisariatActivities';
 import WilayahActivities from '@/models/WilayahActivities';
 import authStore from '@/stores/authStore';
 import { formatDate } from '@/utils/date-operation';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-const komisariat = authStore().user.komisariat;
+const komisariatUser = authStore().user.komisariat;
 const activities = ref([]);
 const loading = ref(false);
 const dialog = ref(false);
 const { meta } = useRoute();
 let model = null;
 
-const titlePage =
-    meta.scope == 'Wilayah'
-        ? 'Data Kegiatan Wilayah'
-        : meta.scope == 'Komisariat'
-          ? 'Data Kegiatan Komisariat ' + (komisariat || '(?)')
-          : 'Data Kegiatan';
+const titlePage = 'Data Kegiatan ' + meta.scope;
+const filterKomisariat = ref('');
+const filterText = ref('');
+
+const filteredActivities = computed(() =>
+    filterKomisariat.value
+        ? activities.value.filter(
+              (a) => a.komisariat.toLowerCase() == filterKomisariat.value.toLowerCase(),
+          )
+        : activities.value,
+);
 
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {
         model = KomisariatActivities;
+        filterKomisariat.value = komisariatUser;
     }
     if (meta.scope == 'Wilayah') {
         model = WilayahActivities;
