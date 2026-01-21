@@ -103,6 +103,7 @@
 </template>
 <script setup>
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
+import BansusActivities from '@/models/BansusActivities';
 import KomisariatAbsences from '@/models/KomisariatAbsences';
 import WilayahAbsences from '@/models/WilayahAbsences';
 import { notifyConfirm } from '@/utils/notify';
@@ -125,7 +126,9 @@ onMounted(async () => {
     if (meta.scope == 'Wilayah') {
         model = WilayahAbsences;
     }
-
+    if (meta.scope == 'Bansus') {
+        model = BansusActivities;
+    }
     if (props.activityId) {
         await loadData();
     }

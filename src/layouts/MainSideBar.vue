@@ -78,6 +78,13 @@ const bansus = [
         route: '/bansuses',
         disable: false,
     },
+    {
+        icon: 'sym_o_history_2',
+        label: 'Kegiatan',
+        caption: 'Kegiatan Bansus',
+        route: '/bansus/activities',
+        disable: false,
+    },
 ];
 
 const setting = [

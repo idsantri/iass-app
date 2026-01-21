@@ -86,6 +86,13 @@ export default [
                 children: _common,
             },
 
+            // Bansus
+            {
+                path: 'bansus',
+                meta: { scope: 'Bansus', title: 'Kegiatan Bansus' },
+                children: _common,
+            },
+
             // Settings
             {
                 path: 'settings',

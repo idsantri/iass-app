@@ -48,7 +48,7 @@
                     readonly=""
                 />
                 <InputSelectArray
-                    v-if="scope == 'Wilayah'"
+                    v-if="scope == 'Wilayah' || scope == 'Bansus'"
                     v-model="inputs.komisariat"
                     url="komisariat"
                     label="Komisariat *"
@@ -90,8 +90,7 @@ import FormActions from './parts/FormActions.vue';
 import { isValid } from 'date-fns';
 import { formatDate } from '@/utils/date-operation';
 import { bacaHijri, m2h } from '@/utils/hijri';
-import KomisariatActivities from '@/models/KomisariatActivities';
-import WilayahActivities from '@/models/WilayahActivities';
+import Activity from '@/models/Activity';
 
 const props = defineProps({
     dataInputs: { type: Object },
@@ -112,10 +111,13 @@ onMounted(async () => {
     btnClose = document.getElementById('btn-close-form');
 
     if (props.scope == 'Komisariat') {
-        model = KomisariatActivities;
+        model = Activity.Komisariat;
     }
     if (props.scope == 'Wilayah') {
-        model = WilayahActivities;
+        model = Activity.Wilayah;
+    }
+    if (props.scope == 'Bansus') {
+        model = Activity.Bansus;
     }
 });
 

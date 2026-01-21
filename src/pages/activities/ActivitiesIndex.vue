@@ -61,8 +61,7 @@
 <script setup>
 import ActivityForm from '@/components/forms/ActivityForm.vue';
 import InputSelectArray from '@/components/forms/inputs/InputSelectArray.vue';
-import KomisariatActivities from '@/models/KomisariatActivities';
-import WilayahActivities from '@/models/WilayahActivities';
+import Activity from '@/models/Activity';
 import authStore from '@/stores/authStore';
 import { formatDate } from '@/utils/date-operation';
 import { computed, onMounted, ref } from 'vue';
@@ -89,11 +88,14 @@ const filteredActivities = computed(() =>
 
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {
-        model = KomisariatActivities;
+        model = Activity.Komisariat;
         filterKomisariat.value = komisariatUser;
     }
     if (meta.scope == 'Wilayah') {
-        model = WilayahActivities;
+        model = Activity.Wilayah;
+    }
+    if (meta.scope == 'Bansus') {
+        model = Activity.Bansus;
     }
     await loadData();
 });

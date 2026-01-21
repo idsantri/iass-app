@@ -54,13 +54,12 @@
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import KomisariatAbsences from '@/models/KomisariatAbsences';
-import KomisariatActivities from '@/models/KomisariatActivities';
 import WilayahAbsences from '@/models/WilayahAbsences';
-import WilayahActivities from '@/models/WilayahActivities';
 import { onMounted, ref } from 'vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
 import { useRoute } from 'vue-router';
 import ActivityHeader from '@/pages/activities/ActivityHeader.vue';
+import Activity from '@/models/Activity';
 
 const result = ref('');
 const loading = ref(false);
@@ -74,11 +73,11 @@ let modelAbsence = null;
 
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {
-        modelActivity = KomisariatActivities;
+        modelActivity = Activity.Komisariat;
         modelAbsence = KomisariatAbsences;
     }
     if (meta.scope == 'Wilayah') {
-        modelActivity = WilayahActivities;
+        modelActivity = Activity.Wilayah;
         modelAbsence = WilayahAbsences;
     }
 

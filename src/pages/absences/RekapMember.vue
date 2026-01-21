@@ -166,7 +166,7 @@
 import { ref, onMounted, watch, shallowRef, computed } from 'vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import AbsenceNks from '@/models/AbsenceNks';
-import WilayahActivities from '@/models/WilayahActivities';
+import Activity from '@/models/Activity';
 
 const loading = ref(false);
 const loadingNks = ref(false);
@@ -216,7 +216,7 @@ const filteredReports = computed(() => {
 const loadActivityNks = async () => {
     try {
         loadingNks.value = true;
-        const data = await WilayahActivities.getAll({ nama: 'Ngaji Kitab Sidogiri' });
+        const data = await Activity.Wilayah.getAll({ nama: 'Ngaji Kitab Sidogiri' });
         // console.log('🚀 ~ loadActivity ~ data:', data.activities);
         if (data.activities?.length > 0) {
             const _set = new Set();

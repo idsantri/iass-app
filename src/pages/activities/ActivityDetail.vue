@@ -90,35 +90,30 @@
 <script setup>
 import ActivityForm from '@/components/forms/ActivityForm.vue';
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
-import KomisariatActivities from '@/models/KomisariatActivities';
-import WilayahActivities from '@/models/WilayahActivities';
-import authStore from '@/stores/authStore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
+import Activity from '@/models/Activity';
 
 const { params, meta } = useRoute();
 const id = params.id;
-const komisariat = authStore().user.komisariat;
 const dialog = ref(false);
 const activity = ref({});
 const loading = ref(false);
 let model = null;
 
-const titlePage =
-    meta.scope == 'Wilayah'
-        ? 'Detail Kegiatan Wilayah'
-        : meta.scope == 'Komisariat'
-          ? 'Detail Kegiatan Komisariat ' + komisariat
-          : 'Detail Kegiatan';
+const titlePage = 'Detail Kegiatan ' + meta.scope;
 
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {
-        model = KomisariatActivities;
+        model = Activity.Komisariat;
     }
     if (meta.scope == 'Wilayah') {
-        model = WilayahActivities;
+        model = Activity.Wilayah;
+    }
+    if (meta.scope == 'Bansus') {
+        model = Activity.Bansus;
     }
     if (id) await loadData();
 });
