@@ -15,7 +15,16 @@
                         <td>Tanggal</td>
                         <td>
                             {{ formatDate(activity.tgl_m, 'cccc, dd MMMM yyyy') }} |
-                            {{ bacaHijri(activity.tgl_h) }}
+                            {{ bacaHijri(activity.tgl_h) }}, Pukul
+                            {{
+                                activity?.tgl_m &&
+                                new Intl.DateTimeFormat('id-ID', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    timeZoneName: 'short', // Ini yang akan mengambil 'WIB'
+                                    timeZone: 'Asia/Jakarta',
+                                }).format(new Date(activity?.tgl_m))
+                            }}
                         </td>
                     </tr>
 

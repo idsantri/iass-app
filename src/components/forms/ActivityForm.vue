@@ -16,7 +16,7 @@
                     outlined
                     label="Tanggal (M) *"
                     v-model="inputs.tgl_m"
-                    type="date"
+                    type="datetime-local"
                     @change="
                         isValid(new Date(inputs.tgl_m)) ? (inputs.tgl_h = m2h(inputs.tgl_m)) : ''
                     "
@@ -87,16 +87,27 @@ import InputSelectArray from './inputs/InputSelectArray.vue';
 import { notifyConfirm } from '@/utils/notify';
 import FormHeader from './parts/FormHeader.vue';
 import FormActions from './parts/FormActions.vue';
-import { isValid } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { formatDate } from '@/utils/date-operation';
 import { bacaHijri, m2h } from '@/utils/hijri';
 import Activity from '@/models/Activity';
+import { id as idn } from 'date-fns/locale';
 
 const props = defineProps({
     dataInputs: { type: Object },
     scope: { type: String, required: true },
 });
 const emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
+
+const convertToLocalForInput = (utcString) => {
+    if (!utcString) return '';
+
+    // parseISO akan membaca 'Z' sebagai UTC
+    const date = parseISO(utcString);
+
+    // Format ke 'yyyy-MM-ddTHH:mm' (Format wajib untuk datetime-local)
+    return format(date, "yyyy-MM-dd'T'HH:mm", { locale: idn });
+};
 
 const loading = ref(false);
 const id = props.dataInputs?.id;
@@ -106,7 +117,7 @@ let model = null;
 
 onMounted(async () => {
     if (inputs.value.tgl_m) {
-        inputs.value.tgl_m = formatDate(new Date(inputs.value.tgl_m), 'yyyy-MM-dd');
+        inputs.value.tgl_m = convertToLocalForInput(inputs.value.tgl_m);
     }
     btnClose = document.getElementById('btn-close-form');
 
