@@ -113,11 +113,10 @@
 <script setup>
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import ArrayCrud from '@/models/ArrayCrud';
-import KomisariatAbsences from '@/models/KomisariatAbsences';
-import WilayahAbsences from '@/models/WilayahAbsences';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import ActivityHeader from '@/pages/activities/ActivityHeader.vue';
+import Absence from '@/models/Absence';
 
 const { params, meta } = useRoute();
 const activityId = params.id;
@@ -130,10 +129,13 @@ let model = null;
 
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {
-        model = KomisariatAbsences;
+        model = Absence.Komisariat;
     }
     if (meta.scope == 'Wilayah') {
-        model = WilayahAbsences;
+        model = Absence.Wilayah;
+    }
+    if (meta.scope == 'Bansus') {
+        model = Absence.Bansus;
     }
 
     if (activityId) {

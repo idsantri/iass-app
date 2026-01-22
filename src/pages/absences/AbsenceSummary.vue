@@ -103,9 +103,7 @@
 </template>
 <script setup>
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
-import BansusActivities from '@/models/BansusActivities';
-import KomisariatAbsences from '@/models/KomisariatAbsences';
-import WilayahAbsences from '@/models/WilayahAbsences';
+import Absence from '@/models/Absence';
 import { notifyConfirm } from '@/utils/notify';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -121,13 +119,13 @@ let model = null;
 
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {
-        model = KomisariatAbsences;
+        model = Absence.Komisariat;
     }
     if (meta.scope == 'Wilayah') {
-        model = WilayahAbsences;
+        model = Absence.Wilayah;
     }
     if (meta.scope == 'Bansus') {
-        model = BansusActivities;
+        model = Absence.Bansus;
     }
     if (props.activityId) {
         await loadData();

@@ -53,13 +53,12 @@
 <script setup>
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
-import KomisariatAbsences from '@/models/KomisariatAbsences';
-import WilayahAbsences from '@/models/WilayahAbsences';
 import { onMounted, ref } from 'vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
 import { useRoute } from 'vue-router';
 import ActivityHeader from '@/pages/activities/ActivityHeader.vue';
 import Activity from '@/models/Activity';
+import Absence from '@/models/Absence';
 
 const result = ref('');
 const loading = ref(false);
@@ -74,11 +73,15 @@ let modelAbsence = null;
 onMounted(async () => {
     if (meta.scope == 'Komisariat') {
         modelActivity = Activity.Komisariat;
-        modelAbsence = KomisariatAbsences;
+        modelAbsence = Absence.Komisariat;
     }
     if (meta.scope == 'Wilayah') {
         modelActivity = Activity.Wilayah;
-        modelAbsence = WilayahAbsences;
+        modelAbsence = Absence.Wilayah;
+    }
+    if (meta.scope == 'Bansus') {
+        modelActivity = Activity.Bansus;
+        modelAbsence = Absence.Bansus;
     }
 
     if (params.id) {
