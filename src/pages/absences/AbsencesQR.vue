@@ -67,23 +67,34 @@ const error = ref('');
 const { params, meta } = useRoute();
 const activity = ref({});
 const cameraKey = ref(0); // Key untuk memaksa render ulang
-let modelActivity = null;
-let modelAbsence = null;
+
+const ModelAbsence = () => {
+    switch (meta.scope) {
+        case 'Komisariat':
+            return Absence.Komisariat;
+        case 'Wilayah':
+            return Absence.Wilayah;
+        case 'Bansus':
+            return Absence.Bansus;
+        default:
+            throw new Error(`Scope '${meta.scope}' is not recognized`);
+    }
+};
+
+const ModelActivity = () => {
+    switch (meta.scope) {
+        case 'Komisariat':
+            return Activity.Komisariat;
+        case 'Wilayah':
+            return Activity.Wilayah;
+        case 'Bansus':
+            return Activity.Bansus;
+        default:
+            throw new Error(`Scope '${meta.scope}' is not recognized`);
+    }
+};
 
 onMounted(async () => {
-    if (meta.scope == 'Komisariat') {
-        modelActivity = Activity.Komisariat;
-        modelAbsence = Absence.Komisariat;
-    }
-    if (meta.scope == 'Wilayah') {
-        modelActivity = Activity.Wilayah;
-        modelAbsence = Absence.Wilayah;
-    }
-    if (meta.scope == 'Bansus') {
-        modelActivity = Activity.Bansus;
-        modelAbsence = Absence.Bansus;
-    }
-
     if (params.id) {
         await loadData();
     }
@@ -92,7 +103,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await modelActivity.getById(params.id);
+        const res = await ModelActivity().getById(params.id);
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity by id ', e);
@@ -104,7 +115,7 @@ async function loadData() {
 const onHadir = async (member_id) => {
     try {
         loadingAbsence.value = true;
-        await modelAbsence.setHadir({ activity_id: activity.value.id, member_id: member_id });
+        await ModelAbsence().setHadir({ activity_id: activity.value.id, member_id: member_id });
     } catch (error) {
         console.log('error hadir ', error);
     } finally {

@@ -12,7 +12,7 @@
             <QMarkupTable flat bordered>
                 <tbody>
                     <tr>
-                        <td>Tanggal</td>
+                        <td>Waktu</td>
                         <td>
                             {{ formatDate(activity.tgl_m, 'cccc, dd MMMM yyyy') }} |
                             {{ bacaHijri(activity.tgl_h) }}, Pukul
@@ -110,27 +110,29 @@ const id = params.id;
 const dialog = ref(false);
 const activity = ref({});
 const loading = ref(false);
-let model = null;
-
 const titlePage = 'Detail Kegiatan ' + meta.scope;
 
+const Model = () => {
+    switch (meta.scope) {
+        case 'Komisariat':
+            return Activity.Komisariat;
+        case 'Wilayah':
+            return Activity.Wilayah;
+        case 'Bansus':
+            return Activity.Bansus;
+        default:
+            throw new Error(`Scope '${meta.scope}' is not recognized`);
+    }
+};
+
 onMounted(async () => {
-    if (meta.scope == 'Komisariat') {
-        model = Activity.Komisariat;
-    }
-    if (meta.scope == 'Wilayah') {
-        model = Activity.Wilayah;
-    }
-    if (meta.scope == 'Bansus') {
-        model = Activity.Bansus;
-    }
     if (id) await loadData();
 });
 
 async function loadData() {
     try {
         loading.value = true;
-        const res = await model.getById(id);
+        const res = await Model().getById(id);
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity id ', e);
@@ -141,7 +143,7 @@ async function loadData() {
 
 async function lockActivity(act) {
     try {
-        await model.update(act.id, { locked: act.locked });
+        await Model().update(act.id, { locked: act.locked });
     } catch (e) {
         activity.value.locked = act.locked ? 0 : 1;
         console.log('error lock activity ', e);

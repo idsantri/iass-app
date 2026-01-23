@@ -113,23 +113,25 @@ const loading = ref(false);
 const id = props.dataInputs?.id;
 const inputs = ref({ ...props.dataInputs });
 let btnClose = null;
-let model = null;
+
+const Model = () => {
+    switch (props.scope) {
+        case 'Komisariat':
+            return Activity.Komisariat;
+        case 'Wilayah':
+            return Activity.Wilayah;
+        case 'Bansus':
+            return Activity.Bansus;
+        default:
+            throw new Error(`Scope '${props.scope}' is not recognized`);
+    }
+};
 
 onMounted(async () => {
     if (inputs.value.tgl_m) {
         inputs.value.tgl_m = convertToLocalForInput(inputs.value.tgl_m);
     }
     btnClose = document.getElementById('btn-close-form');
-
-    if (props.scope == 'Komisariat') {
-        model = Activity.Komisariat;
-    }
-    if (props.scope == 'Wilayah') {
-        model = Activity.Wilayah;
-    }
-    if (props.scope == 'Bansus') {
-        model = Activity.Bansus;
-    }
 });
 
 watch(
@@ -147,10 +149,10 @@ const onSubmit = async () => {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await model.create(data);
+            response = await Model().create(data);
             emit('successCreate', response?.activity);
         } else {
-            response = await model.update(id, data);
+            response = await Model().update(id, data);
             emit('successUpdate', response?.activity);
         }
         emit('successSubmit', response?.activity);
@@ -168,7 +170,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await model.remove(id);
+        await Model().remove(id);
         btnClose.click();
         emit('successDelete', id);
     } catch (error) {

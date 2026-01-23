@@ -70,8 +70,7 @@
 </template>
 <script setup>
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
-import KomisariatNotes from '@/models/KomisariatNotes';
-import WilayahNotes from '@/models/WilayahNotes';
+import Note from '@/models/Note';
 import { onMounted, ref, shallowRef } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -83,16 +82,21 @@ const props = defineProps({
 const loading = ref(false);
 const notes = shallowRef([]);
 const activity = shallowRef({});
-let model = null;
+
+const Model = () => {
+    switch (props.scope) {
+        case 'Komisariat':
+            return Note.Komisariat;
+        case 'Wilayah':
+            return Note.Wilayah;
+        case 'Bansus':
+            return Note.Bansus;
+        default:
+            throw new Error(`Scope '${props.scope}' is not recognized`);
+    }
+};
 
 onMounted(async () => {
-    if (props.scope.toLocaleLowerCase() === 'komisariat') {
-        model = KomisariatNotes;
-    }
-    if (props.scope.toLocaleLowerCase() === 'wilayah') {
-        model = WilayahNotes;
-    }
-
     if (props.activityId) {
         await loadData();
     }
@@ -101,7 +105,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await model.getAll({ activity_id: props.activityId });
+        const res = await Model().getAll({ activity_id: props.activityId });
         notes.value = res.notes;
         activity.value = res.activity;
     } catch (e) {

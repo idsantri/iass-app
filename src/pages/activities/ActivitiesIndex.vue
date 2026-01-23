@@ -72,7 +72,6 @@ const activities = ref([]);
 const loading = ref(false);
 const dialog = ref(false);
 const { meta } = useRoute();
-let model = null;
 
 const titlePage = 'Data Kegiatan ' + meta.scope;
 const filterKomisariat = ref('');
@@ -85,25 +84,27 @@ const filteredActivities = computed(() =>
           )
         : activities.value,
 );
+const Model = () => {
+    switch (meta.scope) {
+        case 'Komisariat':
+            return Activity.Komisariat;
+        case 'Wilayah':
+            return Activity.Wilayah;
+        case 'Bansus':
+            return Activity.Bansus;
+        default:
+            throw new Error(`Scope '${meta.scope}' is not recognized`);
+    }
+};
 
 onMounted(async () => {
-    if (meta.scope == 'Komisariat') {
-        model = Activity.Komisariat;
-        filterKomisariat.value = komisariatUser;
-    }
-    if (meta.scope == 'Wilayah') {
-        model = Activity.Wilayah;
-    }
-    if (meta.scope == 'Bansus') {
-        model = Activity.Bansus;
-    }
     await loadData();
 });
 
 async function loadData() {
     try {
         loading.value = true;
-        const data = await model.getAll();
+        const data = await Model().getAll();
         activities.value = data.activities;
     } catch (error) {
         console.log('error get activities ', error);

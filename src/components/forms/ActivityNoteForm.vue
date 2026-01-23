@@ -14,12 +14,11 @@
     </pre> -->
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import LoadingAbsolute from '../LoadingAbsolute.vue';
 import { notifyConfirm } from '@/utils/notify';
 import FormActions from './parts/FormActions.vue';
-import KomisariatNotes from '@/models/KomisariatNotes';
-import WilayahNotes from '@/models/WilayahNotes';
+import Note from '@/models/Note';
 
 const emit = defineEmits(['successDelete', 'successSubmit', 'successUpdate', 'successCreate']);
 const props = defineProps({
@@ -30,16 +29,19 @@ const props = defineProps({
 const inputs = ref({ ...props.dataInputs, content: props.dataInputs?.content || '' });
 const id = props.dataInputs?.id;
 const loading = ref(false);
-let model = null;
 
-onMounted(async () => {
-    if (props.scope.toLocaleLowerCase() === 'komisariat') {
-        model = KomisariatNotes;
+const Model = () => {
+    switch (props.scope) {
+        case 'Komisariat':
+            return Note.Komisariat;
+        case 'Wilayah':
+            return Note.Wilayah;
+        case 'Bansus':
+            return Note.Bansus;
+        default:
+            throw new Error(`Scope '${props.scope}' is not recognized`);
     }
-    if (props.scope.toLocaleLowerCase() === 'wilayah') {
-        model = WilayahNotes;
-    }
-});
+};
 
 const onSubmit = async () => {
     const data = JSON.parse(JSON.stringify(inputs.value));
@@ -48,10 +50,10 @@ const onSubmit = async () => {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await model.create(data);
+            response = await Model().create(data);
             emit('successCreate', response?.note);
         } else {
-            response = await model.update(id, data);
+            response = await Model().update(id, data);
             emit('successUpdate', response?.note);
         }
         emit('successSubmit', response?.note);
@@ -68,7 +70,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await model.remove(id);
+        await Model().remove(id);
         emit('successDelete', id);
     } catch (error) {
         console.log('error delete note ', error);

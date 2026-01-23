@@ -1,5 +1,6 @@
 <template>
     <div class="q-pa-sm tw:flex tw:flex-col tw:gap-y-4 tw:gap-x-2 tw:items-center tw:sm:flex-row">
+        <CardLoading :showing="loading" />
         <q-avatar
             size="200px"
             class="text-center tw:ring-4 tw:ring-orange-300/75 tw:shadow-lg tw:shadow-orange-500/75 tw:m-2"
@@ -93,6 +94,10 @@ import { formatDate, getAge } from '@/utils/date-operation';
 defineProps({
     anggota: {
         type: Object,
+        required: true,
+    },
+    loading: {
+        type: Boolean,
         required: true,
     },
 });

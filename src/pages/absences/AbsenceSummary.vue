@@ -115,18 +115,21 @@ const props = defineProps({
 const loading = ref(false);
 const report = ref([]);
 const { meta } = useRoute();
-let model = null;
+
+const Model = () => {
+    switch (meta.scope) {
+        case 'Komisariat':
+            return Absence.Komisariat;
+        case 'Wilayah':
+            return Absence.Wilayah;
+        case 'Bansus':
+            return Absence.Bansus;
+        default:
+            throw new Error(`Scope '${meta.scope}' is not recognized`);
+    }
+};
 
 onMounted(async () => {
-    if (meta.scope == 'Komisariat') {
-        model = Absence.Komisariat;
-    }
-    if (meta.scope == 'Wilayah') {
-        model = Absence.Wilayah;
-    }
-    if (meta.scope == 'Bansus') {
-        model = Absence.Bansus;
-    }
     if (props.activityId) {
         await loadData();
     }
@@ -147,7 +150,7 @@ const sumHadir = computed(() => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await model.getSummaryByActivity(props.activityId);
+        const res = await Model().getSummaryByActivity(props.activityId);
         report.value = res.absence_summaries;
     } catch (e) {
         console.log('error report absence', e);
@@ -159,7 +162,7 @@ async function loadData() {
 async function createAbsence() {
     try {
         loading.value = true;
-        const res = await model.createByActivity(props.activityId);
+        const res = await Model().createByActivity(props.activityId);
         report.value = res.absence_summaries;
     } catch (e) {
         console.log('error report absence', e);
@@ -174,7 +177,7 @@ async function resetAbsence() {
 
     try {
         loading.value = true;
-        await model.removeByActivity(props.activityId);
+        await Model().removeByActivity(props.activityId);
         report.value = [];
     } catch (error) {
         console.log('error on reset absence ', error);

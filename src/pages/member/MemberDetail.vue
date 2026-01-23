@@ -20,8 +20,11 @@
         </CardHeader>
         <QCardSection class="q-pa-sm q-gutter-sm" style="max-width: 1024px">
             <QCard bordered flat>
-                <LoadingFixed v-if="loading" />
-                <DetailIdentity :anggota="anggota" @on-click-upload="dialogAvatar = true" />
+                <DetailIdentity
+                    :anggota="anggota"
+                    @on-click-upload="dialogAvatar = true"
+                    :loading="loading"
+                />
                 <DetailStatus
                     :statuses="anggota?.statuses || []"
                     :member="{ id: anggota.id, nama: anggota.nama }"
@@ -62,7 +65,6 @@ import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import DetailIdentity from './comp/DetailIdentity.vue';
 import DetailStatus from './comp/DetailStatus.vue';
-import LoadingFixed from '@/components/LoadingFixed.vue';
 import MemberForm from '@/components/forms/MemberForm.vue';
 import { useRouter } from 'vue-router';
 import ArrayCrud from '@/models/ArrayCrud';

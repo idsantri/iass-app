@@ -125,19 +125,21 @@ const absences = ref([]);
 const activity = ref({});
 const filterSelect = ref('');
 const filterInput = ref('');
-let model = null;
+
+const Model = () => {
+    switch (meta.scope) {
+        case 'Komisariat':
+            return Absence.Komisariat;
+        case 'Wilayah':
+            return Absence.Wilayah;
+        case 'Bansus':
+            return Absence.Bansus;
+        default:
+            throw new Error(`Scope '${meta.scope}' is not recognized`);
+    }
+};
 
 onMounted(async () => {
-    if (meta.scope == 'Komisariat') {
-        model = Absence.Komisariat;
-    }
-    if (meta.scope == 'Wilayah') {
-        model = Absence.Wilayah;
-    }
-    if (meta.scope == 'Bansus') {
-        model = Absence.Bansus;
-    }
-
     if (activityId) {
         await loadData();
         if (optionsKomisariat.value.length === 1) {
@@ -178,7 +180,7 @@ const filteredData = computed(() => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await model.getByActivity(activityId);
+        const res = await Model().getByActivity(activityId);
         absences.value = res.absences;
         activity.value = res.activity;
     } catch (e) {
@@ -190,7 +192,7 @@ async function loadData() {
 
 async function setHadir(item) {
     try {
-        await model.update(item.id, { hadir: item.hadir });
+        await Model().update(item.id, { hadir: item.hadir });
     } catch (error) {
         absences.value = ArrayCrud.update(absences.value, item.id, { hadir: item.hadir ? 0 : 1 });
         console.log('error update absen by id ', error);

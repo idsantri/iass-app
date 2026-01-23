@@ -165,7 +165,6 @@
 <script setup>
 import { ref, onMounted, watch, shallowRef, computed } from 'vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
-import AbsenceNks from '@/models/AbsenceNks';
 import Activity from '@/models/Activity';
 
 const loading = ref(false);
@@ -239,21 +238,21 @@ const loadActivityNks = async () => {
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        const data = await AbsenceNks.byMember({ th_ajaran_h });
-        // console.log(data);
-        reports.value = data.reports;
-        // set options komisariat
-        const _set = new Set();
-        data.reports.forEach((r) => {
-            if (r.member_komisariat) {
-                _set.add(r.member_komisariat);
-            }
-        });
-        optionsKomisariat.value = Array.from(_set).sort();
+        // const data = await AbsenceNks.byMember({ th_ajaran_h });
+        // // console.log(data);
+        // reports.value = data.reports;
+        // // set options komisariat
+        // const _set = new Set();
+        // data.reports.forEach((r) => {
+        //     if (r.member_komisariat) {
+        //         _set.add(r.member_komisariat);
+        //     }
+        // });
+        // optionsKomisariat.value = Array.from(_set).sort();
 
-        if (optionsKomisariat.value.length === 1) {
-            komisariat.value = optionsKomisariat.value[0];
-        }
+        // if (optionsKomisariat.value.length === 1) {
+        //     komisariat.value = optionsKomisariat.value[0];
+        // }
     } catch (error) {
         console.log('error load reports', error);
     } finally {

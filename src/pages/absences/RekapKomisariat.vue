@@ -265,7 +265,6 @@
 </template>
 <script setup>
 import LoadingFixed from '@/components/LoadingFixed.vue';
-import AbsenceNks from '@/models/AbsenceNks';
 import Activity from '@/models/Activity';
 import { ref, onMounted, watch, shallowRef } from 'vue';
 
@@ -290,7 +289,6 @@ const loadActivityNks = async () => {
             });
             optionsNks.value = Array.from(_set).sort();
         }
-        // console.log(optionsNks.value);
     } catch (error) {
         console.log('error load nks', error);
     } finally {
@@ -314,9 +312,8 @@ watch(thAjaranH, async (newVal) => {
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        const data = await AbsenceNks.byKomisariat({ th_ajaran_h });
-        // console.log(data);
-        reports.value = data.reports;
+        // const data = await AbsenceNks.byKomisariat({ th_ajaran_h });
+        // reports.value = data.reports;
     } catch (error) {
         console.log('error load reports', error);
     } finally {
