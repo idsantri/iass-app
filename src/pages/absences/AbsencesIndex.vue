@@ -55,8 +55,9 @@
                     <table class="full-width">
                         <thead>
                             <tr class="bg-orange-1">
-                                <th class="tw:p-2">Nama</th>
-                                <th class="tw:p-2">Hadir</th>
+                                <th class="tw:p-2 text-center">!</th>
+                                <th class="tw:p-2 text-left">Nama</th>
+                                <th class="tw:p-2 text-left">Hadir</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,7 +66,7 @@
                                 :key="absence.id"
                                 class="tw:border-b tw:border-orange-200/50"
                             >
-                                <td class="tw:flex tw:items-center tw:gap-x-1 tw:p-2">
+                                <td class="text-center tw:p-2">
                                     <QBtn
                                         icon="info"
                                         dense
@@ -75,34 +76,51 @@
                                         color="orange-4"
                                         :to="`/members/${absence.member_id}`"
                                     />
-                                    <div>
-                                        <span class="tw:font-medium">
-                                            {{ absence.nama }}
-                                        </span>
-                                        <br />
-                                        <small class="tw:font-light">
-                                            {{ absence.komisariat }} | {{ absence.kelompok }}
-                                        </small>
-                                    </div>
                                 </td>
                                 <td class="tw:p-2">
-                                    <q-toggle
-                                        class="q-px-sm"
-                                        v-model="absence.hadir"
-                                        color="orange"
-                                        label="Hadir"
-                                        @click="() => (activity.locked ? null : setHadir(absence))"
-                                        :true-value="true"
-                                        :false-value="false"
-                                        :disable="!!activity.locked"
-                                    />
+                                    <span class="tw:font-medium">
+                                        {{ absence.nama }}
+                                    </span>
+                                    <br />
+                                    <small class="tw:font-light">
+                                        {{ absence.komisariat }} | {{ absence.kelompok }}
+                                    </small>
+                                </td>
+                                <td class="tw:p-2">
+                                    <template v-if="!readonly">
+                                        <q-toggle
+                                            class=""
+                                            v-model="absence.hadir"
+                                            color="orange"
+                                            label="Hadir"
+                                            @click="
+                                                () =>
+                                                    activity.locked ? null : updateHadir(absence)
+                                            "
+                                            :true-value="true"
+                                            :false-value="false"
+                                            :disable="!!activity.locked"
+                                        />
+                                    </template>
+                                    <template v-else>
+                                        <span
+                                            :class="
+                                                cekKehadiran(activity.tgl_m, absence.hadir_at) ==
+                                                'Disiplin'
+                                                    ? 'text-black'
+                                                    : 'text-red-12'
+                                            "
+                                        >
+                                            {{ cekKehadiran(activity.tgl_m, absence.hadir_at) }}
+                                        </span>
+                                    </template>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </q-card-section>
                 <QCard class="q-mt-sm q-pa-sm text-center bg-orange-14 text-orange-1" flat bordered>
-                    Menampilkan {{ filteredData?.length }} anggota (aktif)
+                    Menampilkan {{ filteredData?.length }} anggota
                 </QCard>
             </QCard>
         </QCardSection>
@@ -139,12 +157,41 @@ const Model = () => {
     }
 };
 
+function cekKehadiran(date1, date2) {
+    if (!date2) return 'Absen';
+
+    const waktuTetap = new Date(date1);
+    const waktuHadir = new Date(date2);
+
+    if (waktuHadir <= waktuTetap) {
+        return 'Disiplin';
+    }
+
+    const selisihMs = waktuHadir - waktuTetap;
+    const totalMenit = Math.floor(selisihMs / (1000 * 60));
+
+    // Menghitung jam dan sisa menit
+    const jam = Math.floor(totalMenit / 60);
+    const menit = totalMenit % 60;
+
+    // Format output agar lebih enak dibaca
+    if (jam > 0) {
+        return `T+ ${jam} jam ${menit} menit`;
+    } else {
+        return `T+ ${menit} menit`;
+    }
+}
+
+let readonly = false;
 onMounted(async () => {
     if (activityId) {
         await loadData();
         if (optionsKomisariat.value.length === 1) {
             filterSelect.value = optionsKomisariat.value[0];
         }
+    }
+    if (meta.scope === 'Bansus') {
+        readonly = true;
     }
 });
 
@@ -190,11 +237,14 @@ async function loadData() {
     }
 }
 
-async function setHadir(item) {
+async function updateHadir(item) {
     try {
-        await Model().update(item.id, { hadir: item.hadir });
+        const data = await Model().update(item.id, { hadir: item.hadir });
+        absences.value = ArrayCrud.update(absences.value, item.id, data.absence);
     } catch (error) {
-        absences.value = ArrayCrud.update(absences.value, item.id, { hadir: item.hadir ? 0 : 1 });
+        absences.value = ArrayCrud.update(absences.value, item.id, {
+            hadir: item.hadir ? false : true,
+        });
         console.log('error update absen by id ', error);
     }
 }
