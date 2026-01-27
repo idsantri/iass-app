@@ -47,19 +47,17 @@ const wilayah = [
     {
         icon: 'sym_o_overview_key',
         label: 'Absensi Komisariat',
-        // caption: 'Rekap by Komisariat',
-        caption: 'Dalam perbaikan',
+        caption: 'Rekap by Komisariat',
         route: '/wilayah/absence-nks/rekap-komisariat',
-        disable: true,
+        disable: false,
     },
     {
         icon: 'sym_o_clinical_notes',
         label: 'Absensi Anggota',
-        // caption: 'Rekap by Anggota',
-        caption: 'Dalam perbaikan',
+        caption: 'Rekap by Anggota',
         route: '/wilayah/absence-nks/rekap-member',
         separator: true,
-        disable: true,
+        disable: false,
     },
 ];
 

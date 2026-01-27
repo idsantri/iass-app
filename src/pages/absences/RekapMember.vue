@@ -90,64 +90,64 @@
                         <td class="text-left">{{ report.member_kelompok }}</td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b11 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b11 == '1' ? 'green' : 'red'"
+                                :name="report.b_11 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_11 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b12 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b12 == '1' ? 'green' : 'red'"
+                                :name="report.b_12 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_12 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b01 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b01 == '1' ? 'green' : 'red'"
+                                :name="report.b_01 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_01 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b02 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b02 == '1' ? 'green' : 'red'"
+                                :name="report.b_02 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_02 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b03 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b03 == '1' ? 'green' : 'red'"
+                                :name="report.b_03 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_03 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b04 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b04 == '1' ? 'green' : 'red'"
+                                :name="report.b_04 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_04 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b05 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b05 == '1' ? 'green' : 'red'"
+                                :name="report.b_05 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_05 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b06 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b06 == '1' ? 'green' : 'red'"
+                                :name="report.b_06 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_06 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
                         <td class="text-center">
                             <q-icon
-                                :name="report.b07 == '1' ? 'check_circle' : 'cancel'"
-                                :color="report.b07 == '1' ? 'green' : 'red'"
+                                :name="report.b_07 == '1' ? 'check_circle' : 'cancel'"
+                                :color="report.b_07 == '1' ? 'green' : 'red'"
                                 size="xs"
                             />
                         </td>
@@ -166,6 +166,7 @@
 import { ref, onMounted, watch, shallowRef, computed } from 'vue';
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import Activity from '@/models/Activity';
+import ReportAbsence from '@/models/ReportAbsence';
 
 const loading = ref(false);
 const loadingNks = ref(false);
@@ -238,21 +239,21 @@ const loadActivityNks = async () => {
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        // const data = await AbsenceNks.byMember({ th_ajaran_h });
-        // // console.log(data);
-        // reports.value = data.reports;
-        // // set options komisariat
-        // const _set = new Set();
-        // data.reports.forEach((r) => {
-        //     if (r.member_komisariat) {
-        //         _set.add(r.member_komisariat);
-        //     }
-        // });
-        // optionsKomisariat.value = Array.from(_set).sort();
+        const data = await ReportAbsence.NksByMember(th_ajaran_h); // AbsenceNks.byMember({ th_ajaran_h });
+        // console.log(data);
+        reports.value = data.reports;
+        // set options komisariat
+        const _set = new Set();
+        data.reports.forEach((r) => {
+            if (r.member_komisariat) {
+                _set.add(r.member_komisariat);
+            }
+        });
+        optionsKomisariat.value = Array.from(_set).sort();
 
-        // if (optionsKomisariat.value.length === 1) {
-        //     komisariat.value = optionsKomisariat.value[0];
-        // }
+        if (optionsKomisariat.value.length === 1) {
+            komisariat.value = optionsKomisariat.value[0];
+        }
     } catch (error) {
         console.log('error load reports', error);
     } finally {

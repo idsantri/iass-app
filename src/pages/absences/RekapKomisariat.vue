@@ -74,93 +74,93 @@
                         <td class="text-left bg-orange-3">{{ report.komisariat }}</td>
 
                         <td title="Hadir" class="text-center bg-orange-1">
-                            {{ report.h11 ?? '-' }}
+                            {{ report.h_11 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-1">
-                            {{ report.a11 ?? '-' }}
+                            {{ report.a_11 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-1">
-                            {{ report.t11 ?? '-' }}
+                            {{ report.t_11 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-2">
-                            {{ report.h12 ?? '-' }}
+                            {{ report.h_12 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-2">
-                            {{ report.a12 ?? '-' }}
+                            {{ report.a_12 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-2">
-                            {{ report.t12 ?? '-' }}
+                            {{ report.t_12 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-1">
-                            {{ report.h01 ?? '-' }}
+                            {{ report.h_01 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-1">
-                            {{ report.a01 ?? '-' }}
+                            {{ report.a_01 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-1">
-                            {{ report.t01 ?? '-' }}
+                            {{ report.t_01 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-2">
-                            {{ report.h02 ?? '-' }}
+                            {{ report.h_02 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-2">
-                            {{ report.a02 ?? '-' }}
+                            {{ report.a_02 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-2">
-                            {{ report.t02 ?? '-' }}
+                            {{ report.t_02 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-1">
-                            {{ report.h03 ?? '-' }}
+                            {{ report.h_03 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-1">
-                            {{ report.a03 ?? '-' }}
+                            {{ report.a_03 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-1">
-                            {{ report.t03 ?? '-' }}
+                            {{ report.t_03 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-2">
-                            {{ report.h04 ?? '-' }}
+                            {{ report.h_04 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-2">
-                            {{ report.a04 ?? '-' }}
+                            {{ report.a_04 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-2">
-                            {{ report.t04 ?? '-' }}
+                            {{ report.t_04 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-1">
-                            {{ report.h05 ?? '-' }}
+                            {{ report.h_05 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-1">
-                            {{ report.a05 ?? '-' }}
+                            {{ report.a_05 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-1">
-                            {{ report.t05 ?? '-' }}
+                            {{ report.t_05 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-2">
-                            {{ report.h06 ?? '-' }}
+                            {{ report.h_06 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-2">
-                            {{ report.a06 ?? '-' }}
+                            {{ report.a_06 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-2">
-                            {{ report.t06 ?? '-' }}
+                            {{ report.t_06 ?? '-' }}
                         </td>
 
                         <td title="Hadir" class="text-center bg-orange-1">
-                            {{ report.h07 ?? '-' }}
+                            {{ report.h_07 ?? '-' }}
                         </td>
                         <td title="Absen" class="text-center bg-orange-1">
-                            {{ report.a07 ?? '-' }}
+                            {{ report.a_07 ?? '-' }}
                         </td>
                         <td title="Total" class="text-center bg-orange-1">
-                            {{ report.t07 ?? '-' }}
+                            {{ report.t_07 ?? '-' }}
                         </td>
                     </tr>
                 </tbody>
@@ -168,93 +168,93 @@
                     <tr class="text-subtitle2">
                         <th class="text-left bg-deep-orange-3">Total</th>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'h11') }}
+                            {{ hitungNilai(reports, 'h_11') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'a11') }}
+                            {{ hitungNilai(reports, 'a_11') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 't11') }}
+                            {{ hitungNilai(reports, 't_11') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'h12') }}
+                            {{ hitungNilai(reports, 'h_12') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'a12') }}
+                            {{ hitungNilai(reports, 'a_12') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 't12') }}
+                            {{ hitungNilai(reports, 't_12') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'h01') }}
+                            {{ hitungNilai(reports, 'h_01') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'a01') }}
+                            {{ hitungNilai(reports, 'a_01') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 't01') }}
+                            {{ hitungNilai(reports, 't_01') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'h02') }}
+                            {{ hitungNilai(reports, 'h_02') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'a02') }}
+                            {{ hitungNilai(reports, 'a_02') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 't02') }}
+                            {{ hitungNilai(reports, 't_02') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'h03') }}
+                            {{ hitungNilai(reports, 'h_03') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'a03') }}
+                            {{ hitungNilai(reports, 'a_03') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 't03') }}
+                            {{ hitungNilai(reports, 't_03') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'h04') }}
+                            {{ hitungNilai(reports, 'h_04') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'a04') }}
+                            {{ hitungNilai(reports, 'a_04') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 't04') }}
+                            {{ hitungNilai(reports, 't_04') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'h05') }}
+                            {{ hitungNilai(reports, 'h_05') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'a05') }}
+                            {{ hitungNilai(reports, 'a_05') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 't05') }}
+                            {{ hitungNilai(reports, 't_05') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'h06') }}
+                            {{ hitungNilai(reports, 'h_06') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 'a06') }}
+                            {{ hitungNilai(reports, 'a_06') }}
                         </td>
                         <td class="text-center bg-deep-orange-2">
-                            {{ hitungNilai(reports, 't06') }}
+                            {{ hitungNilai(reports, 't_06') }}
                         </td>
 
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'h07') }}
+                            {{ hitungNilai(reports, 'h_07') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 'a07') }}
+                            {{ hitungNilai(reports, 'a_07') }}
                         </td>
                         <td class="text-center bg-deep-orange-1">
-                            {{ hitungNilai(reports, 't07') }}
+                            {{ hitungNilai(reports, 't_07') }}
                         </td>
                     </tr>
                 </tfoot>
@@ -266,6 +266,7 @@
 <script setup>
 import LoadingFixed from '@/components/LoadingFixed.vue';
 import Activity from '@/models/Activity';
+import ReportAbsence from '@/models/ReportAbsence';
 import { ref, onMounted, watch, shallowRef } from 'vue';
 
 const reports = shallowRef([]);
@@ -312,8 +313,8 @@ watch(thAjaranH, async (newVal) => {
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        // const data = await AbsenceNks.byKomisariat({ th_ajaran_h });
-        // reports.value = data.reports;
+        const data = await ReportAbsence.NksByKomisariat(th_ajaran_h);
+        reports.value = data.reports;
     } catch (error) {
         console.log('error load reports', error);
     } finally {
