@@ -1,4 +1,5 @@
 export default [
+    // activities
     {
         path: 'activities',
         component: () => import('@/pages/activities/ActivitiesIndex.vue'),

@@ -93,6 +93,18 @@ export default [
                 children: _common,
             },
 
+            // cash flows
+            {
+                path: 'cash-flows',
+                component: () => import('../pages/cash-flows/CashFlowsPage.vue'),
+            },
+
+            // accounts
+            {
+                path: 'accounts',
+                component: () => import('../pages/accounts/AccountPage.vue'),
+            },
+
             // Settings
             {
                 path: 'settings',

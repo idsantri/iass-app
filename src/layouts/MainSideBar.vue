@@ -59,6 +59,14 @@ const wilayah = [
         separator: true,
         disable: false,
     },
+    {
+        icon: 'sym_o_money',
+        label: 'Keuangan',
+        caption: 'Arus Kas',
+        route: '/cash-flows' + '?scope=wilayah',
+        separator: true,
+        disable: false,
+    },
 ];
 
 const komisariat = [
