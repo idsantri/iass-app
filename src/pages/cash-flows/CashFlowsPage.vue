@@ -6,7 +6,7 @@
             :show-reload="false"
             :show-add="true"
             @on-add="handleAdd"
-            :disable-add="!modRekening"
+            :disable-add="!account"
         />
 
         <q-card-section
@@ -108,13 +108,14 @@
 </template>
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref, watch, computed } from 'vue';
+import { onMounted, ref, watch, computed, nextTick } from 'vue';
 import { toProperCase } from '@/utils/string';
 import InputSelectArray from '@/components/forms/inputs/InputSelectArray.vue';
 import Account from '@/models/Account';
 import CashFlowForm from '@/components/forms/CashFlowForm.vue';
 import CashFlow from '@/models/CashFlow';
 import { formatDate } from '@/utils/date-operation';
+import { notifyWarning } from '@/utils/notify';
 
 const router = useRouter();
 const { query } = useRoute();
@@ -140,6 +141,7 @@ async function loadAccounts() {
     try {
         lodRekening.value = true;
         const res = await Account.getAll({
+            active: 1,
             lingkup: query.scope,
             komisariat: modKomisariat.value ?? null,
         });
@@ -194,6 +196,10 @@ onMounted(async () => {
     await loadAccounts();
     if (query?.rekening) {
         modRekening.value = query.rekening;
+    }
+    await nextTick();
+    if (!account.value && modRekening.value) {
+        notifyWarning('Sepertinya rekening yang dipilih sudah tidak aktif.');
     }
 });
 

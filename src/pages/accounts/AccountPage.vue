@@ -13,17 +13,24 @@
             >
                 <template v-slot:body-cell-private="props">
                     <q-td :props="props">
-                        <q-toggle
-                            :model-value="props.value"
-                            :true-value="true"
-                            :false-value="false"
-                            checked-icon="check"
-                            unchecked-icon="clear"
+                        <q-icon
+                            :name="props.value ? 'sym_o_encrypted' : 'sym_o_encrypted_off'"
                             color="orange-10"
-                            @update:model-value="
-                                (value, event) => handleToggle(value, props.row.id)
-                            "
+                            class="q-mr-sm"
+                            size="1.5em"
                         />
+                        {{ props.value ? 'Ya' : 'Tidak' }}
+                    </q-td>
+                </template>
+                <template v-slot:body-cell-active="props">
+                    <q-td :props="props">
+                        <q-icon
+                            :name="props.value ? 'check' : 'clear'"
+                            color="orange-10"
+                            class="q-mr-sm"
+                            size="1.5em"
+                        />
+                        {{ props.value ? 'Ya' : 'Tidak' }}
                     </q-td>
                 </template>
                 <template v-slot:body-cell-id="props">
@@ -75,7 +82,6 @@ import { ref, onMounted } from 'vue';
 import Account from '@/models/Account';
 import { toProperCase } from '@/utils/string';
 import ArrayCrud from '@/models/ArrayCrud';
-import { notifyWarning } from '@/utils/notify';
 import AccountForm from '@/components/forms/AccountForm.vue';
 
 const { query } = useRoute();
@@ -105,26 +111,6 @@ function reload() {
         .catch((err) => console.log(err))
         .finally(() => (loading.value = false));
 }
-async function handleToggle(value, id) {
-    try {
-        loading.value = true;
-        accounts.value = ArrayCrud.update(accounts.value, id, { private: value });
-        const data = ArrayCrud.findById(accounts.value, id);
-        await Account.update(id, data, { lingkup: query.scope });
-        if (value) {
-            notifyWarning(
-                'Arus kas untuk rekening ini hanya dapat dilihat oleh Anda sendiri atau pengguna dengan peran (role) yang sama',
-            );
-        } else {
-            notifyWarning('Arus kas untuk rekening ini dapat diakses oleh seluruh pengguna');
-        }
-    } catch (err) {
-        accounts.value = ArrayCrud.update(accounts.value, id, { private: value ? false : true });
-        console.error('🚀 ~ toggleHidden ~ err:', err);
-    } finally {
-        loading.value = false;
-    }
-}
 
 const handleEdit = (acc) => {
     const data = JSON.parse(JSON.stringify(acc));
@@ -140,6 +126,7 @@ const handleAdd = () => {
     account.value = {
         komisariat: toProperCase(query.komisariat) ?? null,
         private: true,
+        active: true,
     };
     dialog.value = true;
 };
@@ -161,22 +148,32 @@ const onDelete = (id) => {
 
 const columns = [
     {
-        name: 'private',
-        label: 'Private',
-        field: 'private',
-        align: 'center',
-    },
-    {
         name: 'nama',
         label: 'Nama',
         field: 'nama',
         align: 'left',
+        sortable: true,
     },
     {
         name: 'komisariat',
         label: 'Komisariat',
         field: 'komisariat',
         align: 'left',
+        sortable: true,
+    },
+    {
+        name: 'private',
+        label: 'Private',
+        field: 'private',
+        align: 'left',
+        sortable: true,
+    },
+    {
+        name: 'active',
+        label: 'Aktif',
+        field: 'active',
+        align: 'left',
+        sortable: true,
     },
     {
         name: 'id',

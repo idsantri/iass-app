@@ -29,13 +29,23 @@
                 />
 
                 <q-card bordered flat class="q-px-sm q-my-sm bg-transparent flex items-center">
-                    <div class="q-mr-md text-caption">Private</div>
+                    <div class="q-mr-md text-caption tw:w-1/8">Private</div>
                     <q-toggle
                         v-model="inputs.private"
                         color="orange"
                         :true-value="true"
                         :false-value="false"
                         :label="inputs.private ? 'Ya' : 'Tidak'"
+                    />
+                </q-card>
+                <q-card bordered flat class="q-px-sm q-my-sm bg-transparent flex items-center">
+                    <div class="q-mr-md text-caption tw:w-1/8">Aktif</div>
+                    <q-toggle
+                        v-model="inputs.active"
+                        color="orange"
+                        :true-value="true"
+                        :false-value="false"
+                        :label="inputs.active ? 'Ya (tampil di list)' : 'Tidak'"
                     />
                 </q-card>
             </q-card-section>
