@@ -5,7 +5,7 @@
             @on-reload="null"
             :show-reload="false"
             :show-add="true"
-            @on-add="dialog = true"
+            @on-add="handleAdd"
             :disable-add="!modRekening"
         />
 
@@ -68,20 +68,53 @@
             </q-input>
         </q-card-section>
 
-        <q-card-section class="q-pa-sm" style="max-width: 1024px">
-            model: {{ modRekening }}
-            <pre>
-optRekening {{ optRekening }}
-            </pre>
+        <q-card-section class="q-pa-sm">
+            <q-table
+                flat
+                bordered
+                :rows="cashFlows"
+                :columns="columns"
+                row-key="id"
+                :loading="lodCashFlow"
+                :rows-per-page-options="[10, 25, 50, 100, 0]"
+                :filter="modSearch"
+                no-data-label="Data tidak ditemukan"
+                no-results-label="Data tidak ditemukan"
+            >
+                <template v-slot:body-cell-id="props">
+                    <q-td :props="props">
+                        <q-btn
+                            icon="edit"
+                            flat
+                            dense
+                            color="orange-10"
+                            :model-value="props.value"
+                            @click="handleEdit(props.row)"
+                        />
+                    </q-td>
+                </template>
+            </q-table>
         </q-card-section>
+        <QDialog v-model="dialog">
+            <CashFlowForm
+                :dataInputs="cashFlow"
+                :scope="query.scope"
+                @success-create="loadCashFlows"
+                @success-update="loadCashFlows"
+                @success-delete="loadCashFlows"
+            />
+        </QDialog>
     </CardPage>
 </template>
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { toProperCase } from '@/utils/string';
 import InputSelectArray from '@/components/forms/inputs/InputSelectArray.vue';
 import Account from '@/models/Account';
+import CashFlowForm from '@/components/forms/CashFlowForm.vue';
+import CashFlow from '@/models/CashFlow';
+import { formatDate } from '@/utils/date-operation';
 
 const router = useRouter();
 const { query } = useRoute();
@@ -96,6 +129,12 @@ const lodRekening = ref(false);
 
 const dialog = ref(false);
 const cashFlows = ref([]);
+const cashFlow = ref({});
+const lodCashFlow = ref(false);
+
+const account = computed(() => {
+    return optRekening.value.find((a) => a.slug == modRekening.value);
+});
 
 async function loadAccounts() {
     try {
@@ -115,9 +154,41 @@ async function loadAccounts() {
     }
 }
 
-async function loadCashFlows(rekeningSlug) {
-    console.log('🚀 ~ loadCashFlows ~ rekeningSlug:', rekeningSlug);
+async function loadCashFlows() {
+    // console.log(modRekening.value);
+    dialog.value = false;
+    // console.log('🚀 ~ loadCashFlows ~ rekeningSlug:', rekeningSlug);
+    try {
+        lodCashFlow.value = true;
+        const res = await CashFlow.getAll({
+            rekening: modRekening.value,
+        });
+        if (res && res.cash_flows) {
+            cashFlows.value = res.cash_flows;
+        }
+    } catch (err) {
+        console.error('🚀 ~ loadCashFlows ~ err:', err);
+    } finally {
+        lodCashFlow.value = false;
+    }
 }
+
+const handleAdd = () => {
+    cashFlow.value = {
+        rekening: modRekening.value,
+        rekening_nama: account.value.nama,
+    };
+    dialog.value = true;
+};
+
+const handleEdit = (obj) => {
+    cashFlow.value = {
+        ...obj,
+        rekening: modRekening.value,
+        rekening_nama: account.value.nama,
+    };
+    dialog.value = true;
+};
 
 onMounted(async () => {
     await loadAccounts();
@@ -135,10 +206,80 @@ watch(modRekening, async (newVal) => {
     });
 
     if (newVal) {
-        await loadCashFlows(newVal);
+        await loadCashFlows();
     } else {
         cashFlows.value = [];
     }
 });
+
+const columns = [
+    {
+        name: 'tgl_transaksi',
+        align: 'left',
+        label: 'Tanggal',
+        field: 'tgl_transaksi',
+        format: (val) => formatDate(val, 'dd-MM-yyyy'),
+        sortable: true,
+    },
+    {
+        name: 'keterangan',
+        align: 'left',
+        label: 'Keterangan',
+        field: 'keterangan',
+        sortable: true,
+    },
+    {
+        name: 'masuk',
+        align: 'right',
+        label: 'Masuk',
+        field: 'masuk',
+        format: (val) =>
+            new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            }).format(val),
+        sortable: true,
+    },
+    {
+        name: 'keluar',
+        align: 'right',
+        label: 'Keluar',
+        field: 'keluar',
+        format: (val) =>
+            new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            }).format(val),
+        sortable: true,
+    },
+    {
+        name: 'saldo',
+        align: 'right',
+        label: 'Saldo',
+        field: 'saldo',
+        format: (val) =>
+            new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            }).format(val),
+        sortable: true,
+    },
+    {
+        name: 'atas_nama',
+        align: 'left',
+        label: 'Atas Nama',
+        field: 'atas_nama',
+        sortable: true,
+    },
+    {
+        name: 'id',
+        align: 'center',
+        label: 'Edit',
+        field: 'id',
+    },
+];
 </script>
 <style lang=""></style>
