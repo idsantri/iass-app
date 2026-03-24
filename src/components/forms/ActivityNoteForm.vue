@@ -31,12 +31,12 @@ const id = props.dataInputs?.id;
 const loading = ref(false);
 
 const Model = () => {
-    switch (props.scope) {
-        case 'Komisariat':
+    switch (props.scope?.toLowerCase()) {
+        case 'komisariat':
             return Note.Komisariat;
-        case 'Wilayah':
+        case 'wilayah':
             return Note.Wilayah;
-        case 'Bansus':
+        case 'bansus':
             return Note.Bansus;
         default:
             throw new Error(`Scope '${props.scope}' is not recognized`);

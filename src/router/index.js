@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { nextTick } from 'vue';
 import authStore from '@/stores/authStore';
 import routes from './routes';
+import { toProperCase } from '@/utils/string';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,7 +34,11 @@ router.beforeEach((to, _from, next) => {
 const DEFAULT_TITLE = import.meta.env.VITE_APP_INSTANCE;
 router.afterEach(async (to) => {
     await nextTick(() => {
-        document.title = to.meta.title ? `${DEFAULT_TITLE} — ${to.meta.title}` : DEFAULT_TITLE;
+        const hasMetaTitle = Boolean(to.meta.title);
+        const scope = to.query?.scope ? toProperCase(to.query.scope) : '';
+        const metaTitle = hasMetaTitle ? `${DEFAULT_TITLE} — ${to.meta.title}` : DEFAULT_TITLE;
+
+        document.title = scope ? `${metaTitle} ${scope}` : metaTitle;
     });
 });
 export default router;

@@ -6,7 +6,7 @@
                 <LoadingFixed v-if="loading" />
 
                 <QCardSection class="q-px-md q-py-sm text-center bg-orange-1">
-                    <ActivityHeader :activity="activity" :scope="meta.scope" />
+                    <ActivityHeader :activity="activity" :scope="query.scope" />
                 </QCardSection>
 
                 <QCard v-if="error" class="q-pa-sm text-center bg-red-1 text-red-10" flat bordered>
@@ -64,20 +64,20 @@ const result = ref('');
 const loading = ref(false);
 const loadingAbsence = ref(false);
 const error = ref('');
-const { params, meta } = useRoute();
+const { params, query } = useRoute();
 const activity = ref({});
 const cameraKey = ref(0); // Key untuk memaksa render ulang
 
 const ModelAbsence = () => {
-    switch (meta.scope) {
-        case 'Komisariat':
+    switch (query.scope?.toLowerCase()) {
+        case 'komisariat':
             return Absence.Komisariat;
-        case 'Wilayah':
+        case 'wilayah':
             return Absence.Wilayah;
-        case 'Bansus':
+        case 'bansus':
             return Absence.Bansus;
         default:
-            throw new Error(`Scope '${meta.scope}' is not recognized`);
+            throw new Error(`Scope '${query.scope}' is not recognized`);
     }
 };
 
@@ -90,7 +90,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Activity().getById(params.id, { lingkup: meta?.scope?.toLowerCase() });
+        const res = await Activity.getById(params.id, { lingkup: query?.scope?.toLowerCase() });
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity by id ', e);

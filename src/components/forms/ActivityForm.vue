@@ -1,7 +1,7 @@
 <template>
     <q-card class="full-width" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
-            <FormHeader :title="'Input Kegiatan ' + scope" :is-new="!id" />
+            <FormHeader :title="'Input Kegiatan ' + toProperCase(scope)" :is-new="!id" />
             <LoadingAbsolute v-if="loading" />
 
             <q-card-section class="q-pa-sm">
@@ -38,7 +38,7 @@
                     error-color="negative"
                 />
                 <q-input
-                    v-if="scope == 'Komisariat'"
+                    v-if="scope == 'komisariat'"
                     dense
                     class="q-my-sm"
                     outlined
@@ -48,7 +48,7 @@
                     readonly=""
                 />
                 <InputSelectArray
-                    v-if="scope == 'Wilayah' || scope == 'Bansus'"
+                    v-if="scope == 'wilayah' || scope == 'bansus'"
                     v-model="inputs.komisariat"
                     url="komisariat"
                     label="Komisariat *"
@@ -92,6 +92,7 @@ import { formatDate } from '@/utils/date-operation';
 import { bacaHijri, m2h } from '@/utils/hijri';
 import Activity from '@/models/Activity';
 import { id as idn } from 'date-fns/locale';
+import { toProperCase } from '@/utils/string';
 
 const props = defineProps({
     dataInputs: { type: Object },

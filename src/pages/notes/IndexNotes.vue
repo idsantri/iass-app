@@ -84,12 +84,12 @@ const notes = shallowRef([]);
 const activity = shallowRef({});
 
 const Model = () => {
-    switch (props.scope) {
-        case 'Komisariat':
+    switch (props.scope?.toLowerCase()) {
+        case 'komisariat':
             return Note.Komisariat;
-        case 'Wilayah':
+        case 'wilayah':
             return Note.Wilayah;
-        case 'Bansus':
+        case 'bansus':
             return Note.Bansus;
         default:
             throw new Error(`Scope '${props.scope}' is not recognized`);
@@ -118,7 +118,7 @@ async function loadData() {
 const router = useRouter();
 function goEdit(note = {}) {
     router.push({
-        path: `/${props.scope}/activities/${props.activityId}/notes/form`,
+        path: `/activities/${props.activityId}/notes/form`,
         state: {
             note: { activity_id: activity.value.id, ...note },
             activity: { ...activity.value },

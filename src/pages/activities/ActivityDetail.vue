@@ -67,7 +67,10 @@
             <q-card class="" flat bordered>
                 <q-tabs class="bg-orange-1 text-orange-10" align="left" inline-label>
                     <q-route-tab
-                        :to="`/${meta.scope}/activities/${id}/absence-summaries`"
+                        :to="{
+                            path: `/activities/${id}/absence-summaries`,
+                            query: { scope: query.scope },
+                        }"
                         icon="sym_o_planner_review"
                         label="Absensi"
                         outline
@@ -75,7 +78,10 @@
                         replace
                     />
                     <q-route-tab
-                        :to="`/${meta.scope}/activities/${id}/notes`"
+                        :to="{
+                            path: `/activities/${id}/notes`,
+                            query: { scope: query.scope },
+                        }"
                         icon="sym_o_comment"
                         label="Catatan"
                         outline
@@ -83,7 +89,7 @@
                         replace
                     />
                 </q-tabs>
-                <RouterView :key="$route.path" :activityId="id" :scope="meta.scope" />
+                <RouterView :key="$route.path" :activityId="id" :scope="query.scope" />
             </q-card>
         </q-card-section>
         <QDialog v-model="dialog">
@@ -91,7 +97,7 @@
                 @success-update="loadData"
                 @success-delete="() => $router.go(-1)"
                 :dataInputs="{ ...activity }"
-                :scope="meta.scope"
+                :scope="query.scope"
             />
         </QDialog>
     </CardPage>
@@ -104,13 +110,14 @@ import { useRoute } from 'vue-router';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
 import Activity from '@/models/Activity';
+import { toProperCase } from '@/utils/string';
 
-const { params, meta } = useRoute();
+const { params, query } = useRoute();
 const id = params.id;
 const dialog = ref(false);
 const activity = ref({});
 const loading = ref(false);
-const titlePage = 'Detail Kegiatan ' + meta.scope;
+const titlePage = 'Detail Kegiatan ' + toProperCase(query.scope);
 
 onMounted(async () => {
     if (id) await loadData();
@@ -119,7 +126,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Activity.getById(id, { lingkup: meta?.scope?.toLowerCase() });
+        const res = await Activity.getById(id, { lingkup: query?.scope?.toLowerCase() });
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity id ', e);
@@ -130,7 +137,11 @@ async function loadData() {
 
 async function lockActivity(act) {
     try {
-        await Activity.update(act.id, { locked: act.locked, lingkup: meta?.scope?.toLowerCase() });
+        await Activity.update(
+            act.id,
+            { locked: act.locked },
+            { lingkup: query?.scope?.toLowerCase() },
+        );
     } catch (e) {
         activity.value.locked = act.locked ? 0 : 1;
         console.log('error lock activity ', e);

@@ -14,7 +14,10 @@
             <QSpace />
             <div class="tw:flex tw:gap-2">
                 <QBtn
-                    :to="`/${meta.scope}/activities/${activityId}/absences/qr`"
+                    :to="{
+                        path: `/activities/${activityId}/absences/qr`,
+                        query: { scope: query.scope },
+                    }"
                     :label="$q.screen.lt.sm ? 'Scan' : 'Scan QR Code'"
                     color="orange-10"
                     no-caps
@@ -23,7 +26,10 @@
                     icon="sym_o_qr_code_scanner"
                 />
                 <QBtn
-                    :to="`/${meta.scope}/activities/${activityId}/absences`"
+                    :to="{
+                        path: `/activities/${activityId}/absences`,
+                        query: { scope: query.scope },
+                    }"
                     :label="$q.screen.lt.sm ? 'Detail' : 'Detail Absensi'"
                     color="orange-10"
                     no-caps
@@ -114,18 +120,18 @@ const props = defineProps({
 
 const loading = ref(false);
 const report = ref([]);
-const { meta } = useRoute();
+const { query } = useRoute();
 
 const Model = () => {
-    switch (meta.scope) {
-        case 'Komisariat':
+    switch (query?.scope?.toLowerCase()) {
+        case 'komisariat':
             return Absence.Komisariat;
-        case 'Wilayah':
+        case 'wilayah':
             return Absence.Wilayah;
-        case 'Bansus':
+        case 'bansus':
             return Absence.Bansus;
         default:
-            throw new Error(`Scope '${meta.scope}' is not recognized`);
+            throw new Error(`Scope '${query.scope}' is not recognized`);
     }
 };
 

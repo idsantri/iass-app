@@ -9,7 +9,10 @@
                     icon="qr_code"
                     no-caps
                     class="q-px-md"
-                    :to="`/${meta.scope}/activities/${activityId}/absences/qr`"
+                    :to="{
+                        path: `/activities/${activityId}/absences/qr`,
+                        query: { scope: query.scope },
+                    }"
                 />
             </template>
         </CardHeader>
@@ -17,7 +20,7 @@
             <QCard bordered flat>
                 <LoadingFixed v-if="loading" />
                 <QCardSection class="q-px-md q-pt-sm q-pb-none text-center">
-                    <ActivityHeader :activity="activity" :scope="meta.scope" />
+                    <ActivityHeader :activity="activity" :scope="query.scope" />
                 </QCardSection>
                 <div
                     v-if="activity.locked"
@@ -136,7 +139,7 @@ import { useRoute } from 'vue-router';
 import ActivityHeader from '@/pages/activities/ActivityHeader.vue';
 import Absence from '@/models/Absence';
 
-const { params, meta } = useRoute();
+const { params, query } = useRoute();
 const activityId = params.id;
 const loading = ref(false);
 const absences = ref([]);
@@ -145,15 +148,15 @@ const filterSelect = ref('');
 const filterInput = ref('');
 
 const Model = () => {
-    switch (meta.scope) {
-        case 'Komisariat':
+    switch (query.scope?.toLowerCase()) {
+        case 'komisariat':
             return Absence.Komisariat;
-        case 'Wilayah':
+        case 'wilayah':
             return Absence.Wilayah;
-        case 'Bansus':
+        case 'bBansus':
             return Absence.Bansus;
         default:
-            throw new Error(`Scope '${meta.scope}' is not recognized`);
+            throw new Error(`Scope '${query.scope}' is not recognized`);
     }
 };
 
@@ -190,7 +193,7 @@ onMounted(async () => {
             filterSelect.value = optionsKomisariat.value[0];
         }
     }
-    if (meta.scope === 'Bansus') {
+    if (query.scope === 'Bansus') {
         readonly = true;
     }
 });

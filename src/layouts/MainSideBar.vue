@@ -40,7 +40,7 @@ const wilayah = [
         icon: 'sym_o_history_2',
         label: 'Kegiatan',
         caption: 'Kegiatan Wilayah',
-        route: '/wilayah/activities',
+        route: '/activities' + '?scope=wilayah',
         disable: false,
     },
 
@@ -48,14 +48,14 @@ const wilayah = [
         icon: 'sym_o_overview_key',
         label: 'Absensi Komisariat',
         caption: 'Rekap by Komisariat',
-        route: '/wilayah/absence-nks/rekap-komisariat',
+        route: '/reports-nks/rekap-komisariat',
         disable: false,
     },
     {
         icon: 'sym_o_clinical_notes',
         label: 'Absensi Anggota',
         caption: 'Rekap by Anggota',
-        route: '/wilayah/absence-nks/rekap-member',
+        route: '/reports-nks/rekap-member',
         separator: true,
         disable: false,
     },
@@ -74,7 +74,7 @@ const komisariat = [
         icon: 'sym_o_history_2',
         label: 'Kegiatan',
         caption: 'Kegiatan Komisariat',
-        route: '/komisariat/activities',
+        route: '/activities' + '?scope=komisariat',
         disable: false,
     },
 ];
@@ -90,7 +90,7 @@ const bansus = [
         icon: 'sym_o_history_2',
         label: 'Kegiatan',
         caption: 'Kegiatan Bansus',
-        route: '/bansus/activities',
+        route: '/activities' + '?scope=bansus',
         disable: false,
     },
 ];

@@ -15,7 +15,11 @@
                 bordered
                 :loading="loading"
                 @row-click="
-                    (evt, row, index) => $router.push(`/${meta.scope}/activities/${row.id}`)
+                    (evt, row, index) =>
+                        $router.push({
+                            path: `/activities/${row.id}`,
+                            query: { scope: query.scope },
+                        })
                 "
                 :filter="filterText"
             >
@@ -49,9 +53,9 @@
         </q-card-section>
         <QDialog v-model="dialog">
             <ActivityForm
-                @success-create="(res) => $router.push(`/${meta.scope}/activities/${res.id}`)"
+                @success-create="(res) => $router.push(`/${query.scope}/activities/${res.id}`)"
                 :dataInputs="{ komisariat: komisariatUser }"
-                :scope="meta.scope"
+                :scope="query.scope"
             />
         </QDialog>
         <!-- {{ filteredActivities }}
@@ -64,6 +68,7 @@ import InputSelectArray from '@/components/forms/inputs/InputSelectArray.vue';
 import Activity from '@/models/Activity';
 import authStore from '@/stores/authStore';
 import { formatDate } from '@/utils/date-operation';
+import { toProperCase } from '@/utils/string';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -71,9 +76,9 @@ const komisariatUser = authStore().user.komisariat;
 const activities = ref([]);
 const loading = ref(false);
 const dialog = ref(false);
-const { meta } = useRoute();
+const { query } = useRoute();
 
-const titlePage = 'Data Kegiatan ' + meta.scope;
+const titlePage = 'Data Kegiatan ' + toProperCase(query.scope);
 const filterKomisariat = ref('');
 const filterText = ref('');
 
@@ -87,12 +92,16 @@ const filteredActivities = computed(() =>
 
 onMounted(async () => {
     await loadData();
+
+    if (komisariatUser && query.scope?.toLowerCase() == 'komisariat') {
+        filterKomisariat.value = komisariatUser;
+    }
 });
 
 async function loadData() {
     try {
         loading.value = true;
-        const data = await Activity.getAll({ lingkup: meta?.scope?.toLowerCase() });
+        const data = await Activity.getAll({ lingkup: query?.scope?.toLowerCase() });
         activities.value = data.activities;
     } catch (error) {
         console.log('error get activities ', error);

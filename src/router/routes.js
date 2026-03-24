@@ -44,6 +44,7 @@ export default [
                     },
                 ],
             },
+
             // Bansus
             {
                 path: 'bansuses',
@@ -60,49 +61,101 @@ export default [
                 ],
             },
 
-            // Wilayah
+            // // Wilayah
+            // {
+            //     path: 'wilayah',
+            //     meta: { scope: 'Wilayah', title: 'Kegiatan Wilayah' },
+            //     children: [
+            //         ..._common,
+            //         {
+            //             path: 'absence-nks/rekap-komisariat',
+            //             component: () => import('@/pages/absences/RekapKomisariat.vue'),
+            //             meta: { title: 'Absensi NKS | Rekap Komisariat' },
+            //         },
+            //         {
+            //             path: 'absence-nks/rekap-member',
+            //             component: () => import('@/pages/absences/RekapMember.vue'),
+            //             meta: { title: 'Absensi NKS | Rekap Anggota' },
+            //         },
+            //     ],
+            // },
+
+            // // Komisariat
+            // {
+            //     path: 'komisariat',
+            //     meta: { scope: 'Komisariat', title: 'Kegiatan Komisariat' },
+            //     children: _common,
+            // },
+
+            // // Bansus
+            // {
+            //     path: 'bansus',
+            //     meta: { scope: 'Bansus', title: 'Kegiatan Bansus' },
+            //     children: _common,
+            // },
+
             {
-                path: 'wilayah',
-                meta: { scope: 'Wilayah', title: 'Kegiatan Wilayah' },
+                path: 'activities',
+                meta: { title: 'Kegiatan' },
                 children: [
-                    ..._common,
                     {
-                        path: 'absence-nks/rekap-komisariat',
+                        path: '',
+                        component: () => import('@/pages/activities/ActivitiesIndex.vue'),
+                    },
+                    {
+                        path: ':id',
+                        component: () => import('@/pages/activities/ActivityDetail.vue'),
+                        redirect: (to) => `${to.path}/absence-summaries`,
+                        children: [
+                            {
+                                path: 'absence-summaries',
+                                component: () => import('@/pages/absences/AbsenceSummary.vue'),
+                            },
+                            {
+                                path: 'notes',
+                                component: () => import('@/pages/notes/IndexNotes.vue'),
+                            },
+                        ],
+                    },
+                    {
+                        path: ':id/notes/form',
+                        component: () => import('@/pages/notes/EditNote.vue'),
+                    },
+                    {
+                        path: ':id/absences',
+                        component: () => import('@/pages/absences/AbsencesIndex.vue'),
+                    },
+                    {
+                        path: ':id/absences/qr',
+                        component: () => import('@/pages/absences/AbsencesQR.vue'),
+                    },
+                ],
+            },
+
+            {
+                path: 'reports-nks',
+                children: [
+                    {
+                        path: 'rekap-komisariat',
                         component: () => import('@/pages/absences/RekapKomisariat.vue'),
                         meta: { title: 'Absensi NKS | Rekap Komisariat' },
                     },
                     {
-                        path: 'absence-nks/rekap-member',
+                        path: 'rekap-member',
                         component: () => import('@/pages/absences/RekapMember.vue'),
                         meta: { title: 'Absensi NKS | Rekap Anggota' },
                     },
                 ],
             },
 
-            // Komisariat
-            {
-                path: 'komisariat',
-                meta: { scope: 'Komisariat', title: 'Kegiatan Komisariat' },
-                children: _common,
-            },
-
-            // Bansus
-            {
-                path: 'bansus',
-                meta: { scope: 'Bansus', title: 'Kegiatan Bansus' },
-                children: _common,
-            },
-
-            // cash flows
-            {
-                path: 'cash-flows',
-                component: () => import('../pages/cash-flows/CashFlowsPage.vue'),
-            },
-
-            // accounts
             {
                 path: 'accounts',
                 component: () => import('../pages/accounts/AccountPage.vue'),
+            },
+
+            {
+                path: 'cash-flows',
+                component: () => import('../pages/cash-flows/CashFlowsPage.vue'),
             },
 
             // Settings

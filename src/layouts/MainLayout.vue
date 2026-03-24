@@ -14,10 +14,8 @@
         </q-drawer>
 
         <q-page-container>
-            <!-- <q-page class="q-pa-sm"> -->
             <!-- START HERE -->
-            <router-view :key="$route.path" />
-            <!-- </q-page> -->
+            <router-view :key="$route.fullPath" />
         </q-page-container>
         <MainFooter />
     </q-layout>
