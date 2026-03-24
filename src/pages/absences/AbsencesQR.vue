@@ -81,19 +81,6 @@ const ModelAbsence = () => {
     }
 };
 
-const ModelActivity = () => {
-    switch (meta.scope) {
-        case 'Komisariat':
-            return Activity.Komisariat;
-        case 'Wilayah':
-            return Activity.Wilayah;
-        case 'Bansus':
-            return Activity.Bansus;
-        default:
-            throw new Error(`Scope '${meta.scope}' is not recognized`);
-    }
-};
-
 onMounted(async () => {
     if (params.id) {
         await loadData();
@@ -103,7 +90,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await ModelActivity().getById(params.id);
+        const res = await Activity().getById(params.id, { lingkup: meta?.scope?.toLowerCase() });
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity by id ', e);

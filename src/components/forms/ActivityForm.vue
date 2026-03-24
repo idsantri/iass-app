@@ -114,19 +114,6 @@ const id = props.dataInputs?.id;
 const inputs = ref({ ...props.dataInputs });
 let btnClose = null;
 
-const Model = () => {
-    switch (props.scope) {
-        case 'Komisariat':
-            return Activity.Komisariat;
-        case 'Wilayah':
-            return Activity.Wilayah;
-        case 'Bansus':
-            return Activity.Bansus;
-        default:
-            throw new Error(`Scope '${props.scope}' is not recognized`);
-    }
-};
-
 onMounted(async () => {
     if (inputs.value.tgl_m) {
         inputs.value.tgl_m = convertToLocalForInput(inputs.value.tgl_m);
@@ -149,10 +136,10 @@ const onSubmit = async () => {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await Model().create(data);
+            response = await Activity.create(data, { lingkup: props.scope });
             emit('successCreate', response?.activity);
         } else {
-            response = await Model().update(id, data);
+            response = await Activity.update(id, data, { lingkup: props.scope });
             emit('successUpdate', response?.activity);
         }
         emit('successSubmit', response?.activity);
@@ -170,7 +157,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await Model().remove(id);
+        await Activity.remove(id, { lingkup: props.scope });
         btnClose.click();
         emit('successDelete', id);
     } catch (error) {

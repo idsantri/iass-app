@@ -84,18 +84,6 @@ const filteredActivities = computed(() =>
           )
         : activities.value,
 );
-const Model = () => {
-    switch (meta.scope) {
-        case 'Komisariat':
-            return Activity.Komisariat;
-        case 'Wilayah':
-            return Activity.Wilayah;
-        case 'Bansus':
-            return Activity.Bansus;
-        default:
-            throw new Error(`Scope '${meta.scope}' is not recognized`);
-    }
-};
 
 onMounted(async () => {
     await loadData();
@@ -104,7 +92,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const data = await Model().getAll();
+        const data = await Activity.getAll({ lingkup: meta?.scope?.toLowerCase() });
         activities.value = data.activities;
     } catch (error) {
         console.log('error get activities ', error);

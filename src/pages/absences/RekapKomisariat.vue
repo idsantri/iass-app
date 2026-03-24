@@ -278,7 +278,7 @@ const thAjaranH = ref('');
 const loadActivityNks = async () => {
     try {
         loadingNks.value = true;
-        const data = await Activity.Wilayah.getAll({ nama: 'Ngaji Kitab Sidogiri' });
+        const data = await Activity.getAll({ nama: 'Ngaji Kitab Sidogiri', lingkup: 'wilayah' });
         // console.log('🚀 ~ loadActivity ~ data:', data.activities);
         if (data.activities?.length > 0) {
             const _set = new Set();

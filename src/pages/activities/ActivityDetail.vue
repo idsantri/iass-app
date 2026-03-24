@@ -112,19 +112,6 @@ const activity = ref({});
 const loading = ref(false);
 const titlePage = 'Detail Kegiatan ' + meta.scope;
 
-const Model = () => {
-    switch (meta.scope) {
-        case 'Komisariat':
-            return Activity.Komisariat;
-        case 'Wilayah':
-            return Activity.Wilayah;
-        case 'Bansus':
-            return Activity.Bansus;
-        default:
-            throw new Error(`Scope '${meta.scope}' is not recognized`);
-    }
-};
-
 onMounted(async () => {
     if (id) await loadData();
 });
@@ -132,7 +119,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Model().getById(id);
+        const res = await Activity.getById(id, { lingkup: meta?.scope?.toLowerCase() });
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity id ', e);
@@ -143,7 +130,7 @@ async function loadData() {
 
 async function lockActivity(act) {
     try {
-        await Model().update(act.id, { locked: act.locked });
+        await Activity.update(act.id, { locked: act.locked, lingkup: meta?.scope?.toLowerCase() });
     } catch (e) {
         activity.value.locked = act.locked ? 0 : 1;
         console.log('error lock activity ', e);
