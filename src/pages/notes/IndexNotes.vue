@@ -83,19 +83,6 @@ const loading = ref(false);
 const notes = shallowRef([]);
 const activity = shallowRef({});
 
-const Model = () => {
-    switch (props.scope?.toLowerCase()) {
-        case 'komisariat':
-            return Note.Komisariat;
-        case 'wilayah':
-            return Note.Wilayah;
-        case 'bansus':
-            return Note.Bansus;
-        default:
-            throw new Error(`Scope '${props.scope}' is not recognized`);
-    }
-};
-
 onMounted(async () => {
     if (props.activityId) {
         await loadData();
@@ -105,7 +92,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Model().getAll({ activity_id: props.activityId });
+        const res = await Note.getAll({ activity_id: props.activityId });
         notes.value = res.notes;
         activity.value = res.activity;
     } catch (e) {

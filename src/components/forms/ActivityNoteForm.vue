@@ -30,19 +30,6 @@ const inputs = ref({ ...props.dataInputs, content: props.dataInputs?.content || 
 const id = props.dataInputs?.id;
 const loading = ref(false);
 
-const Model = () => {
-    switch (props.scope?.toLowerCase()) {
-        case 'komisariat':
-            return Note.Komisariat;
-        case 'wilayah':
-            return Note.Wilayah;
-        case 'bansus':
-            return Note.Bansus;
-        default:
-            throw new Error(`Scope '${props.scope}' is not recognized`);
-    }
-};
-
 const onSubmit = async () => {
     const data = JSON.parse(JSON.stringify(inputs.value));
 
@@ -50,10 +37,10 @@ const onSubmit = async () => {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await Model().create(data);
+            response = await Note.create(data);
             emit('successCreate', response?.note);
         } else {
-            response = await Model().update(id, data);
+            response = await Note.update(id, data);
             emit('successUpdate', response?.note);
         }
         emit('successSubmit', response?.note);
@@ -70,7 +57,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await Model().remove(id);
+        await Note.remove(id);
         emit('successDelete', id);
     } catch (error) {
         console.log('error delete note ', error);
