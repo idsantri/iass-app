@@ -68,19 +68,6 @@ const { params, query } = useRoute();
 const activity = ref({});
 const cameraKey = ref(0); // Key untuk memaksa render ulang
 
-const ModelAbsence = () => {
-    switch (query.scope?.toLowerCase()) {
-        case 'komisariat':
-            return Absence.Komisariat;
-        case 'wilayah':
-            return Absence.Wilayah;
-        case 'bansus':
-            return Absence.Bansus;
-        default:
-            throw new Error(`Scope '${query.scope}' is not recognized`);
-    }
-};
-
 onMounted(async () => {
     if (params.id) {
         await loadData();
@@ -102,7 +89,7 @@ async function loadData() {
 const onHadir = async (member_id) => {
     try {
         loadingAbsence.value = true;
-        await ModelAbsence().setHadir({ activity_id: activity.value.id, member_id: member_id });
+        await Absence.setHadir({ activity_id: activity.value.id, member_id: member_id });
     } catch (error) {
         console.log('error hadir ', error);
     } finally {

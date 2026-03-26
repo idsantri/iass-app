@@ -4,7 +4,7 @@ class ReportAbsence extends Api {
     constructor() {
         super();
         this.setNotifyGet();
-        this.path = 'reports/absences';
+        this.path = 'absences-reports';
     }
 
     async NksByMember(th_ajaran_h) {

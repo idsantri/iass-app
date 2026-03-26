@@ -53,7 +53,13 @@
         </q-card-section>
         <QDialog v-model="dialog">
             <ActivityForm
-                @success-create="(res) => $router.push(`/${query.scope}/activities/${res.id}`)"
+                @success-create="
+                    (res) =>
+                        $router.push({
+                            path: `/activities/${res.id}`,
+                            query: { scope: query.scope },
+                        })
+                "
                 :dataInputs="{ komisariat: komisariatUser }"
                 :scope="query.scope"
             />

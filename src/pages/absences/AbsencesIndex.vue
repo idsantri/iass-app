@@ -96,10 +96,7 @@
                                             v-model="absence.hadir"
                                             color="orange"
                                             label="Hadir"
-                                            @click="
-                                                () =>
-                                                    activity.locked ? null : updateHadir(absence)
-                                            "
+                                            @click="() => updateHadir(absence)"
                                             :true-value="true"
                                             :false-value="false"
                                             :disable="!!activity.locked"
@@ -146,19 +143,6 @@ const absences = ref([]);
 const activity = ref({});
 const filterSelect = ref('');
 const filterInput = ref('');
-
-const Model = () => {
-    switch (query.scope?.toLowerCase()) {
-        case 'komisariat':
-            return Absence.Komisariat;
-        case 'wilayah':
-            return Absence.Wilayah;
-        case 'bBansus':
-            return Absence.Bansus;
-        default:
-            throw new Error(`Scope '${query.scope}' is not recognized`);
-    }
-};
 
 function cekKehadiran(date1, date2) {
     if (!date2) return 'Absen';
@@ -230,7 +214,7 @@ const filteredData = computed(() => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Model().getByActivity(activityId);
+        const res = await Absence.getAll({ activity_id: activityId });
         absences.value = res.absences;
         activity.value = res.activity;
     } catch (e) {
@@ -242,7 +226,7 @@ async function loadData() {
 
 async function updateHadir(item) {
     try {
-        const data = await Model().update(item.id, { hadir: item.hadir });
+        const data = await Absence.update(item.id, { hadir: item.hadir });
         absences.value = ArrayCrud.update(absences.value, item.id, data.absence);
     } catch (error) {
         absences.value = ArrayCrud.update(absences.value, item.id, {

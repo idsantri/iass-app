@@ -122,19 +122,6 @@ const loading = ref(false);
 const report = ref([]);
 const { query } = useRoute();
 
-const Model = () => {
-    switch (query?.scope?.toLowerCase()) {
-        case 'komisariat':
-            return Absence.Komisariat;
-        case 'wilayah':
-            return Absence.Wilayah;
-        case 'bansus':
-            return Absence.Bansus;
-        default:
-            throw new Error(`Scope '${query.scope}' is not recognized`);
-    }
-};
-
 onMounted(async () => {
     if (props.activityId) {
         await loadData();
@@ -156,7 +143,7 @@ const sumHadir = computed(() => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Model().getSummaryByActivity(props.activityId);
+        const res = await Absence.getSummary(props.activityId);
         report.value = res.absence_summaries;
     } catch (e) {
         console.log('error report absence', e);
@@ -168,7 +155,7 @@ async function loadData() {
 async function createAbsence() {
     try {
         loading.value = true;
-        const res = await Model().createByActivity(props.activityId);
+        const res = await Absence.createByActivity(props.activityId);
         report.value = res.absence_summaries;
     } catch (e) {
         console.log('error report absence', e);
@@ -183,7 +170,7 @@ async function resetAbsence() {
 
     try {
         loading.value = true;
-        await Model().removeByActivity(props.activityId);
+        await Absence.removeByActivity(props.activityId);
         report.value = [];
     } catch (error) {
         console.log('error on reset absence ', error);

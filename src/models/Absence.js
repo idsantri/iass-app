@@ -1,8 +1,8 @@
 import ApiCrud from './ApiCrud';
 
-class BaseAbsences extends ApiCrud {
-    constructor(prefix) {
-        super(`${prefix}/absences`);
+class Absence extends ApiCrud {
+    constructor() {
+        super(`absences`);
     }
 
     async setHadir(data) {
@@ -25,49 +25,21 @@ class BaseAbsences extends ApiCrud {
 
     async removeByActivity(activityId) {
         this.setNotify(true);
-        const response = await this.fetchAuth(`${this.path}/activities/${activityId}`, {
+        const response = await this.fetchAuth(`${this.path}`, {
             method: 'DELETE',
+            params: { activity_id: activityId },
         });
         return response.data || true;
     }
 
-    async getByActivity(activityId) {
+    async getSummary(activityId) {
         this.setNotifyGet();
-        const response = await this.fetchAuth(`${this.path}/activities/${activityId}`, {
+        const response = await this.fetchAuth(`${this.path}/summaries`, {
             method: 'GET',
-        });
-        return response.data || true;
-    }
-
-    async getSummaryByActivity(activityId) {
-        this.setNotifyGet();
-        const response = await this.fetchAuth(`${this.path}/activities/${activityId}/summaries`, {
-            method: 'GET',
+            params: { activity_id: activityId },
         });
         return response.data || true;
     }
 }
 
-class BansusAbsences extends BaseAbsences {
-    constructor() {
-        super('bansus');
-    }
-}
-
-class WilayahAbsences extends BaseAbsences {
-    constructor() {
-        super('wilayah');
-    }
-}
-class KomisariatAbsences extends BaseAbsences {
-    constructor() {
-        super('komisariat');
-    }
-}
-
-const Absence = {
-    Wilayah: new WilayahAbsences(),
-    Bansus: new BansusAbsences(),
-    Komisariat: new KomisariatAbsences(),
-};
-export default Absence;
+export default new Absence();
