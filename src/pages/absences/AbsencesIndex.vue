@@ -96,10 +96,10 @@
                                             v-model="absence.hadir"
                                             color="orange"
                                             label="Hadir"
-                                            @click="() => updateHadir(absence)"
                                             :true-value="true"
                                             :false-value="false"
                                             :disable="!!activity.locked"
+                                            @update:model-value="() => updateHadir(absence)"
                                         />
                                     </template>
                                     <template v-else>

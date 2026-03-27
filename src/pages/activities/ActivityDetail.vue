@@ -56,6 +56,8 @@
                                 @click="lockActivity(activity)"
                                 :true-value="1"
                                 :false-value="0"
+                                checked-icon="lock"
+                                unchecked-icon="lock_open"
                             />
                         </td>
                     </tr>
