@@ -157,9 +157,7 @@ async function loadAccounts() {
 }
 
 async function loadCashFlows() {
-    // console.log(modRekening.value);
     dialog.value = false;
-    // console.log('🚀 ~ loadCashFlows ~ rekeningSlug:', rekeningSlug);
     try {
         lodCashFlow.value = true;
         const res = await CashFlow.getAll({

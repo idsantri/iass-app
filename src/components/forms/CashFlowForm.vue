@@ -110,7 +110,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await CashFlow.remove(id, { rekening: props.dataInputs.rekening });
+        await CashFlow.remove(id);
         emit('successDelete', id);
     } catch (error) {
         console.log('error delete status ', error);
