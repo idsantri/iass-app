@@ -137,10 +137,10 @@ const onSubmit = async () => {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await Activity.create(data, { lingkup: props.scope });
+            response = await Activity.create(data);
             emit('successCreate', response?.activity);
         } else {
-            response = await Activity.update(id, data, { lingkup: props.scope });
+            response = await Activity.update(id, data);
             emit('successUpdate', response?.activity);
         }
         emit('successSubmit', response?.activity);
@@ -158,7 +158,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await Activity.remove(id, { lingkup: props.scope });
+        await Activity.remove(id);
         btnClose.click();
         emit('successDelete', id);
     } catch (error) {

@@ -279,10 +279,8 @@ const loadActivityNks = async () => {
     try {
         loadingNks.value = true;
         const data = await Activity.getAll({ nama: 'Ngaji Kitab Sidogiri', lingkup: 'wilayah' });
-        // console.log('🚀 ~ loadActivity ~ data:', data.activities);
         if (data.activities?.length > 0) {
             const _set = new Set();
-            // console.log('🚀 ~ loadActivity ~ _set:', _set);
             data.activities.forEach((n) => {
                 if (n.th_ajaran_h) {
                     _set.add(n.th_ajaran_h);
@@ -345,10 +343,6 @@ function hitungNilai(data, keyToCalculate) {
 </script>
 <style lang="sass" scoped>
 .my-sticky-column-table
-  /* specifying max-width so the example can
-    highlight the sticky column on any browser window */
-
-    //       max-width: 600px
 
   thead tr:first-child th:first-child
     /* bg color is important for th; just specify one */

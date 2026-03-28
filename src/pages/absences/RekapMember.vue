@@ -217,10 +217,8 @@ const loadActivityNks = async () => {
     try {
         loadingNks.value = true;
         const data = await Activity.getAll({ nama: 'Ngaji Kitab Sidogiri', lingkup: 'wilayah' });
-        // console.log('🚀 ~ loadActivity ~ data:', data.activities);
         if (data.activities?.length > 0) {
             const _set = new Set();
-            // console.log('🚀 ~ loadActivity ~ _set:', _set);
             data.activities.forEach((n) => {
                 if (n.th_ajaran_h) {
                     _set.add(n.th_ajaran_h);
@@ -228,7 +226,6 @@ const loadActivityNks = async () => {
             });
             optionsNks.value = Array.from(_set).sort();
         }
-        // console.log(optionsNks.value);
     } catch (error) {
         console.log('error load nks', error);
     } finally {
@@ -239,8 +236,7 @@ const loadActivityNks = async () => {
 const loadReport = async (th_ajaran_h) => {
     try {
         loading.value = true;
-        const data = await ReportAbsence.NksByMember(th_ajaran_h); // AbsenceNks.byMember({ th_ajaran_h });
-        // console.log(data);
+        const data = await ReportAbsence.NksByMember(th_ajaran_h);
         reports.value = data.reports;
         // set options komisariat
         const _set = new Set();
@@ -276,10 +272,6 @@ watch(thAjaranH, async (newVal) => {
 </script>
 <style lang="sass" scoped>
 .my-sticky-column-table
-  /* specifying max-width so the example can
-    highlight the sticky column on any browser window */
-
-    //       max-width: 600px
 
   thead tr:first-child th:first-child
     /* bg color is important for th; just specify one */

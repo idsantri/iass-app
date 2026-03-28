@@ -128,7 +128,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Activity.getById(id, { lingkup: query?.scope?.toLowerCase() });
+        const res = await Activity.getById(id);
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity id ', e);
@@ -142,7 +142,7 @@ async function lockActivity(act) {
         await Activity.update(
             act.id,
             { locked: act.locked },
-            { lingkup: query?.scope?.toLowerCase() },
+            // { lingkup: query?.scope?.toLowerCase() },
         );
     } catch (e) {
         activity.value.locked = act.locked ? 0 : 1;

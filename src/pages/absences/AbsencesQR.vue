@@ -77,7 +77,7 @@ onMounted(async () => {
 async function loadData() {
     try {
         loading.value = true;
-        const res = await Activity.getById(params.id, { lingkup: query?.scope?.toLowerCase() });
+        const res = await Activity.getById(params.id);
         activity.value = res.activity;
     } catch (e) {
         console.log('error get activity by id ', e);
