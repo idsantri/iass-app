@@ -80,16 +80,17 @@ onMounted(async () => {
 
 const onSubmit = async () => {
     const data = JSON.parse(JSON.stringify(inputs.value));
+    data.lingkup = props.scope;
     // console.log('🚀 ~ onSubmit ~ data:', data);
 
     try {
         loading.value = true;
         let response = null;
         if (!id) {
-            response = await Account.create(data, { lingkup: props.scope });
+            response = await Account.create(data);
             emit('successCreate', response?.account);
         } else {
-            response = await Account.update(id, data, { lingkup: props.scope });
+            response = await Account.update(id, data);
             emit('successUpdate', response?.account);
         }
         emit('successSubmit', response?.account);
@@ -106,7 +107,7 @@ const onDelete = async () => {
 
     try {
         loading.value = true;
-        await Account.remove(id, { lingkup: props.scope });
+        await Account.remove(id);
         emit('successDelete', id);
     } catch (error) {
         console.log('error delete account ', error);
