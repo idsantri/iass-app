@@ -13,30 +13,35 @@
             class="q-pa-sm tw:grid tw:grid-cols-1 tw:gap-2 tw:w-full tw:sm:flex tw:sm:items-center tw:sm:justify-between bg-orange-1"
         >
             <InputSelectArray
-                v-if="query?.komisariat"
-                v-model="modKomisariat"
+                v-if="QScope?.toLowerCase() === 'komisariat'"
+                v-model="QKomisariat"
                 url="komisariat"
                 label="Pilih Komisariat"
                 class="tw:w-full tw:sm:flex-1 tw:sm:max-w-md"
-                :disable="query?.scope.toLowerCase() != 'komisariat'"
             />
             <q-select
-                v-model="modRekening"
-                :options="optRekening"
-                label="Pilih Nama Rekening"
+                v-model="QAccount"
+                :options="optionsAccount"
+                label="Rekening/Akun (Aktif)"
                 dense
                 outlined
                 clearable
                 behavior="menu"
                 class="tw:w-full tw:sm:flex-1 tw:sm:max-w-md"
-                :loading="lodRekening"
+                :loading="loadingAccounts"
                 option-value="slug"
                 option-label="nama"
                 emit-value
                 map-options
             >
                 <template v-slot:after>
-                    <q-btn no-caps outline icon="sync" @click="loadAccounts" class="q-pa-sm" />
+                    <q-btn
+                        no-caps
+                        outline
+                        icon="sync"
+                        @click="() => loadAccounts(QScope)"
+                        class="q-pa-sm"
+                    />
                     <q-btn
                         no-caps
                         outline
@@ -44,10 +49,12 @@
                         :to="{
                             path: '/accounts',
                             query: {
-                                scope: query.scope,
+                                scope: QScope,
+                                komisariat: QKomisariat,
                             },
                         }"
                         class="q-pa-sm"
+                        :disable="!validAccountRoute"
                     />
                 </template>
             </q-select>
@@ -56,7 +63,7 @@
                 borderless
                 dense
                 debounce="300"
-                v-model="modSearch"
+                v-model="searchModel"
                 placeholder="Cari"
                 outlined
                 clearable
@@ -77,7 +84,7 @@
                 row-key="id"
                 :loading="lodCashFlow"
                 :rows-per-page-options="[10, 25, 50, 100, 0]"
-                :filter="modSearch"
+                :filter="searchModel"
                 no-data-label="Data tidak ditemukan"
                 no-results-label="Data tidak ditemukan"
             >
@@ -98,71 +105,128 @@
         <QDialog v-model="dialog">
             <CashFlowForm
                 :dataInputs="cashFlow"
-                :scope="query.scope"
-                @success-create="loadCashFlows"
-                @success-update="loadCashFlows"
-                @success-delete="loadCashFlows"
+                :scope="QScope"
+                @success-create="() => loadCashFlows(QAccount)"
+                @success-update="() => loadCashFlows(QAccount)"
+                @success-delete="() => loadCashFlows(QAccount)"
             />
         </QDialog>
     </CardPage>
 </template>
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref, watch, computed, nextTick } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { toProperCase } from '@/utils/string';
 import InputSelectArray from '@/components/forms/inputs/InputSelectArray.vue';
-import Account from '@/models/Account';
 import CashFlowForm from '@/components/forms/CashFlowForm.vue';
 import CashFlow from '@/models/CashFlow';
 import { formatDate } from '@/utils/date-operation';
-import { notifyWarning } from '@/utils/notify';
+import { useQueryState } from 'vue-url-state';
+import { useAccountsStore } from '@/stores/accountsStore';
+import { storeToRefs } from 'pinia';
+import authStore from '@/stores/authStore';
 
-const router = useRouter();
-const { query } = useRoute();
-const titlePage = 'Data Keuangan ' + toProperCase(query.scope);
-const modSearch = ref('');
-
-const modKomisariat = ref('');
-
-const modRekening = ref('');
-const optRekening = ref([]);
-const lodRekening = ref(false);
+const store = useAccountsStore();
+const { accounts, isLoading: loadingAccounts } = storeToRefs(store);
+const auth = authStore();
+const searchModel = ref('');
+const QScope = useQueryState('scope', '');
+const QKomisariat = useQueryState('komisariat', '');
+const QAccount = useQueryState('rekening', '');
 
 const dialog = ref(false);
 const cashFlows = ref([]);
 const cashFlow = ref({});
 const lodCashFlow = ref(false);
 
-const account = computed(() => {
-    return optRekening.value.find((a) => a.slug == modRekening.value);
+const titlePage = computed(() => {
+    const baseTitle = 'Arus Kas';
+    if (QScope.value) {
+        return `${baseTitle} — ${toProperCase(QScope.value)} ${QKomisariat.value?.toUpperCase() || ''}`;
+    }
+    return baseTitle;
 });
 
-async function loadAccounts() {
-    try {
-        lodRekening.value = true;
-        const res = await Account.getAll({
-            active: 1,
-            lingkup: query.scope,
-            komisariat: modKomisariat.value ?? null,
-        });
+const validAccountRoute = computed(() => {
+    const mapRoles = [
+        {
+            scope: 'wilayah',
+            role: 'Pengurus Wilayah',
+        },
+        {
+            scope: 'komisariat',
+            role: 'Pengurus Komisariat',
+        },
+        {
+            scope: 'bansus',
+            role: 'Bansus',
+        },
+    ];
+    if (!QScope.value) return false;
 
-        if (res && res.accounts) {
-            optRekening.value = res.accounts;
-        }
-    } catch (err) {
-        console.error('🚀 ~ loadAccounts ~ err:', err);
-    } finally {
-        lodRekening.value = false;
+    const scope = QScope.value.toLowerCase();
+    const hasRole = mapRoles.some((role) => role.scope === scope && auth.roles.includes(role.role));
+
+    if (!hasRole) return false;
+
+    if (scope === 'komisariat') {
+        return QKomisariat.value?.toLowerCase() === auth.user?.komisariat?.toLowerCase();
     }
+
+    return true;
+});
+
+const optionsAccount = computed(() => {
+    if (QScope.value?.toLowerCase() !== 'komisariat') {
+        return accounts.value.filter(
+            (a) => a.active && a.lingkup.toLowerCase() === QScope.value?.toLowerCase(),
+        );
+    } else {
+        return accounts.value.filter(
+            (a) =>
+                a.active &&
+                a.lingkup.toLowerCase() === QScope.value?.toLowerCase() &&
+                a.komisariat.toLowerCase() === QKomisariat.value?.toLowerCase(),
+        );
+    }
+});
+
+const account = computed(() => {
+    return optionsAccount.value.find((a) => a.slug == QAccount.value);
+});
+
+function loadAccounts(scope) {
+    return store.loadData({ lingkup: scope });
 }
 
-async function loadCashFlows() {
+watch(QScope, async (scope) => {
+    if (scope) {
+        const scoped = accounts.value.filter((a) => a.lingkup.toLowerCase() == scope.toLowerCase());
+        // console.log('🚀 ~ scoped:', scoped);
+        if (!scoped.length) {
+            await loadAccounts(scope);
+        }
+    }
+
+    if (scope.toLowerCase() == 'komisariat') {
+        QKomisariat.value = auth.user?.komisariat || '';
+    }
+});
+
+watch(QAccount, async (rekening) => {
+    cashFlows.value = [];
+    if (!rekening) return;
+    await loadCashFlows(rekening);
+});
+
+watch(QKomisariat, () => {
+    QAccount.value = '';
+});
+
+async function loadCashFlows(rekening) {
     dialog.value = false;
     try {
         lodCashFlow.value = true;
-        const res = await CashFlow.getAll({
-            rekening: modRekening.value,
-        });
+        const res = await CashFlow.getAll({ rekening });
         if (res && res.cash_flows) {
             cashFlows.value = res.cash_flows;
         }
@@ -175,7 +239,7 @@ async function loadCashFlows() {
 
 const handleAdd = () => {
     cashFlow.value = {
-        rekening: modRekening.value,
+        rekening: QAccount.value,
         rekening_nama: account.value.nama,
     };
     dialog.value = true;
@@ -184,37 +248,11 @@ const handleAdd = () => {
 const handleEdit = (obj) => {
     cashFlow.value = {
         ...obj,
-        rekening: modRekening.value,
+        rekening: QAccount.value,
         rekening_nama: account.value.nama,
     };
     dialog.value = true;
 };
-
-onMounted(async () => {
-    await loadAccounts();
-    if (query?.rekening) {
-        modRekening.value = query.rekening;
-    }
-    await nextTick();
-    if (!account.value && modRekening.value) {
-        notifyWarning('Sepertinya rekening yang dipilih sudah tidak aktif.');
-    }
-});
-
-watch(modRekening, async (newVal) => {
-    router.replace({
-        query: {
-            ...router.currentRoute.value.query, // pertahankan query lama
-            rekening: newVal, // tambahkan/ubah rekening
-        },
-    });
-
-    if (newVal) {
-        await loadCashFlows();
-    } else {
-        cashFlows.value = [];
-    }
-});
 
 const columns = [
     {

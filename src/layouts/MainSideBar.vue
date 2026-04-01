@@ -77,6 +77,14 @@ const komisariat = [
         route: '/activities' + '?scope=komisariat',
         disable: false,
     },
+    {
+        icon: 'sym_o_money',
+        label: 'Keuangan',
+        caption: 'Arus Kas',
+        route: '/cash-flows' + '?scope=komisariat',
+        separator: true,
+        disable: false,
+    },
 ];
 const bansus = [
     {
@@ -91,6 +99,14 @@ const bansus = [
         label: 'Kegiatan',
         caption: 'Kegiatan Bansus',
         route: '/activities' + '?scope=bansus',
+        disable: false,
+    },
+    {
+        icon: 'sym_o_money',
+        label: 'Keuangan',
+        caption: 'Arus Kas',
+        route: '/cash-flows' + '?scope=bansus',
+        separator: true,
         disable: false,
     },
 ];

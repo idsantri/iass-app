@@ -5,10 +5,10 @@
             <q-table
                 flat
                 bordered
-                :rows="accounts"
+                :rows="filteredAccounts"
                 :columns="columns"
                 row-key="id"
-                :loading="loading"
+                :loading="loadingAccounts"
                 :rows-per-page-options="[10, 25, 50, 100, 0]"
             >
                 <template v-slot:body-cell-private="props">
@@ -55,7 +55,7 @@
                             :to="{
                                 path: '/cash-flows',
                                 query: {
-                                    scope: query.scope,
+                                    scope: QScope,
                                     rekening: props.row.slug,
                                 },
                             }"
@@ -70,52 +70,59 @@
                 @success-update="onUpdate"
                 @success-delete="onDelete"
                 :dataInputs="account"
-                :scope="query.scope"
+                :scope="QScope"
             />
         </QDialog>
     </CardPage>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-import { ref, onMounted } from 'vue';
-import Account from '@/models/Account';
+import { ref, computed } from 'vue';
 import { toProperCase } from '@/utils/string';
 import ArrayCrud from '@/models/ArrayCrud';
 import AccountForm from '@/components/forms/AccountForm.vue';
+import { useQueryState } from 'vue-url-state';
+import { useAccountsStore } from '@/stores/accountsStore';
+import { storeToRefs } from 'pinia';
 
-const { query } = useRoute();
-const titlePage = 'Daftar Rekening ' + toProperCase(query.scope);
+const QScope = useQueryState('scope', '');
+const QKomisariat = useQueryState('komisariat', '');
+const store = useAccountsStore();
+const { accounts, isLoading: loadingAccounts } = storeToRefs(store);
 
-const loading = ref(false);
+const titlePage = computed(() => {
+    const baseTitle = 'Daftar Rekening';
+    if (QScope.value) {
+        return `${baseTitle}: — ${toProperCase(QScope.value)} ${QKomisariat.value?.toUpperCase() || ''}`;
+    }
+    return baseTitle;
+});
+
 const dialog = ref(false);
-const accounts = ref([]);
 const account = ref({});
 
-onMounted(async () => {
-    reload();
+const filteredAccounts = computed(() => {
+    if (QScope.value?.toLowerCase() !== 'komisariat') {
+        return accounts.value.filter(
+            (a) => a.lingkup.toLowerCase() === QScope.value?.toLowerCase(),
+        );
+    } else {
+        return accounts.value.filter(
+            (a) =>
+                a.lingkup.toLowerCase() === QScope.value?.toLowerCase() &&
+                a.komisariat.toLowerCase() === QKomisariat.value?.toLowerCase(),
+        );
+    }
 });
 
 function reload() {
-    dialog.value = false;
-    loading.value = true;
-    Account.getAll({
-        lingkup: query.scope,
-    })
-        .then((res) => {
-            // console.log('🚀 ~ reload ~ res:', res);
-            if (res && res.accounts) {
-                accounts.value = res.accounts;
-            }
-        })
-        .catch((err) => console.log(err))
-        .finally(() => (loading.value = false));
+    return store.loadData({ lingkup: QScope.value });
 }
 
 const handleEdit = (acc) => {
     const data = JSON.parse(JSON.stringify(acc));
     account.value = {
-        komisariat: toProperCase(query.komisariat),
+        komisariat: toProperCase(QKomisariat.value),
         ...data,
     };
     // console.log('🚀 ~ handleEdit ~ data:', data);
@@ -124,7 +131,7 @@ const handleEdit = (acc) => {
 
 const handleAdd = () => {
     account.value = {
-        komisariat: toProperCase(query.komisariat) ?? null,
+        komisariat: toProperCase(QKomisariat.value) ?? null,
         private: true,
         active: true,
     };
