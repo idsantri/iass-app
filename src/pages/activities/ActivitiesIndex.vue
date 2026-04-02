@@ -18,7 +18,7 @@
                     (evt, row, index) =>
                         $router.push({
                             path: `/activities/${row.id}`,
-                            query: { scope: query.scope },
+                            query: { scope: QScope },
                         })
                 "
                 :filter="filterText"
@@ -53,19 +53,11 @@
         </q-card-section>
         <QDialog v-model="dialog">
             <ActivityForm
-                @success-create="
-                    (res) =>
-                        $router.push({
-                            path: `/activities/${res.id}`,
-                            query: { scope: query.scope },
-                        })
-                "
+                @success-create="onCreate"
                 :dataInputs="{ komisariat: komisariatUser }"
-                :scope="query.scope"
+                :scope="QScope"
             />
         </QDialog>
-        <!-- {{ filteredActivities }}
-        {{ filterKomisariat }} -->
     </CardPage>
 </template>
 <script setup>
@@ -75,18 +67,26 @@ import Activity from '@/models/Activity';
 import authStore from '@/stores/authStore';
 import { formatDate } from '@/utils/date-operation';
 import { toProperCase } from '@/utils/string';
-import { computed, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useQueryState } from 'vue-url-state';
 
 const komisariatUser = authStore().user.komisariat;
 const activities = ref([]);
 const loading = ref(false);
 const dialog = ref(false);
-const { query } = useRoute();
-
-const titlePage = 'Data Kegiatan ' + toProperCase(query.scope);
+const QScope = useQueryState('scope', '');
+const router = useRouter();
 const filterKomisariat = ref('');
 const filterText = ref('');
+
+const titlePage = computed(() => {
+    const baseTitle = 'Data Kegiatan';
+    if (QScope.value) {
+        return `${baseTitle} — ${toProperCase(QScope.value)}`;
+    }
+    return baseTitle;
+});
 
 const filteredActivities = computed(() =>
     filterKomisariat.value
@@ -96,18 +96,17 @@ const filteredActivities = computed(() =>
         : activities.value,
 );
 
-onMounted(async () => {
-    await loadData();
-
-    if (komisariatUser && query.scope?.toLowerCase() == 'komisariat') {
+watch(QScope, async (newScope, _oldScope) => {
+    await loadData(newScope);
+    if (komisariatUser && newScope?.toLowerCase() == 'komisariat') {
         filterKomisariat.value = komisariatUser;
     }
 });
 
-async function loadData() {
+async function loadData(lingkup) {
     try {
         loading.value = true;
-        const data = await Activity.getAll({ lingkup: query?.scope?.toLowerCase() });
+        const data = await Activity.getAll({ lingkup: lingkup?.toLowerCase() });
         activities.value = data.activities;
     } catch (error) {
         console.log('error get activities ', error);
@@ -115,6 +114,14 @@ async function loadData() {
         loading.value = false;
     }
 }
+
+const onCreate = (newActivity) => {
+    dialog.value = false;
+    router.push({
+        path: `/activities/${newActivity.id}`,
+        query: { scope: QScope.value },
+    });
+};
 
 const columns = [
     {

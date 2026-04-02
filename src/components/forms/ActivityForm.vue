@@ -22,6 +22,7 @@
                     "
                     :rules="[(val) => !!val || 'Harus diisi!']"
                     error-color="negative"
+                    ref="firstInput"
                 />
                 <q-input
                     dense
@@ -73,7 +74,7 @@
                     :rules="[(val) => !!val || 'Harus diisi!']"
                     hint="Lokasi/Alamat kegiatan"
                 />
-
+                <!-- scope {{ scope }} -->
                 <!-- <q-input dense class="q-my-sm" outlined label="Locked" v-model="inputs.locked" /> -->
             </q-card-section>
             <FormActions :btn-delete="!!id" @on-delete="onDelete" />
@@ -81,7 +82,7 @@
     </q-card>
 </template>
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 import LoadingAbsolute from '../LoadingAbsolute.vue';
 import InputSelectArray from './inputs/InputSelectArray.vue';
 import { notifyConfirm } from '@/utils/notify';
@@ -113,13 +114,15 @@ const convertToLocalForInput = (utcString) => {
 const loading = ref(false);
 const id = props.dataInputs?.id;
 const inputs = ref({ ...props.dataInputs });
-let btnClose = null;
+const firstInput = useTemplateRef('firstInput');
 
 onMounted(async () => {
     if (inputs.value.tgl_m) {
         inputs.value.tgl_m = convertToLocalForInput(inputs.value.tgl_m);
     }
-    btnClose = document.getElementById('btn-close-form');
+
+    await nextTick();
+    if (firstInput.value) firstInput.value.focus();
 });
 
 watch(
@@ -133,6 +136,8 @@ watch(
 
 const onSubmit = async () => {
     const data = JSON.parse(JSON.stringify(inputs.value));
+    data.lingkup = toProperCase(props.scope);
+
     try {
         loading.value = true;
         let response = null;
@@ -144,7 +149,6 @@ const onSubmit = async () => {
             emit('successUpdate', response?.activity);
         }
         emit('successSubmit', response?.activity);
-        btnClose.click();
     } catch (error) {
         console.log('error activity ', error);
     } finally {
@@ -159,7 +163,6 @@ const onDelete = async () => {
     try {
         loading.value = true;
         await Activity.remove(id);
-        btnClose.click();
         emit('successDelete', id);
     } catch (error) {
         console.log('error delete activity ', error);

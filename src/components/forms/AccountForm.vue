@@ -80,8 +80,7 @@ onMounted(async () => {
 
 const onSubmit = async () => {
     const data = JSON.parse(JSON.stringify(inputs.value));
-    data.lingkup = props.scope;
-    // console.log('🚀 ~ onSubmit ~ data:', data);
+    data.lingkup = toProperCase(props.scope);
 
     try {
         loading.value = true;

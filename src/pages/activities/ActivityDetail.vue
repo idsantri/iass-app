@@ -5,6 +5,7 @@
             @on-reload="loadData"
             :show-edit="true"
             @on-edit="dialog = true"
+            :disable-edit="!activity.id"
         />
 
         <q-card-section class="q-pa-sm relative-position" style="max-width: 1024px">
@@ -96,8 +97,8 @@
         </q-card-section>
         <QDialog v-model="dialog">
             <ActivityForm
-                @success-update="loadData"
-                @success-delete="() => $router.go(-1)"
+                @success-update="onUpdate"
+                @success-delete="onDelete"
                 :dataInputs="{ ...activity }"
                 :scope="query.scope"
             />
@@ -107,19 +108,21 @@
 <script setup>
 import ActivityForm from '@/components/forms/ActivityForm.vue';
 import LoadingAbsolute from '@/components/LoadingAbsolute.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { bacaHijri } from '@/utils/hijri';
 import { formatDate } from '@/utils/date-operation';
 import Activity from '@/models/Activity';
 import { toProperCase } from '@/utils/string';
+import { useRouter } from 'vue-router';
 
 const { params, query } = useRoute();
 const id = params.id;
 const dialog = ref(false);
 const activity = ref({});
 const loading = ref(false);
-const titlePage = 'Detail Kegiatan ' + toProperCase(query.scope);
+const router = useRouter();
+const titlePage = computed(() => `Detail Kegiatan ${toProperCase(activity.value?.lingkup ?? '')}`);
 
 onMounted(async () => {
     if (id) await loadData();
@@ -139,16 +142,23 @@ async function loadData() {
 
 async function lockActivity(act) {
     try {
-        await Activity.update(
-            act.id,
-            { locked: act.locked },
-            // { lingkup: query?.scope?.toLowerCase() },
-        );
+        await Activity.update(act.id, { ...act, locked: act.locked });
     } catch (e) {
+        // rollback
         activity.value.locked = act.locked ? 0 : 1;
         console.log('error lock activity ', e);
     }
 }
+
+const onUpdate = async (updatedActivity) => {
+    dialog.value = false;
+    activity.value = { ...activity.value, ...updatedActivity };
+};
+
+const onDelete = (_id) => {
+    dialog.value = false;
+    router.go(-1);
+};
 </script>
 <style scoped>
 td {
