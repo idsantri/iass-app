@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-item-label header class="q-px-md q-pt-sm q-pb-none">
         {{ title }}
     </q-item-label>

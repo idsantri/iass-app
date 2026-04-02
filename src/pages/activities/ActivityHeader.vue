@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <strong> {{ activity.nama }}</strong> <br />
     <span class="text-caption"> Lingkup Kegiatan: {{ scope?.toUpperCase() }} </span>
     <br />

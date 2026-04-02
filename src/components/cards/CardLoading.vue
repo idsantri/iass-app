@@ -1,7 +1,7 @@
-<template lang="">
+<template>
     <!-- <q-inner-loading :showing="showing" label="Please wait..." label-class="text-teal" label-style="font-size: 1.1em" /> -->
 
-    <!-- 
+    <!--
 		NOTE:
 		- parent must be relative position (or the relative-position CSS class declared)
 		- QInnerLoading must be the last element inside its parent so it can appear on top of the other content.

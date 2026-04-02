@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-page class="q-pa-sm">
         <q-card class="card-page-container" id="card-page-container">
             <slot></slot>

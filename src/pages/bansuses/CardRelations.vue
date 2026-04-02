@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-card flat bordered>
         <q-card-section class="bg-orange-7 text-orange-1 q-pa-xs flex">
             <q-tabs

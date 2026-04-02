@@ -1,7 +1,7 @@
 <template>
     <div
         data-testid="loading"
-        class="tw:fixed tw:inset-0 tw:z-[1000] tw:flex tw:items-center tw:justify-center"
+        class="tw:fixed tw:inset-0 tw:z-1000 tw:flex tw:items-center tw:justify-center"
     >
         <!-- Background blur -->
         <div class="tw:absolute tw:inset-0 tw:backdrop-blur-[1px] tw:bg-orange-200/30"></div>

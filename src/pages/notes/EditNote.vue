@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <CardPage>
         <CardHeader title="Catatan Kegiatan" :show-reload="false"> </CardHeader>
         <q-card-section class="q-pa-sm" style="max-width: 1024px">

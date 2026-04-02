@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-table
         :rows="props.data"
         :columns="columns"

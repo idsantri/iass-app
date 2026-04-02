@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-list bordered separator class="rounded-borders">
         <CardLoading :showing="loading" message="" />
         <q-item class="bg-orange-1">

@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <CardPage>
         <CardHeader :title="titlePage" @on-reload="reload" :show-add="true" @on-add="handleAdd" />
         <q-card-section class="q-pa-sm" style="max-width: 1024px">

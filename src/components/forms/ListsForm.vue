@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-card class="full-width" style="max-width: 425px">
         <q-form @submit.prevent="onSubmit">
             <FormHeader :title="'Lists ' + inputs.key || 'List'" :is-new="!id" />

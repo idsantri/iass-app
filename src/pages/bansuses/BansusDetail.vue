@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <CardPage>
         <CardHeader title="Detail Anggota Bansus" @on-reload="reload" :show-add="false">
         </CardHeader>

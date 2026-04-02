@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-card id="qr">
         <q-card-section class="q-pa-sm bg-orange-7 text-orange-1 text-center">
             {{ env.VITE_APP_INSTANCE }}

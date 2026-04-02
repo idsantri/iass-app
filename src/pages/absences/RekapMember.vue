@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <CardPage>
         <CardHeader title="Rekap Absensi per Anggota" :show-reload="false"> </CardHeader>
         <LoadingFixed v-if="loading" />

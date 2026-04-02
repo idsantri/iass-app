@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <CardPage>
         <CardHeader @on-reload="loadData" title="Profil Saya" />
         <LoadingAbsolute v-if="loading" />

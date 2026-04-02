@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <q-card-actions class="flex items-center bg-orange-6">
         <q-btn v-if="btnDelete" color="negative" no-caps="" @click="$emit('onDelete')">
             <q-icon v-if="iconDelete" :name="iconDelete" class="q-mr-xs" />
