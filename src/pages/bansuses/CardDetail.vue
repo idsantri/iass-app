@@ -7,7 +7,7 @@
             <div class="tw:py-3.5"></div>
         </q-card-section>
         <CardLoading :showing="isLoading" />
-        <q-markup-table class="q-pa-sm tw:min-h-[350px]">
+        <q-markup-table class="q-pa-sm tw:min-h-87.5">
             <tbody>
                 <tr>
                     <td class="label">ID Bansus</td>
